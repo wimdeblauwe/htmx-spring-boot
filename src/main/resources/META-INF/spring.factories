@@ -1,0 +1,4 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  io.github.wimdeblauwe.hsbt.thymeleaf.HtmxThymeleafConfiguration
+org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc=\
+  io.github.wimdeblauwe.hsbt.thymeleaf.HtmxThymeleafConfiguration
