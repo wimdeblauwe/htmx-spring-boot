@@ -5,10 +5,12 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-@Target({ElementType.TYPE, ElementType.METHOD})
+/**
+ * This shows how a custom annotation can be created with the name of the event
+ * already coded in.
+ */
+@Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface HxTrigger {
-    String value();
-
-    HxTriggerPolicy policy() default HxTriggerPolicy.RECEIVE;
+@HxTrigger("updatesSidebar")
+public @interface HxUpdatesSidebar {
 }

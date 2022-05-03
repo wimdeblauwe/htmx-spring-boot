@@ -1,6 +1,6 @@
 package io.github.wimdeblauwe.hsbt.mvc;
 
-import org.springframework.core.annotation.AnnotationUtils;
+import org.springframework.core.annotation.AnnotatedElementUtils;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
@@ -17,7 +17,7 @@ public class HtmxHandlerInterceptor implements HandlerInterceptor {
                            ModelAndView modelAndView) throws Exception {
         if (handler instanceof HandlerMethod) {
             Method method = ((HandlerMethod) handler).getMethod();
-            HxTrigger methodAnnotation = AnnotationUtils.findAnnotation(method, HxTrigger.class);
+            HxTrigger methodAnnotation = AnnotatedElementUtils.findMergedAnnotation(method, HxTrigger.class);
             if (methodAnnotation != null) {
                 response.setHeader(getHeaderName(methodAnnotation.policy()), methodAnnotation.value());
             }

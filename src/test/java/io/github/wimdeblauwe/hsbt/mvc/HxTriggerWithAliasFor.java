@@ -1,14 +1,16 @@
 package io.github.wimdeblauwe.hsbt.mvc;
 
+import org.springframework.core.annotation.AliasFor;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-@Target({ElementType.TYPE, ElementType.METHOD})
+@Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface HxTrigger {
-    String value();
-
-    HxTriggerPolicy policy() default HxTriggerPolicy.RECEIVE;
+@HxTrigger("")
+public @interface HxTriggerWithAliasFor {
+    @AliasFor(annotation = HxTrigger.class, attribute = "value")
+    String event();
 }

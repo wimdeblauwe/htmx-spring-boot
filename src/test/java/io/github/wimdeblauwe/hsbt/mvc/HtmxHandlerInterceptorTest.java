@@ -43,4 +43,19 @@ class HtmxHandlerInterceptorTest {
                .andExpect(header().doesNotExist("HX-Trigger"));
     }
 
+    @Test
+    public void testAnnotationComposition() throws Exception {
+        mockMvc.perform(get("/updates-sidebar"))
+               .andExpect(status().isOk())
+               .andExpect(header().string("HX-Trigger", "updatesSidebar"));
+
+    }
+
+    @Test
+    public void testAnnotationCompositionWithAliasFor() throws Exception {
+        mockMvc.perform(get("/hx-trigger-alias-for"))
+               .andExpect(status().isOk())
+               .andExpect(header().string("HX-Trigger", "updateTrigger"));
+
+    }
 }

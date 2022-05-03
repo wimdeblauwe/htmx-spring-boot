@@ -35,4 +35,18 @@ public class TestController {
     public String methodWithHxTriggerAfterSwap() {
         return "";
     }
+
+    @GetMapping("/updates-sidebar")
+    @HxUpdatesSidebar
+    @ResponseBody
+    public String updatesSidebar() {
+        return "";
+    }
+
+    @GetMapping("/hx-trigger-alias-for")
+    @HxTriggerWithAliasFor(event = "updateTrigger")
+    @ResponseBody
+    public String hxTriggerWithAliasForOverride() {
+        return "";
+    }
 }
