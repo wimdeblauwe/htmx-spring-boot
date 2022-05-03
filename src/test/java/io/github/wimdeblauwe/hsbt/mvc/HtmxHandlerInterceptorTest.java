@@ -23,6 +23,20 @@ class HtmxHandlerInterceptorTest {
     }
 
     @Test
+    public void testAfterSettleHeaderIsSetOnResponseIfHxTriggerIsPresent() throws Exception {
+        mockMvc.perform(get("/with-trigger-settle"))
+               .andExpect(status().isOk())
+               .andExpect(header().string("HX-Trigger-After-Settle", "eventTriggered"));
+    }
+
+    @Test
+    public void testAfterSwapHeaderIsSetOnResponseIfHxTriggerIsPresent() throws Exception {
+        mockMvc.perform(get("/with-trigger-swap"))
+               .andExpect(status().isOk())
+               .andExpect(header().string("HX-Trigger-After-Swap", "eventTriggered"));
+    }
+
+    @Test
     public void testHeaderIsNotSetOnResponseIfHxTriggerNotPresent() throws Exception {
         mockMvc.perform(get("/without-trigger"))
                .andExpect(status().isOk())

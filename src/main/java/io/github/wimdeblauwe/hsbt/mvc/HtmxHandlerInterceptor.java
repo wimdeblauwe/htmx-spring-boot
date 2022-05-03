@@ -19,8 +19,21 @@ public class HtmxHandlerInterceptor implements HandlerInterceptor {
             Method method = ((HandlerMethod) handler).getMethod();
             HxTrigger methodAnnotation = AnnotationUtils.findAnnotation(method, HxTrigger.class);
             if (methodAnnotation != null) {
-                response.setHeader("HX-Trigger", methodAnnotation.value());
+                response.setHeader(getHeaderName(methodAnnotation.policy()), methodAnnotation.value());
             }
+        }
+    }
+
+    private String getHeaderName(HxTriggerPolicy policy) {
+        switch (policy) {
+            case RECEIVE:
+                return "HX-Trigger";
+            case SETTLE:
+                return "HX-Trigger-After-Settle";
+            case SWAP:
+                return "HX-Trigger-After-Swap";
+            default:
+                throw new IllegalArgumentException("Unknown policy:" + policy);
         }
     }
 }

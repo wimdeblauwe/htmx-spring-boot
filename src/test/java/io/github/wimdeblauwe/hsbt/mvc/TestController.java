@@ -21,4 +21,18 @@ public class TestController {
     public String methodWithHxTrigger() {
         return "";
     }
+
+    @GetMapping("/with-trigger-settle")
+    @HxTrigger(value = "eventTriggered", policy = HxTriggerPolicy.SETTLE)
+    @ResponseBody
+    public String methodWithHxTriggerAfterSettle() {
+        return "";
+    }
+
+    @GetMapping("/with-trigger-swap")
+    @HxTrigger(value = "eventTriggered", policy = HxTriggerPolicy.SWAP)
+    @ResponseBody
+    public String methodWithHxTriggerAfterSwap() {
+        return "";
+    }
 }

@@ -9,4 +9,6 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface HxTrigger {
     String value();
+
+    HxTriggerPolicy policy() default HxTriggerPolicy.RECEIVE;
 }
