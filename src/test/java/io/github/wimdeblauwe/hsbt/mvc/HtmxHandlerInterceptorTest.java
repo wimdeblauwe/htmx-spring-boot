@@ -48,7 +48,6 @@ class HtmxHandlerInterceptorTest {
         mockMvc.perform(get("/updates-sidebar"))
                .andExpect(status().isOk())
                .andExpect(header().string("HX-Trigger", "updatesSidebar"));
-
     }
 
     @Test
@@ -56,6 +55,12 @@ class HtmxHandlerInterceptorTest {
         mockMvc.perform(get("/hx-trigger-alias-for"))
                .andExpect(status().isOk())
                .andExpect(header().string("HX-Trigger", "updateTrigger"));
+    }
 
+    @Test
+    public void testHxRefresh() throws Exception {
+        mockMvc.perform(get("/hx-refresh"))
+               .andExpect(status().isOk())
+               .andExpect(header().string("HX-Refresh", "true"));
     }
 }

@@ -49,4 +49,13 @@ public class TestController {
     public String hxTriggerWithAliasForOverride() {
         return "";
     }
+
+
+    @GetMapping("/hx-refresh")
+    @HxRefresh
+    @ResponseBody
+    public String hxRefresh() {
+        return "";
+    }
+
 }
