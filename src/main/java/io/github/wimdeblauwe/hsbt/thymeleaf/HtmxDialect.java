@@ -9,7 +9,7 @@ import java.util.Set;
 public class HtmxDialect extends AbstractProcessorDialect {
 
     public HtmxDialect() {
-        super("Htmx", "hx", 100);
+        super("Htmx", "hx", 1000);
     }
 
     @Override
@@ -22,6 +22,8 @@ public class HtmxDialect extends AbstractProcessorDialect {
         htmxProcessors.add(new HtmxAttributeProcessor(dialectPrefix, "delete"));
         htmxProcessors.add(new HtmxAttributeProcessor(dialectPrefix, "patch"));
         htmxProcessors.add(new HtmxAttributeProcessor(dialectPrefix, "target"));
+        htmxProcessors.add(new HtmxAttributeProcessor(dialectPrefix, "trigger"));
+        htmxProcessors.add(new HtmxAttributeProcessor(dialectPrefix, "swap"));
 
         return htmxProcessors;
     }
