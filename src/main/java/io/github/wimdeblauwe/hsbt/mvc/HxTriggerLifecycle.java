@@ -1,6 +1,6 @@
 package io.github.wimdeblauwe.hsbt.mvc;
 
-public enum HxTriggerPolicy {
+public enum HxTriggerLifecycle {
     /**
      * Maps to HX-Trigger
      */

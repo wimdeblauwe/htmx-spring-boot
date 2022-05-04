@@ -19,13 +19,13 @@ public class HtmxHandlerInterceptor implements HandlerInterceptor {
             Method method = ((HandlerMethod) handler).getMethod();
             HxTrigger methodAnnotation = AnnotatedElementUtils.findMergedAnnotation(method, HxTrigger.class);
             if (methodAnnotation != null) {
-                response.setHeader(getHeaderName(methodAnnotation.policy()), methodAnnotation.value());
+                response.setHeader(getHeaderName(methodAnnotation.lifecycle()), methodAnnotation.value());
             }
         }
     }
 
-    private String getHeaderName(HxTriggerPolicy policy) {
-        switch (policy) {
+    private String getHeaderName(HxTriggerLifecycle lifecycle) {
+        switch (lifecycle) {
             case RECEIVE:
                 return "HX-Trigger";
             case SETTLE:
@@ -33,7 +33,7 @@ public class HtmxHandlerInterceptor implements HandlerInterceptor {
             case SWAP:
                 return "HX-Trigger-After-Swap";
             default:
-                throw new IllegalArgumentException("Unknown policy:" + policy);
+                throw new IllegalArgumentException("Unknown lifecycle:" + lifecycle);
         }
     }
 }

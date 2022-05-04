@@ -10,5 +10,5 @@ import java.lang.annotation.Target;
 public @interface HxTrigger {
     String value();
 
-    HxTriggerPolicy policy() default HxTriggerPolicy.RECEIVE;
+    HxTriggerLifecycle lifecycle() default HxTriggerLifecycle.RECEIVE;
 }
