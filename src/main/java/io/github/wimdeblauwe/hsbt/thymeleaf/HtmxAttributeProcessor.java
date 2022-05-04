@@ -49,14 +49,16 @@ public class HtmxAttributeProcessor extends AbstractStandardExpressionAttributeT
             final String attributeValue,
             final Object expressionResult,
             final IElementTagStructureHandler structureHandler) {
+        if (expressionResult == null) {
+            structureHandler.removeAttribute(attributeName);
+        } else {
+            String newAttributeValue = HtmlEscape.escapeHtml4Xml(expressionResult.toString());
 
-        String newAttributeValue = HtmlEscape.escapeHtml4Xml(expressionResult == null ? "" : expressionResult.toString());
+            // Let RequestDataValueProcessor modify the attribute value if needed
+            newAttributeValue = RequestDataValueProcessorUtils.processUrl(context, newAttributeValue);
 
-        // Let RequestDataValueProcessor modify the attribute value if needed
-        newAttributeValue = RequestDataValueProcessorUtils.processUrl(context, newAttributeValue);
-
-        // Set the real, non prefixed attribute
-        StandardProcessorUtils.replaceAttribute(structureHandler, attributeName, this.targetAttributeDefinition, "hx-" + this.attrName, (newAttributeValue == null ? "" : newAttributeValue));
-
+            // Set the real, non prefixed attribute
+            StandardProcessorUtils.replaceAttribute(structureHandler, attributeName, this.targetAttributeDefinition, "hx-" + this.attrName, (newAttributeValue == null ? "" : newAttributeValue));
+        }
     }
 }
