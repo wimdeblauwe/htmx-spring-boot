@@ -9,14 +9,16 @@ public final class HtmxRequest {
     private final boolean historyRestoreRequest;
     private final String promptResponse;
     private final String target;
+    private final String triggerName;
 
-    HtmxRequest(boolean htmxRequest, boolean boosted, String currentUrl, boolean historyRestoreRequest, String promptResponse, String target) {
+    HtmxRequest(boolean htmxRequest, boolean boosted, String currentUrl, boolean historyRestoreRequest, String promptResponse, String target, String triggerName) {
         this.htmxRequest = htmxRequest;
         this.boosted = boosted;
         this.currentUrl = currentUrl;
         this.historyRestoreRequest = historyRestoreRequest;
         this.promptResponse = promptResponse;
         this.target = target;
+        this.triggerName = triggerName;
     }
 
     public boolean isHtmxRequest() {
@@ -71,6 +73,16 @@ public final class HtmxRequest {
         return target;
     }
 
+    /**
+     * The name of the triggered element if it exists
+     *
+     * @return the name of the trigger, or null if no name was passed in the request
+     */
+    @Nullable
+    public String getTriggerName() {
+        return triggerName;
+    }
+
     public static final class Builder {
         private final boolean htmxRequest;
         private boolean boosted;
@@ -78,6 +90,7 @@ public final class HtmxRequest {
         private boolean historyRestoreRequest;
         private String promptResponse;
         private String target;
+        private String triggerName;
 
         public Builder(boolean htmxRequest) {
             this.htmxRequest = htmxRequest;
@@ -108,8 +121,13 @@ public final class HtmxRequest {
             return this;
         }
 
+        public Builder withTriggerName(String triggerName) {
+            this.triggerName = triggerName;
+            return this;
+        }
+
         public HtmxRequest build() {
-            return new HtmxRequest(htmxRequest, boosted, currentUrl, historyRestoreRequest, promptResponse, target);
+            return new HtmxRequest(htmxRequest, boosted, currentUrl, historyRestoreRequest, promptResponse, target, triggerName);
         }
     }
 }

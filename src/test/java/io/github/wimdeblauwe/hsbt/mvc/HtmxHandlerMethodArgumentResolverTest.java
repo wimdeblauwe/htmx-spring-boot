@@ -123,4 +123,20 @@ class HtmxHandlerMethodArgumentResolverTest {
         assertThat(request.isBoosted()).isFalse();
         assertThat(request.getTarget()).isEqualTo("button-1");
     }
+
+    @Test
+    void testHxTriggerName() throws Exception {
+        mockMvc.perform(get("/method-arg-resolver")
+                                .header("HX-Request", "true")
+                                .header("HX-Trigger-Name", "myTriggerName"));
+
+        ArgumentCaptor<HtmxRequest> captor = ArgumentCaptor.forClass(HtmxRequest.class);
+        verify(service).doSomething(captor.capture());
+
+        HtmxRequest request = captor.getValue();
+        assertThat(request).isNotNull();
+        assertThat(request.isHtmxRequest()).isTrue();
+        assertThat(request.isBoosted()).isFalse();
+        assertThat(request.getTriggerName()).isEqualTo("myTriggerName");
+    }
 }
