@@ -10,8 +10,9 @@ public final class HtmxRequest {
     private final String promptResponse;
     private final String target;
     private final String triggerName;
+    private final String triggerId;
 
-    HtmxRequest(boolean htmxRequest, boolean boosted, String currentUrl, boolean historyRestoreRequest, String promptResponse, String target, String triggerName) {
+    HtmxRequest(boolean htmxRequest, boolean boosted, String currentUrl, boolean historyRestoreRequest, String promptResponse, String target, String triggerName, String triggerId) {
         this.htmxRequest = htmxRequest;
         this.boosted = boosted;
         this.currentUrl = currentUrl;
@@ -19,6 +20,7 @@ public final class HtmxRequest {
         this.promptResponse = promptResponse;
         this.target = target;
         this.triggerName = triggerName;
+        this.triggerId = triggerId;
     }
 
     public boolean isHtmxRequest() {
@@ -74,13 +76,23 @@ public final class HtmxRequest {
     }
 
     /**
-     * The name of the triggered element if it exists
+     * The name of the triggered element if it exists.
      *
      * @return the name of the trigger, or null if no name was passed in the request
      */
     @Nullable
     public String getTriggerName() {
         return triggerName;
+    }
+
+    /**
+     * The id of the triggered element if it exists.
+     *
+     * @return the id of the trigger, or null if no name was passed in the request
+     */
+    @Nullable
+    public String getTriggerId() {
+        return triggerId;
     }
 
     public static final class Builder {
@@ -91,6 +103,7 @@ public final class HtmxRequest {
         private String promptResponse;
         private String target;
         private String triggerName;
+        private String triggerId;
 
         public Builder(boolean htmxRequest) {
             this.htmxRequest = htmxRequest;
@@ -126,8 +139,13 @@ public final class HtmxRequest {
             return this;
         }
 
+        public Builder withTriggerId(String triggerId) {
+            this.triggerId = triggerId;
+            return this;
+        }
+
         public HtmxRequest build() {
-            return new HtmxRequest(htmxRequest, boosted, currentUrl, historyRestoreRequest, promptResponse, target, triggerName);
+            return new HtmxRequest(htmxRequest, boosted, currentUrl, historyRestoreRequest, promptResponse, target, triggerName, triggerId);
         }
     }
 }
