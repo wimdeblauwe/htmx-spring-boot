@@ -7,12 +7,14 @@ public final class HtmxRequest {
     private final boolean boosted;
     private final String currentUrl;
     private final boolean historyRestoreRequest;
+    private final String promptResponse;
 
-    HtmxRequest(boolean htmxRequest, boolean boosted, String currentUrl, boolean historyRestoreRequest) {
+    HtmxRequest(boolean htmxRequest, boolean boosted, String currentUrl, boolean historyRestoreRequest, String promptResponse) {
         this.htmxRequest = htmxRequest;
         this.boosted = boosted;
         this.currentUrl = currentUrl;
         this.historyRestoreRequest = historyRestoreRequest;
+        this.promptResponse = promptResponse;
     }
 
     public boolean isHtmxRequest() {
@@ -32,11 +34,17 @@ public final class HtmxRequest {
         return historyRestoreRequest;
     }
 
+    @Nullable
+    public String getPromptResponse() {
+        return promptResponse;
+    }
+
     public static final class Builder {
         private final boolean htmxRequest;
         private boolean boosted;
         private String currentUrl;
         private boolean historyRestoreRequest;
+        private String promptResponse;
 
         public Builder(boolean htmxRequest) {
             this.htmxRequest = htmxRequest;
@@ -57,8 +65,13 @@ public final class HtmxRequest {
             return this;
         }
 
+        public Builder withPromptResponse(String promptResponse) {
+            this.promptResponse = promptResponse;
+            return this;
+        }
+
         public HtmxRequest build() {
-            return new HtmxRequest(htmxRequest, boosted, currentUrl, historyRestoreRequest);
+            return new HtmxRequest(htmxRequest, boosted, currentUrl, historyRestoreRequest, promptResponse);
         }
     }
 }
