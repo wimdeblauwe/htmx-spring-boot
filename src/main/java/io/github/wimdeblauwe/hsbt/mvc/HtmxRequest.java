@@ -1,12 +1,16 @@
 package io.github.wimdeblauwe.hsbt.mvc;
 
+import org.springframework.lang.Nullable;
+
 public final class HtmxRequest {
     private final boolean htmxRequest;
     private final boolean boosted;
+    private final String currentUrl;
 
-    HtmxRequest(boolean htmxRequest, boolean boosted) {
+    HtmxRequest(boolean htmxRequest, boolean boosted, String currentUrl) {
         this.htmxRequest = htmxRequest;
         this.boosted = boosted;
+        this.currentUrl = currentUrl;
     }
 
     public boolean isHtmxRequest() {
@@ -17,9 +21,15 @@ public final class HtmxRequest {
         return boosted;
     }
 
+    @Nullable
+    public String getCurrentUrl() {
+        return currentUrl;
+    }
+
     public static final class Builder {
         private final boolean htmxRequest;
         private boolean boosted;
+        private String currentUrl;
 
         public Builder(boolean htmxRequest) {
             this.htmxRequest = htmxRequest;
@@ -30,8 +40,13 @@ public final class HtmxRequest {
             return this;
         }
 
+        public Builder withCurrentUrl(String currentUrl) {
+            this.currentUrl = currentUrl;
+            return this;
+        }
+
         public HtmxRequest build() {
-            return new HtmxRequest(htmxRequest, boosted);
+            return new HtmxRequest(htmxRequest, boosted, currentUrl);
         }
     }
 }

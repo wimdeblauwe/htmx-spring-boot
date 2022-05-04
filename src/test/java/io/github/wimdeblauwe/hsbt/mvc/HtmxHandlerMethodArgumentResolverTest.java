@@ -59,4 +59,20 @@ class HtmxHandlerMethodArgumentResolverTest {
         assertThat(request.isHtmxRequest()).isTrue();
         assertThat(request.isBoosted()).isTrue();
     }
+
+    @Test
+    void testHxCurrentUrl() throws Exception {
+        mockMvc.perform(get("/method-arg-resolver")
+                                .header("HX-Request", "true")
+                                .header("HX-Current-URL", "http://localhost:8080/"));
+
+        ArgumentCaptor<HtmxRequest> captor = ArgumentCaptor.forClass(HtmxRequest.class);
+        verify(service).doSomething(captor.capture());
+
+        HtmxRequest request = captor.getValue();
+        assertThat(request).isNotNull();
+        assertThat(request.isHtmxRequest()).isTrue();
+        assertThat(request.isBoosted()).isFalse();
+        assertThat(request.getCurrentUrl()).isEqualTo("http://localhost:8080/");
+    }
 }

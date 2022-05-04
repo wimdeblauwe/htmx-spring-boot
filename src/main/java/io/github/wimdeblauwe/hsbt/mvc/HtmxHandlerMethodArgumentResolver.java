@@ -26,6 +26,9 @@ public class HtmxHandlerMethodArgumentResolver implements HandlerMethodArgumentR
         if (webRequest.getHeader("HX-Boosted") != null) {
             builder.withBoosted(true);
         }
+        if (webRequest.getHeader("HX-Current-URL") != null) {
+            builder.withCurrentUrl(webRequest.getHeader("HX-Current-URL"));
+        }
         return builder.build();
     }
 }
