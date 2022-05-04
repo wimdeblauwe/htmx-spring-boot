@@ -17,10 +17,22 @@ public class HtmxHandlerInterceptor implements HandlerInterceptor {
                            ModelAndView modelAndView) throws Exception {
         if (handler instanceof HandlerMethod) {
             Method method = ((HandlerMethod) handler).getMethod();
-            HxTrigger methodAnnotation = AnnotatedElementUtils.findMergedAnnotation(method, HxTrigger.class);
-            if (methodAnnotation != null) {
-                response.setHeader(getHeaderName(methodAnnotation.lifecycle()), methodAnnotation.value());
-            }
+            setHxTrigger(response, method);
+            setHxRefresh(response, method);
+        }
+    }
+
+    private void setHxTrigger(HttpServletResponse response, Method method) {
+        HxTrigger methodAnnotation = AnnotatedElementUtils.findMergedAnnotation(method, HxTrigger.class);
+        if (methodAnnotation != null) {
+            response.setHeader(getHeaderName(methodAnnotation.lifecycle()), methodAnnotation.value());
+        }
+    }
+
+    private void setHxRefresh(HttpServletResponse response, Method method) {
+        HxRefresh methodAnnotation = AnnotatedElementUtils.findMergedAnnotation(method, HxRefresh.class);
+        if (methodAnnotation != null) {
+            response.setHeader("HX-Refresh", "true");
         }
     }
 
