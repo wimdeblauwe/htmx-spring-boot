@@ -42,5 +42,21 @@ class HtmxHandlerMethodArgumentResolverTest {
         HtmxRequest request = captor.getValue();
         assertThat(request).isNotNull();
         assertThat(request.isHtmxRequest()).isTrue();
+        assertThat(request.isBoosted()).isFalse();
+    }
+
+    @Test
+    void testHxBoosted() throws Exception {
+        mockMvc.perform(get("/method-arg-resolver")
+                                .header("HX-Request", "true")
+                                .header("HX-Boosted", "true"));
+
+        ArgumentCaptor<HtmxRequest> captor = ArgumentCaptor.forClass(HtmxRequest.class);
+        verify(service).doSomething(captor.capture());
+
+        HtmxRequest request = captor.getValue();
+        assertThat(request).isNotNull();
+        assertThat(request.isHtmxRequest()).isTrue();
+        assertThat(request.isBoosted()).isTrue();
     }
 }

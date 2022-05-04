@@ -19,9 +19,13 @@ public class HtmxHandlerMethodArgumentResolver implements HandlerMethodArgumentR
                                   WebDataBinderFactory binderFactory) throws Exception {
         String hxRequestHeader = webRequest.getHeader("HX-Request");
         if (hxRequestHeader == null) {
-            return new HtmxRequest(false);
+            return new HtmxRequest.Builder(false).build();
         }
 
-        return new HtmxRequest(true);
+        HtmxRequest.Builder builder = new HtmxRequest.Builder(true);
+        if (webRequest.getHeader("HX-Boosted") != null) {
+            builder.withBoosted(true);
+        }
+        return builder.build();
     }
 }
