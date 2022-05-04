@@ -35,6 +35,9 @@ public class HtmxHandlerMethodArgumentResolver implements HandlerMethodArgumentR
         if (webRequest.getHeader("HX-Prompt") != null) {
             builder.withPromptResponse(webRequest.getHeader("HX-Prompt"));
         }
+        if (webRequest.getHeader("HX-Target") != null) {
+            builder.withTarget(webRequest.getHeader("HX-Target"));
+        }
         return builder.build();
     }
 }
