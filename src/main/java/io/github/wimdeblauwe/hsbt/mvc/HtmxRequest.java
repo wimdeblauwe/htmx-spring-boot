@@ -1,9 +1,9 @@
 package io.github.wimdeblauwe.hsbt.mvc;
 
-public final class HtmxRequestDetails {
+public final class HtmxRequest {
     private final boolean htmxRequest;
 
-    public HtmxRequestDetails(boolean htmxRequest) {
+    public HtmxRequest(boolean htmxRequest) {
         this.htmxRequest = htmxRequest;
     }
 

@@ -17,7 +17,7 @@ public class HtmxHandlerMethodArgumentResolverTestController {
 
     @GetMapping
     @ResponseBody
-    public String htmxRequestDetails(HtmxRequestDetails details) {
+    public String htmxRequestDetails(HtmxRequest details) {
         service.doSomething(details);
 
         return "";

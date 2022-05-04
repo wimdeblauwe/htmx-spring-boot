@@ -23,12 +23,12 @@ class HtmxHandlerMethodArgumentResolverTest {
     void testIfNonHtmxRequest() throws Exception {
         mockMvc.perform(get("/method-arg-resolver"));
 
-        ArgumentCaptor<HtmxRequestDetails> captor = ArgumentCaptor.forClass(HtmxRequestDetails.class);
+        ArgumentCaptor<HtmxRequest> captor = ArgumentCaptor.forClass(HtmxRequest.class);
         verify(service).doSomething(captor.capture());
 
-        HtmxRequestDetails requestDetails = captor.getValue();
-        assertThat(requestDetails).isNotNull();
-        assertThat(requestDetails.isHtmxRequest()).isFalse();
+        HtmxRequest request = captor.getValue();
+        assertThat(request).isNotNull();
+        assertThat(request.isHtmxRequest()).isFalse();
     }
 
     @Test
@@ -36,11 +36,11 @@ class HtmxHandlerMethodArgumentResolverTest {
         mockMvc.perform(get("/method-arg-resolver")
                                 .header("HX-Request", "true"));
 
-        ArgumentCaptor<HtmxRequestDetails> captor = ArgumentCaptor.forClass(HtmxRequestDetails.class);
+        ArgumentCaptor<HtmxRequest> captor = ArgumentCaptor.forClass(HtmxRequest.class);
         verify(service).doSomething(captor.capture());
 
-        HtmxRequestDetails requestDetails = captor.getValue();
-        assertThat(requestDetails).isNotNull();
-        assertThat(requestDetails.isHtmxRequest()).isTrue();
+        HtmxRequest request = captor.getValue();
+        assertThat(request).isNotNull();
+        assertThat(request.isHtmxRequest()).isTrue();
     }
 }

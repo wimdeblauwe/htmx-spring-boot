@@ -9,7 +9,7 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 public class HtmxHandlerMethodArgumentResolver implements HandlerMethodArgumentResolver {
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
-        return parameter.getParameterType().equals(HtmxRequestDetails.class);
+        return parameter.getParameterType().equals(HtmxRequest.class);
     }
 
     @Override
@@ -19,9 +19,9 @@ public class HtmxHandlerMethodArgumentResolver implements HandlerMethodArgumentR
                                   WebDataBinderFactory binderFactory) throws Exception {
         String hxRequestHeader = webRequest.getHeader("HX-Request");
         if (hxRequestHeader == null) {
-            return new HtmxRequestDetails(false);
+            return new HtmxRequest(false);
         }
 
-        return new HtmxRequestDetails(true);
+        return new HtmxRequest(true);
     }
 }
