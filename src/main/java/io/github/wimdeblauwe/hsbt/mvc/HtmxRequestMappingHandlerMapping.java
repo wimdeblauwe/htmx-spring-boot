@@ -7,6 +7,8 @@ import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandl
 
 import java.lang.reflect.Method;
 
+import static io.github.wimdeblauwe.hsbt.mvc.HtmxRequestHeader.HX_REQUEST;
+
 public class HtmxRequestMappingHandlerMapping extends RequestMappingHandlerMapping {
     @Override
     protected RequestCondition<?> getCustomTypeCondition(Class<?> handlerType) {
@@ -22,7 +24,7 @@ public class HtmxRequestMappingHandlerMapping extends RequestMappingHandlerMappi
 
     private RequestCondition<?> createCondition(HxRequest hxRequest) {
         if (hxRequest != null) {
-            return new HeadersRequestCondition("HX-Request");
+            return new HeadersRequestCondition(HX_REQUEST.getValue());
         }
         return null;
     }

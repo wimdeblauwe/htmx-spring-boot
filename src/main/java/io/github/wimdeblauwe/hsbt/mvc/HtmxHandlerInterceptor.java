@@ -9,6 +9,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.lang.reflect.Method;
 
+import static io.github.wimdeblauwe.hsbt.mvc.HtmxResponseHeader.*;
+
 public class HtmxHandlerInterceptor implements HandlerInterceptor {
     @Override
     public void postHandle(HttpServletRequest request,
@@ -27,11 +29,11 @@ public class HtmxHandlerInterceptor implements HandlerInterceptor {
     private String getHeaderName(HxTriggerLifecycle lifecycle) {
         switch (lifecycle) {
             case RECEIVE:
-                return "HX-Trigger";
+                return HX_TRIGGER.getValue();
             case SETTLE:
-                return "HX-Trigger-After-Settle";
+                return HX_TRIGGER_AFTER_SETTLE.getValue();
             case SWAP:
-                return "HX-Trigger-After-Swap";
+                return HX_TRIGGER_AFTER_SWAP.getValue();
             default:
                 throw new IllegalArgumentException("Unknown lifecycle:" + lifecycle);
         }
