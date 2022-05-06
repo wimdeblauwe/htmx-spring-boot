@@ -1,5 +1,10 @@
 package io.github.wimdeblauwe.hsbt.mvc;
 
-public interface TestService {
-    void doSomething(HtmxRequest details);
+import org.springframework.stereotype.Service;
+
+@Service
+public class TestService {
+    void doSomething(HtmxRequest details) {
+
+    }
 }

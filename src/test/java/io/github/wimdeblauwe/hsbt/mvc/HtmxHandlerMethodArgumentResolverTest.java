@@ -10,6 +10,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 
 @WebMvcTest(HtmxHandlerMethodArgumentResolverTestController.class)
@@ -154,5 +156,26 @@ class HtmxHandlerMethodArgumentResolverTest {
         assertThat(request.isHtmxRequest()).isTrue();
         assertThat(request.isBoosted()).isFalse();
         assertThat(request.getTriggerId()).isEqualTo("myTriggerId");
+    }
+
+
+    @Test
+    void testHxRequestAnnotation() throws Exception {
+        mockMvc.perform(get("/method-arg-resolver/users")
+                                .header("HX-Request", "true"))
+               .andExpect(view().name("users :: list"));;
+    }
+
+    @Test
+    void testHxRequestAnnotationInheritance() throws Exception {
+        mockMvc.perform(get("/method-arg-resolver/users/inherited")
+                                .header("HX-Request", "true"))
+               .andExpect(view().name("users :: list"));;
+    }
+
+    @Test
+    void testHxRequestSameUrlNoAnnotation() throws Exception {
+        mockMvc.perform(get("/method-arg-resolver/users"))
+               .andExpect(view().name("users"));;
     }
 }
