@@ -4,6 +4,7 @@ target/
 !**/src/main/**
 !**/src/test/**
 .sdkmanrc
+.tool-versions
 
 ### STS ###
 .apt_generated
