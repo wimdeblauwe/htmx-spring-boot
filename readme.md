@@ -1,23 +1,29 @@
 [![Discord](https://img.shields.io/discord/725789699527933952)](https://htmx.org/discord)
 
-## Spring Boot integration with HTMX and Thymeleaf
-[HTMX](www.htmx.org) does a great job of making declarative HTML interactive. Thymeleaf is
-good fit since it also focuses on HTML. This project adds processors and other helpers to
-make using both a pleasure.
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.github.wimdeblauwe/htmx-spring-boot-thymeleaf/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.github.wimdeblauwe/htmx-spring-boot-thymeleaf)
+
+# Spring Boot integration with HTMX and Thymeleaf
+
+[HTMX](www.htmx.org) does a great job of making declarative HTML interactive. Thymeleaf is good fit since it also
+focuses on HTML. This project adds processors and other helpers to make using both a pleasure.
 
 ## Installation
 
-### Warning: this artifact has not yet been published to maven central! 
+The library is available
+on [Maven Central](https://mvnrepository.com/artifact/io.github.wimdeblauwe/htmx-spring-boot-thymeleaf), so it is easy
+to add the dependency to your project.
 
 ```xml
+
 <dependency>
   <groupId>io.github.wimdeblauwe</groupId>
-  <artifactId>htmx-spring-boot-thymeleaf</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+    <artifactId>htmx-spring-boot-thymeleaf</artifactId>
+    <version>LATEST_VERSION_HERE</version>
 </dependency>
 ```
 
 ## Configuration
+
 The included Spring Boot autoconfiguration will enable the HTMX integrations. 
 
 ## Request Headers
@@ -82,13 +88,26 @@ in those fields. Note the `:` colon instead of the typical hyphen.
 * `hx:get`: Thymeleaf processing
 * `hx-get`: static values
 
-
 ```html
+
 <div hx:get="@{/users/{id}(id=$userId}" hx-target="#otherElement">Load user details</div>
 ```
 
 Which will be rendered as:
 
 ```html
+
 <div hx-get="/users/123" hx-target="#otherElement">Load user details</div>
 ```
+
+# Release
+
+To release a new version of the project, follow these steps:
+
+1. Update `pom.xml` with the new version and commit
+2. Tag the commit with the version (e.g. `1.0.0`) and push the tag.
+3. Create a new release in GitHub via https://github.com/wimdeblauwe/htmx-spring-boot-thymeleaf/releases/new
+    - Select the newly pushed tag
+    - Update the release notes. This should automatically start
+      the [release action](https://github.com/wimdeblauwe/htmx-spring-boot-thymeleaf/actions).
+4. Update `pom.xml` again with the next `SNAPSHOT` version.
