@@ -16,19 +16,21 @@ to add the dependency to your project.
 ```xml
 
 <dependency>
-  <groupId>io.github.wimdeblauwe</groupId>
+    <groupId>io.github.wimdeblauwe</groupId>
     <artifactId>htmx-spring-boot-thymeleaf</artifactId>
     <version>LATEST_VERSION_HERE</version>
 </dependency>
 ```
 
-## Configuration
+## Usage
 
-The included Spring Boot autoconfiguration will enable the HTMX integrations. 
+### Configuration
 
-## Request Headers
+The included Spring Boot autoconfiguration will enable the HTMX integrations.
 
-Methods can be annotated with `@HxRequest` to be selected when an HTMX-based request (ie `hx-get`) is made. 
+### Request Headers
+
+Methods can be annotated with `@HxRequest` to be selected when an HTMX-based request (ie `hx-get`) is made.
 
 ```java
 @GetMapping("/users")
@@ -50,7 +52,7 @@ public String normalRequest(HtmxRequest details) {
 These annotations allow for composition if you wish to combine them, so you could 
 combine annotations to make a custom `@HxGetMapping`.
 
-### Using `HtmxRequest` to inspect HTML request headers
+#### Using `HtmxRequest` to inspect HTML request headers
 
 The `HtmxRequest` object can be injected into controller methods to check the various HTMX request headers.
 
@@ -66,7 +68,7 @@ public String htmxRequestDetails(HtmxRequest htmxReq) { // HtmxRequest is inject
 }
 ```
 
-## Response Headers
+### Response Headers
 
 Setting the `hx-trigger` header triggers an event when the response is swapped in by HTMX.
 The `@HxTrigger` annotation supports doing that for you:
@@ -80,10 +82,9 @@ public String hxUpdateUser() {
 }
 ```
 
-## Processors
+### Processors
 
-HTMX processors also are provided to allow ThymeLeaf to be able to perform calculations and expressions
-in those fields. Note the `:` colon instead of the typical hyphen. 
+HTMX processors also are provided to allow Thymeleaf to be able to perform calculations and expressions in those fields. Note the `:` colon instead of the typical hyphen. 
 
 * `hx:get`: Thymeleaf processing
 * `hx-get`: static values
@@ -100,7 +101,20 @@ Which will be rendered as:
 <div hx-get="/users/123" hx-target="#otherElement">Load user details</div>
 ```
 
-# Release
+The included Thymeleaf dialect has corresponding processors for most of the `hx-*` attributes. Please open an issue if
+something is missing.
+
+## Contributing
+
+Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
+
+Please make sure to update tests as appropriate.
+
+## License
+
+[Apache 2.0](https://choosealicense.com/licenses/apache-2.0/)
+
+## Release
 
 To release a new version of the project, follow these steps:
 
