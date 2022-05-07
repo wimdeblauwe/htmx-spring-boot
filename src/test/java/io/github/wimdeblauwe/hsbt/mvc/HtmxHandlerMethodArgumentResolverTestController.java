@@ -22,4 +22,33 @@ public class HtmxHandlerMethodArgumentResolverTestController {
 
         return "";
     }
+
+    @GetMapping("/users")
+    @HxRequest
+    public String htmxRequest(HtmxRequest details) {
+        service.doSomething(details);
+
+        return "users :: list";
+    }
+
+    @GetMapping("/users")
+    public String normalRequest(HtmxRequest details) {
+        service.doSomething(details);
+
+        return "users";
+    }
+
+    @HxGetMapping("/users/inherited")
+    public String htmxRequestInheritance(HtmxRequest details) {
+        service.doSomething(details);
+
+        return "users :: list";
+    }
+
+    @GetMapping("/users/inherited")
+    public String normalRequestInheritance(HtmxRequest details) {
+        service.doSomething(details);
+
+        return "users";
+    }
 }
