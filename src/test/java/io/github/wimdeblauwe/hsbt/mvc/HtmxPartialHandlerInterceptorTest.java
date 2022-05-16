@@ -7,8 +7,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.PrintingResultHandler;
+import org.springframework.test.web.servlet.result.XpathResultMatchers;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import javax.xml.xpath.XPathExpressionException;
+
+import static io.github.wimdeblauwe.hsbt.mvc.support.PartialXpathResultMatchers.partialXpath;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -30,11 +34,13 @@ class HtmxPartialHandlerInterceptorTest {
     public void testAMainChange() throws Exception {
         mockMvc.perform(get("/partials/main-and-partial"))
                .andDo(MockMvcResultHandlers.print())
-               .andExpect(status().isOk());
+               .andExpect(status().isOk())
         //TODO xpath can't be used on partials because the document doesn't have a single root
-//               .andExpect(xpath("//*[@id='userCounts'][@hx-swap-oob='true']").exists())
-//               .andExpect(xpath("//*[@id='mainChange']").exists())
-//               .andExpect(xpath("//*[@id='mainChange'][@hx-swap-oob='true']").doesNotExist());
+               .andExpect(partialXpath("//*[@id='userCounts'][@hx-swap-oob='true']").exists())
+               .andExpect(partialXpath("/ul").exists())
+               .andExpect(partialXpath("/ul[@hx-swap-oob='true']").doesNotExist());
     }
+
+
 
 }
