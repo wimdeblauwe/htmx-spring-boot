@@ -8,7 +8,7 @@ This library provides helper classes and a [Thymeleaf](https://www.thymeleaf.org
 to make it easy to work with [htmx](www.htmx.org)
 in a [Spring Boot](https://spring.io/projects/spring-boot) application.
 
-More information about htmx can be viewed on [their website](www.htmx.org).
+More information about htmx can be viewed on [their website](https://htmx.org/).
 
 ## Installation
 
