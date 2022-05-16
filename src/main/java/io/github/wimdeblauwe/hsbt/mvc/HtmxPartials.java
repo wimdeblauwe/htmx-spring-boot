@@ -18,6 +18,7 @@ package io.github.wimdeblauwe.hsbt.mvc;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.util.Assert;
 
@@ -29,6 +30,7 @@ import org.springframework.util.Assert;
 public class HtmxPartials {
 
 	private final Collection<Partial> partials;
+    protected static final String MAIN_PARTIAL_ID = "__main__";
 
 	public HtmxPartials() {
 		this.partials = new ArrayList<>();
@@ -61,7 +63,7 @@ public class HtmxPartials {
 	/**
 	 * Remove the rendered fragment.
 	 *
-	 * @param template must not be {@literal null} or empty.
+	 * @param target must not be {@literal null} or empty.
 	 * @return
 	 */
 	public HtmxPartials remove(String target) {
@@ -93,11 +95,15 @@ public class HtmxPartials {
 		return () -> partials.iterator();
 	}
 
-	public static class HtmxPartialsBuilder {
+    public <V> HtmxPartials main(String templateOrFragment) {
+        return new HtmxPartialsBuilder(partials, MAIN_PARTIAL_ID, Action.REPLACE).with(templateOrFragment);
+    }
 
-		private Collection<Partial> streams;
-		private String target;
-		private Action action;
+    public static class HtmxPartialsBuilder {
+
+        private final Collection<Partial> streams;
+        private final String target;
+        private final Action action;
 
 		HtmxPartialsBuilder(Collection<Partial> streams, String target, Action action) {
 			this.streams = streams;
@@ -199,14 +205,22 @@ public class HtmxPartials {
 		}
 		
 
-		String openWrapper() {
-			return String.format("<div id=\"%s\" hx-swap-oob=\"%s\">\n", target,
-					action.toAttribute());
-		}
+        String openWrapper() {
+            if (target.equals(MAIN_PARTIAL_ID)) {
+                return "";
+            } else {
+                return String.format("<div id=\"%s\" hx-swap-oob=\"%s\">\n", target,
+                                     action.toAttribute());
+            }
+        }
 
-		String closeWrapper() {
-			return "\n</div>\n";
-		}
+        String closeWrapper() {
+            if (target.equals(MAIN_PARTIAL_ID)) {
+                return "";
+            } else {
+                return "\n</div>\n";
+            }
+        }
 
 		boolean isRemove() {
 			return Action.REMOVE.equals(action);
