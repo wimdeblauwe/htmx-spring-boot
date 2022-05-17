@@ -5,6 +5,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import java.util.List;
+
 @Controller
 public class PartialsController {
 
@@ -35,27 +37,42 @@ public class PartialsController {
     }
 
     @GetMapping("/partials/first")
-    public HtmxPartials getFirstPartials() {
-        return new HtmxPartials().addTemplate("users :: list");
+    public HtmxResponse getFirstPartials() {
+        return new HtmxResponse().addTemplate("users :: list");
     }
 
     @GetMapping("/partials/main-and-partial")
-    public HtmxPartials getMainAndPartial(Model model) {
+    public HtmxResponse getMainAndPartial(Model model) {
         model.addAttribute("userCountOob", true);
         model.addAttribute("userCount", 5);
-        return new HtmxPartials()
+        return new HtmxResponse()
                 .addTemplate("users :: list")
                 .addTemplate("users :: count");
     }
 
     @PostMapping("/partials/add-todo")
-    public HtmxPartials htmxAddTodoItem(TodoItem item, Model model) {
+    public HtmxResponse htmxAddTodoItem(TodoItem item, Model model) {
         model.addAttribute("item", item);
         model.addAttribute("itemCountSwap", "true");
         model.addAttribute("numberOfActiveItems", todoRepository.getNumberOfActiveItems());
-        return new HtmxPartials()
+        return new HtmxResponse()
                 .addTemplate("fragments :: todoItem")
                 .addTemplate("fragments :: active-items-count");
     }
+
+    @GetMapping("/partials/triggers")
+    public HtmxResponse getPartialsAndTriggers(Model model) {
+        model.addAttribute("userCountOob", true);
+        model.addAttribute("userCount", 5);
+        model.addAttribute("htmxPartials", List.of());
+
+        return new HtmxResponse().addTemplate("users :: list")
+                .addTemplate("users :: count")
+                .addTrigger("usersCounted")
+                .addTrigger("usersCountedSwap", "swap detail", HxTriggerLifecycle.SWAP)
+                .addTrigger("usersCountedSettle1", "aDetail", HxTriggerLifecycle.SETTLE)
+                .addTrigger("usersCountedSettle2", null, HxTriggerLifecycle.SETTLE);
+    }
+
 
 }

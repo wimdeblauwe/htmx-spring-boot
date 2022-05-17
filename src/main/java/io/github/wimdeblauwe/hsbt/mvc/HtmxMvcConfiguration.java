@@ -2,6 +2,7 @@ package io.github.wimdeblauwe.hsbt.mvc;
 
 import java.util.List;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.boot.autoconfigure.web.servlet.WebMvcRegistrations;
@@ -21,14 +22,15 @@ public class HtmxMvcConfiguration implements WebMvcRegistrations, WebMvcConfigur
 
     private final ViewResolver resolver;
     private final ObjectFactory<LocaleResolver> locales;
+    private final ObjectMapper objectMapper;
 
-    HtmxMvcConfiguration(ThymeleafViewResolver resolver, ObjectFactory<LocaleResolver> locales) {
+    HtmxMvcConfiguration(ThymeleafViewResolver resolver, ObjectFactory<LocaleResolver> locales, ObjectMapper objectMapper) {
+        Assert.notNull(resolver, "ViewResovler must not be null!");
+        Assert.notNull(locales, "LocaleResolver must not be null!");
 
-      Assert.notNull(resolver, "ViewResovler must not be null!");
-      Assert.notNull(locales, "LocaleResolver must not be null!");
-
-      this.resolver = resolver;
-      this.locales = locales;
+        this.resolver = resolver;
+        this.locales = locales;
+        this.objectMapper = objectMapper;
     }
 
     @Override
@@ -39,7 +41,7 @@ public class HtmxMvcConfiguration implements WebMvcRegistrations, WebMvcConfigur
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(new HtmxHandlerInterceptor());
-        registry.addInterceptor(new HtmxViewHandlerInterceptor(resolver, locales));
+        registry.addInterceptor(new HtmxViewHandlerInterceptor(resolver, locales, objectMapper));
     }
 
     @Override

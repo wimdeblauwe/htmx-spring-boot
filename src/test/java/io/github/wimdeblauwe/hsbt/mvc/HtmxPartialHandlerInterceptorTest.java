@@ -49,6 +49,16 @@ class HtmxPartialHandlerInterceptorTest {
     }
 
     @Test
+    public void testTriggers() throws Exception {
+        mockMvc.perform(get("/partials/triggers"))
+               .andDo(MockMvcResultHandlers.print())
+               .andExpect(status().isOk())
+               .andExpect(header().string("HX-Trigger", "usersCounted"))
+               .andExpect(header().string("HX-Trigger-After-Settle", "{\"usersCountedSettle1\":\"aDetail\",\"usersCountedSettle2\":null}"))
+               .andExpect(header().string("HX-Trigger-After-Swap", "{\"usersCountedSwap\":\"swap detail\"}"));
+    }
+
+    @Test
     public void testPostTodo() throws Exception {
         when(todoRepository.getNumberOfActiveItems()).thenReturn(0);
 

@@ -16,11 +16,17 @@
 package io.github.wimdeblauwe.hsbt.mvc;
 
 import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectFactory;
+import org.springframework.core.annotation.AnnotatedElementUtils;
 import org.springframework.util.Assert;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -30,18 +36,21 @@ import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.ViewResolver;
 
 /**
- * A {@link HandlerInterceptor} that turns {@link HtmxPartials} instances returned from controller methods into a
+ * A {@link HandlerInterceptor} that turns {@link HtmxResponse} instances returned from controller methods into a
  *
  * @author Oliver Drotbohm
  */
 class HtmxViewHandlerInterceptor implements HandlerInterceptor {
+    private static final Logger LOG = LoggerFactory.getLogger(HtmxViewHandlerInterceptor.class);
 
     private final ViewResolver views;
     private final ObjectFactory<LocaleResolver> locales;
+    private final ObjectMapper objectMapper;
 
-    public HtmxViewHandlerInterceptor(ViewResolver views, ObjectFactory<LocaleResolver> locales) {
+    public HtmxViewHandlerInterceptor(ViewResolver views, ObjectFactory<LocaleResolver> locales, ObjectMapper objectMapper) {
         this.views = views;
         this.locales = locales;
+        this.objectMapper = objectMapper;
     }
 
     /*
@@ -57,23 +66,60 @@ class HtmxViewHandlerInterceptor implements HandlerInterceptor {
         }
 
         HandlerMethod method = (HandlerMethod) handler;
+        HxPartials methodAnnotation = AnnotatedElementUtils.findMergedAnnotation(method.getMethod(), HxPartials.class);
 
-        if (!method.getReturnType().getParameterType().equals(HtmxPartials.class)) {
+        String partialsAttributeName = null;
+        if(methodAnnotation != null) {
+            System.out.println(methodAnnotation);
+            partialsAttributeName = methodAnnotation.value();
+        }
+        if (method.getReturnType().getParameterType().equals(HtmxResponse.class)) {
+            partialsAttributeName = "htmxResponse";
+        }
+        if (partialsAttributeName == null) {
             return;
         }
 
-        Object attribute = modelAndView.getModel().get("htmxPartials");
+        Object attribute = modelAndView.getModel().get(partialsAttributeName);
 
-        if (!HtmxPartials.class.isInstance(attribute)) {
+        if (!HtmxResponse.class.isInstance(attribute)) {
             return;
         }
 
-        HtmxPartials streams = (HtmxPartials) attribute;
+        HtmxResponse htmxResponse = (HtmxResponse) attribute;
 
-        modelAndView.setView(toView(streams));
+        modelAndView.setView(toView(htmxResponse));
+
+        setTriggerHeader(HxTriggerLifecycle.RECEIVE, htmxResponse.getTriggers(), response);
+        setTriggerHeader(HxTriggerLifecycle.SETTLE, htmxResponse.getTriggersAfterSettle(), response);
+        setTriggerHeader(HxTriggerLifecycle.SWAP, htmxResponse.getTriggersAfterSwap(), response);
     }
 
-    private View toView(HtmxPartials partials) {
+    private void setTriggerHeader(HxTriggerLifecycle triggerHeader, Map<String, String> triggers, HttpServletResponse response) {
+        if(triggers.isEmpty()) {
+            return;
+        }
+        if(triggers.size() == 1) {
+            Map.Entry<String, String> singleHeader = triggers.entrySet().stream().findFirst().orElseThrow();
+            if(singleHeader.getValue() == null || singleHeader.getValue().isBlank()) {
+                response.setHeader(triggerHeader.getHeaderName(), singleHeader.getKey());
+            } else {
+                try {
+                    response.setHeader(triggerHeader.getHeaderName(), objectMapper.writeValueAsString(triggers));
+                } catch (Exception e) {
+                    LOG.warn("Unable to set header {} to {}", triggerHeader.getHeaderName(), triggers, e);
+                }
+            }
+        } else {
+            try {
+                response.setHeader(triggerHeader.getHeaderName(), objectMapper.writeValueAsString(triggers));
+            } catch (Exception e) {
+                LOG.warn("Unable to set header {} to {}", triggerHeader.getHeaderName(), triggers, e);
+            }
+        }
+    }
+
+    private View toView(HtmxResponse partials) {
 
         Assert.notNull(partials, "HtmxPartials must not be null!");
 
