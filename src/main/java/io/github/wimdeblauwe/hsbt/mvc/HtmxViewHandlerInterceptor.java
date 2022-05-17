@@ -15,9 +15,6 @@
  */
 package io.github.wimdeblauwe.hsbt.mvc;
 
-import io.github.wimdeblauwe.hsbt.mvc.HtmxPartials.Partial;
-
-import java.io.PrintWriter;
 import java.util.Locale;
 
 import javax.servlet.http.HttpServletRequest;
@@ -39,63 +36,54 @@ import org.springframework.web.servlet.ViewResolver;
  */
 class HtmxViewHandlerInterceptor implements HandlerInterceptor {
 
-  private final ViewResolver views;
-  private final ObjectFactory<LocaleResolver> locales;
+    private final ViewResolver views;
+    private final ObjectFactory<LocaleResolver> locales;
 
-	public HtmxViewHandlerInterceptor(ViewResolver views, ObjectFactory<LocaleResolver> locales) {
-		this.views = views;
-		this.locales = locales;
-	}
+    public HtmxViewHandlerInterceptor(ViewResolver views, ObjectFactory<LocaleResolver> locales) {
+        this.views = views;
+        this.locales = locales;
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.springframework.web.servlet.HandlerInterceptor#postHandle(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse, java.lang.Object, org.springframework.web.servlet.ModelAndView)
-	 */
-	@Override
-	public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler,
-			ModelAndView modelAndView) throws Exception {
+    /*
+     * (non-Javadoc)
+     * @see org.springframework.web.servlet.HandlerInterceptor#postHandle(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse, java.lang.Object, org.springframework.web.servlet.ModelAndView)
+     */
+    @Override
+    public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler,
+                           ModelAndView modelAndView) throws Exception {
 
-		if (modelAndView == null || !HandlerMethod.class.isInstance(handler)) {
-			return;
-		}
+        if (modelAndView == null || !HandlerMethod.class.isInstance(handler)) {
+            return;
+        }
 
-		HandlerMethod method = (HandlerMethod) handler;
+        HandlerMethod method = (HandlerMethod) handler;
 
-		if (!method.getReturnType().getParameterType().equals(HtmxPartials.class)) {
-			return;
-		}
+        if (!method.getReturnType().getParameterType().equals(HtmxPartials.class)) {
+            return;
+        }
 
-		Object attribute = modelAndView.getModel().get("htmxPartials");
+        Object attribute = modelAndView.getModel().get("htmxPartials");
 
-		if (!HtmxPartials.class.isInstance(attribute)) {
-			return;
-		}
+        if (!HtmxPartials.class.isInstance(attribute)) {
+            return;
+        }
 
-		HtmxPartials streams = (HtmxPartials) attribute;
+        HtmxPartials streams = (HtmxPartials) attribute;
 
-		modelAndView.setView(toView(streams));
-	}
-	
-	private View toView(HtmxPartials partials) {
+        modelAndView.setView(toView(streams));
+    }
 
-		Assert.notNull(partials, "HtmxPartials must not be null!");
+    private View toView(HtmxPartials partials) {
 
-		return (model, request, response) -> {
+        Assert.notNull(partials, "HtmxPartials must not be null!");
 
-			Locale locale = locales.getObject().resolveLocale(request);
-			PrintWriter writer = response.getWriter();
+        return (model, request, response) -> {
+            Locale locale = locales.getObject().resolveLocale(request);
+            for (String template : partials.toIterable()) {
+                views.resolveViewName(template, locale)
+                     .render(model, request, response);
 
-			for (Partial partial : partials.toIterable()) {
-
-				writer.write(partial.openWrapper());
-
-				if (!partial.isRemove()) {
-					views.resolveViewName(partial.getTemplate(), locale)
-							.render(model, request, response);
-				}
-
-				writer.write(partial.closeWrapper());
-			}
-		};
-	}
+            }
+        };
+    }
 }
