@@ -64,7 +64,6 @@ public class PartialsController {
     public HtmxResponse getPartialsAndTriggers(Model model) {
         model.addAttribute("userCountOob", true);
         model.addAttribute("userCount", 5);
-        model.addAttribute("htmxPartials", List.of());
 
         return new HtmxResponse().addTemplate("users :: list")
                 .addTemplate("users :: count")
@@ -72,6 +71,19 @@ public class PartialsController {
                 .addTrigger("usersCountedSwap", "swap detail", HxTriggerLifecycle.SWAP)
                 .addTrigger("usersCountedSettle1", "aDetail", HxTriggerLifecycle.SETTLE)
                 .addTrigger("usersCountedSettle2", null, HxTriggerLifecycle.SETTLE);
+    }
+
+
+    @GetMapping("/partials/extension")
+    public HtmxResponse getPartialsViaExtension(Model model) {
+        MyHtmxResponse response = new MyHtmxResponse(model);
+
+        model.addAttribute("userCountOob", true);
+        model.addAttribute("userCount", 5);
+        response.sendAlertPartial("Warning! Odium approaches!");
+
+        return response.addTemplate("users :: list")
+                                 .addTemplate("users :: count");
     }
 
 

@@ -57,6 +57,14 @@ class HtmxPartialHandlerInterceptorTest {
                .andExpect(header().string("HX-Trigger-After-Settle", "{\"usersCountedSettle1\":\"aDetail\",\"usersCountedSettle2\":null}"))
                .andExpect(header().string("HX-Trigger-After-Swap", "{\"usersCountedSwap\":\"swap detail\"}"));
     }
+    @Test
+    public void testExtension() throws Exception {
+        mockMvc.perform(get("/partials/extension"))
+               .andDo(MockMvcResultHandlers.print())
+               .andExpect(status().isOk())
+               .andExpect(partialXpath("//*[@id='alert'][@hx-swap-oob]").exists())
+               .andExpect(header().string("HX-Trigger", "alertSent"));
+    }
 
     @Test
     public void testPostTodo() throws Exception {
