@@ -49,13 +49,17 @@ class HtmxPartialHandlerInterceptorTest {
     }
 
     @Test
-    public void testTriggers() throws Exception {
+    public void testHeaders() throws Exception {
         mockMvc.perform(get("/partials/triggers"))
                .andDo(MockMvcResultHandlers.print())
                .andExpect(status().isOk())
                .andExpect(header().string("HX-Trigger", "usersCounted"))
                .andExpect(header().string("HX-Trigger-After-Settle", "{\"usersCountedSettle1\":\"aDetail\",\"usersCountedSettle2\":null}"))
-               .andExpect(header().string("HX-Trigger-After-Swap", "{\"usersCountedSwap\":\"swap detail\"}"));
+               .andExpect(header().string("HX-Trigger-After-Swap", "{\"usersCountedSwap\":\"swap detail\"}"))
+               .andExpect(header().string("HX-Push", "/a/newHistory"))
+               .andExpect(header().string("HX-Redirect", "/a/redirect"))
+               .andExpect(header().string("HX-Refresh", "true"))
+               .andExpect(header().string("HX-Retarget", "#newTarget"));
     }
     @Test
     public void testExtension() throws Exception {

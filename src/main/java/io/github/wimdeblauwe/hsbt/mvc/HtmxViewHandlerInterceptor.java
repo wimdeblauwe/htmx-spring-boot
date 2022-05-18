@@ -84,9 +84,26 @@ class HtmxViewHandlerInterceptor implements HandlerInterceptor {
 
         modelAndView.setView(toView(htmxResponse));
 
+        addHxHeaders(htmxResponse, response);
+    }
+
+    private void addHxHeaders(HtmxResponse htmxResponse, HttpServletResponse response) {
         setTriggerHeader(HxTriggerLifecycle.RECEIVE, htmxResponse.getTriggers(), response);
         setTriggerHeader(HxTriggerLifecycle.SETTLE, htmxResponse.getTriggersAfterSettle(), response);
         setTriggerHeader(HxTriggerLifecycle.SWAP, htmxResponse.getTriggersAfterSwap(), response);
+
+        if(htmxResponse.getHeaderPushHistory() != null) {
+            response.setHeader("HX-Push", htmxResponse.getHeaderPushHistory());
+        }
+        if(htmxResponse.getHeaderRedirect() != null) {
+            response.setHeader("HX-Redirect", htmxResponse.getHeaderRedirect());
+        }
+        if(htmxResponse.getHeaderRefresh()) {
+            response.setHeader("HX-Refresh", "true");
+        }
+        if(htmxResponse.getHeaderRetarget() != null) {
+            response.setHeader("HX-Retarget", htmxResponse.getHeaderRetarget());
+        }
     }
 
     private void setTriggerHeader(HxTriggerLifecycle triggerHeader, Map<String, String> triggers, HttpServletResponse response) {

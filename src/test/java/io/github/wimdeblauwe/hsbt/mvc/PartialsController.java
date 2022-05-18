@@ -70,7 +70,12 @@ public class PartialsController {
                                  .addTrigger("usersCounted")
                                  .addTrigger("usersCountedSwap", "swap detail", HxTriggerLifecycle.SWAP)
                                  .addTrigger("usersCountedSettle1", "aDetail", HxTriggerLifecycle.SETTLE)
-                                 .addTrigger("usersCountedSettle2", null, HxTriggerLifecycle.SETTLE);
+                                 .addTrigger("usersCountedSettle2", null, HxTriggerLifecycle.SETTLE)
+                .retarget("#newTarget")
+                .pushHistory("/a/newHistory")
+                .browserRefresh(true)
+                .browserRedirect("/a/redirect");
+
     }
 
 
