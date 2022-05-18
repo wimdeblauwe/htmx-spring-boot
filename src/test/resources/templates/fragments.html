@@ -1,0 +1,21 @@
+<html>
+
+<span th:fragment="active-items-count"
+      id="active-items-count"
+      hx:swap-oob="${itemCountSwap} ?: ''"
+      class="todo-count">
+        <th:block th:unless="${numberOfActiveItems == 1}">
+            <span class="todo-count"><strong th:text="${numberOfActiveItems}">0</strong> items left</span>
+        </th:block>
+        <th:block th:if="${numberOfActiveItems == 1}">
+            <span class="todo-count"><strong>1</strong> item left</span>
+        </th:block>
+</span>
+
+<span th:fragment="todoItem"
+      th:object="${item}"
+        id="item">
+        <span th:text="*{name}">Item name</span>
+</span>
+
+</html>

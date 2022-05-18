@@ -4,13 +4,23 @@ public enum HxTriggerLifecycle {
     /**
      * Maps to HX-Trigger
      */
-    RECEIVE,
+    RECEIVE("HX-Trigger"),
     /**
      * Maps to HX-Trigger-After-Settle
      */
-    SETTLE,
+    SETTLE("HX-Trigger-After-Settle"),
     /**
      * Maps to HX-Trigger-After-Swap
      */
-    SWAP
+    SWAP("HX-Trigger-After-Swap");
+
+    private final String headerName;
+
+    HxTriggerLifecycle(String headerName) {
+        this.headerName = headerName;
+    }
+
+    public String getHeaderName() {
+        return this.headerName;
+    }
 }

@@ -115,6 +115,20 @@ Will be rendered as:
 The included Thymeleaf dialect has corresponding processors for most of the `hx-*` attributes.
 Please [open an issue](https://github.com/wimdeblauwe/htmx-spring-boot-thymeleaf/issues) if something is missing.
 
+### OOB Swap support
+htmx supports updating multiple targets by returning multiple partial response with 
+[`hx-swap-oop`](https://htmx.org/docs/#oob_swaps). Return partials using this library use the `HtmxResponse` as a return type:
+
+```java
+@GetMapping("/partials/main-and-partial")
+public HtmxResponse getMainAndPartial(Model model) {
+    model.addAttribute("userCount", 5);
+    return new HtmxResponse()
+            .addTemplate("users :: list")
+            .addTemplate("users :: count");
+}
+```
+
 ## Contributing
 
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
