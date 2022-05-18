@@ -71,21 +71,21 @@ final public class HtmxResponse {
 		return () -> templates.iterator();
 	}
 
-    public Map<String, String> getTriggers() {
+    Map<String, String> getTriggers() {
         if(this.triggers.isEmpty()) {
             return Collections.EMPTY_MAP;
         }
         return new HashMap<>(this.triggers);
     }
 
-    public Map<String, String> getTriggersAfterSettle() {
+    Map<String, String> getTriggersAfterSettle() {
         if(this.triggers.isEmpty()) {
             return Collections.EMPTY_MAP;
         }
         return new HashMap<>(this.triggersAfterSettle);
     }
 
-    public Map<String, String> getTriggersAfterSwap() {
+    Map<String, String> getTriggersAfterSwap() {
         if(this.triggers.isEmpty()) {
             return Collections.EMPTY_MAP;
         }
