@@ -1,19 +1,6 @@
-/*
- * Copyright 2021-2022 the original author or authors.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      https://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package io.github.wimdeblauwe.hsbt.mvc;
+
+import org.springframework.util.Assert;
 
 import java.util.*;
 
@@ -23,7 +10,7 @@ import java.util.*;
  * @author Oliver Drotbohm
  * @author Clint Checketts
  */
-public class HtmxResponse {
+final public class HtmxResponse {
 
 	private final Collection<String> templates;
 	private final Map<String, String> triggers;
@@ -44,6 +31,7 @@ public class HtmxResponse {
 	 * @return same HtmxResponse for chaining
 	 */
 	public HtmxResponse addTemplate(String template) {
+        Assert.hasText(template, "template should not be blank");
         templates.add(template);
         return this;
 	}
@@ -68,6 +56,16 @@ public class HtmxResponse {
         }
         return this;
     }
+
+    public HtmxResponse and(HtmxResponse otherResponse){
+        this.templates.addAll(otherResponse.templates);
+        this.triggers.putAll(otherResponse.triggers);
+        this.triggersAfterSettle.putAll(otherResponse.triggersAfterSettle);
+        this.triggersAfterSwap.putAll(otherResponse.triggersAfterSwap);
+
+        return this;
+    }
+
 
 	Iterable<String> toIterable() {
 		return () -> templates.iterator();

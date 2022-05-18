@@ -117,16 +117,16 @@ Please [open an issue](https://github.com/wimdeblauwe/htmx-spring-boot-thymeleaf
 
 ### OOB Swap support
 htmx supports updating multiple targets by returning multiple partial response with 
-[`hx-swap-oop`](https://htmx.org/docs/#oob_swaps). Return partials using this library use the `HtmxPartials` as a return type:
+[`hx-swap-oop`](https://htmx.org/docs/#oob_swaps). Return partials using this library use the `HtmxResponse` as a return type:
 
 ```java
-    @GetMapping("/partials/main-and-partial")
-    public HtmxPartials getMainAndPartial(Model model) {
-        model.addAttribute("userCount", 5);
-        return new HtmxPartials()
-                .main("users :: list")  // the main template, will not include an hx-swap-oob attribute
-                .replace("userCounts").with("users :: count"); //  Will wrap the template with <div id="userCounts" hx-swap-oob="true"> 
-    }
+@GetMapping("/partials/main-and-partial")
+public HtmxResponse getMainAndPartial(Model model) {
+    model.addAttribute("userCount", 5);
+    return new HtmxResponse()
+            .addTemplate("users :: list")
+            .addTemplate("users :: count");
+}
 ```
 
 ## Contributing

@@ -17,7 +17,6 @@ package io.github.wimdeblauwe.hsbt.mvc;
 
 import java.util.Locale;
 import java.util.Map;
-import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -66,13 +65,8 @@ class HtmxViewHandlerInterceptor implements HandlerInterceptor {
         }
 
         HandlerMethod method = (HandlerMethod) handler;
-        HxPartials methodAnnotation = AnnotatedElementUtils.findMergedAnnotation(method.getMethod(), HxPartials.class);
 
         String partialsAttributeName = null;
-        if(methodAnnotation != null) {
-            System.out.println(methodAnnotation);
-            partialsAttributeName = methodAnnotation.value();
-        }
         if (method.getReturnType().getParameterType().equals(HtmxResponse.class)) {
             partialsAttributeName = "htmxResponse";
         }

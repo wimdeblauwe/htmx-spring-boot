@@ -5,7 +5,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
-import java.util.List;
+import static io.github.wimdeblauwe.hsbt.mvc.CommonHtmxResponses.sendAlertPartial;
 
 @Controller
 public class PartialsController {
@@ -20,7 +20,7 @@ public class PartialsController {
         public int getNumberOfActiveItems();
     }
 
-    public static class TodoItem{
+    public static class TodoItem {
         String name;
 
         public TodoItem(String name) {
@@ -66,24 +66,22 @@ public class PartialsController {
         model.addAttribute("userCount", 5);
 
         return new HtmxResponse().addTemplate("users :: list")
-                .addTemplate("users :: count")
-                .addTrigger("usersCounted")
-                .addTrigger("usersCountedSwap", "swap detail", HxTriggerLifecycle.SWAP)
-                .addTrigger("usersCountedSettle1", "aDetail", HxTriggerLifecycle.SETTLE)
-                .addTrigger("usersCountedSettle2", null, HxTriggerLifecycle.SETTLE);
+                                 .addTemplate("users :: count")
+                                 .addTrigger("usersCounted")
+                                 .addTrigger("usersCountedSwap", "swap detail", HxTriggerLifecycle.SWAP)
+                                 .addTrigger("usersCountedSettle1", "aDetail", HxTriggerLifecycle.SETTLE)
+                                 .addTrigger("usersCountedSettle2", null, HxTriggerLifecycle.SETTLE);
     }
 
 
     @GetMapping("/partials/extension")
     public HtmxResponse getPartialsViaExtension(Model model) {
-        MyHtmxResponse response = new MyHtmxResponse(model);
-
         model.addAttribute("userCountOob", true);
         model.addAttribute("userCount", 5);
-        response.sendAlertPartial("Warning! Odium approaches!");
 
-        return response.addTemplate("users :: list")
-                                 .addTemplate("users :: count");
+        return new HtmxResponse().addTemplate("users :: list")
+                                 .addTemplate("users :: count")
+                                 .and(sendAlertPartial(model, "Warning! Odium approaches!"));
     }
 
 
