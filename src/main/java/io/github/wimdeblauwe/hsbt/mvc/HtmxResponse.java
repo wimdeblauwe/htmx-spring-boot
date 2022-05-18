@@ -1,5 +1,7 @@
 package io.github.wimdeblauwe.hsbt.mvc;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.util.Assert;
 
 import java.util.*;
@@ -11,14 +13,15 @@ import java.util.*;
  * @author Clint Checketts
  */
 final public class HtmxResponse {
+    private static final Logger LOG = LoggerFactory.getLogger(HtmxResponse.class);
 
-	private final Collection<String> templates;
+	private final Set<String> templates;
 	private final Map<String, String> triggers;
 	private final Map<String, String> triggersAfterSettle;
 	private final Map<String, String> triggersAfterSwap;
 
 	public HtmxResponse() {
-        this.templates = new ArrayList<>();
+        this.templates = new HashSet<>();
         this.triggers = new HashMap<>();
         this.triggersAfterSettle = new HashMap<>();
         this.triggersAfterSwap = new HashMap<>();
@@ -58,17 +61,33 @@ final public class HtmxResponse {
     }
 
     public HtmxResponse and(HtmxResponse otherResponse){
-        this.templates.addAll(otherResponse.templates);
-        this.triggers.putAll(otherResponse.triggers);
-        this.triggersAfterSettle.putAll(otherResponse.triggersAfterSettle);
-        this.triggersAfterSwap.putAll(otherResponse.triggersAfterSwap);
+        otherResponse.templates.forEach(otherTemplate -> {
+            if(!this.templates.add(otherTemplate)) {
+                LOG.info("Duplicate template '{}' found while merging HtmxResponse", otherTemplate);
+            }
+        });
+        mergeMapAndLog(HxTriggerLifecycle.RECEIVE, this.triggers, otherResponse.triggers);
+        mergeMapAndLog(HxTriggerLifecycle.SETTLE, this.triggersAfterSettle, otherResponse.triggersAfterSettle);
+        mergeMapAndLog(HxTriggerLifecycle.SWAP, this.triggersAfterSwap, otherResponse.triggersAfterSwap);
 
         return this;
     }
 
+    private void mergeMapAndLog(HxTriggerLifecycle receive, Map<String, String> triggers, Map<String, String> otherTriggers) {
+        otherTriggers.forEach((key, value) -> {
+            if(LOG.isInfoEnabled()) {
+                if(triggers.containsKey(key)) {
+                    String matchingTrigger = triggers.get(key);
+                    LOG.info("Duplicate {} entry: event '{}' details '{}' will be overwritten by with '{}'", receive.getHeaderName(), key, matchingTrigger, value);
+                }
+            }
+            triggers.put(key, value);
+        });
+    }
 
-	Iterable<String> toIterable() {
-		return () -> templates.iterator();
+
+	Set<String> getTemplates() {
+		return new HashSet<>(templates);
 	}
 
     Map<String, String> getTriggers() {

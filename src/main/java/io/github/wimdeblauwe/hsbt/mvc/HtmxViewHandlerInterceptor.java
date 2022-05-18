@@ -119,7 +119,7 @@ class HtmxViewHandlerInterceptor implements HandlerInterceptor {
 
         return (model, request, response) -> {
             Locale locale = locales.getObject().resolveLocale(request);
-            for (String template : partials.toIterable()) {
+            for (String template : partials.getTemplates()) {
                 views.resolveViewName(template, locale)
                      .render(model, request, response);
 
