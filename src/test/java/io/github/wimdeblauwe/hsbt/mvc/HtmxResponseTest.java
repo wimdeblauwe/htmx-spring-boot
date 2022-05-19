@@ -67,4 +67,17 @@ public class HtmxResponseTest {
         assertThat(sut.getTemplates()).hasSize(2);
     }
 
+    @Test
+    public void extraHxHeaders() {
+        sut.pushHistory("/a/history")
+                .browserRedirect("/a/new/page")
+                .browserRefresh(true)
+                .retarget("#theThing");
+
+        assertThat(sut.getHeaderPushHistory()).isEqualTo("/a/history");
+        assertThat(sut.getHeaderRedirect()).isEqualTo("/a/new/page");
+        assertThat(sut.getHeaderRefresh()).isTrue();
+        assertThat(sut.getHeaderRetarget()).isEqualTo("#theThing");
+    }
+
 }
