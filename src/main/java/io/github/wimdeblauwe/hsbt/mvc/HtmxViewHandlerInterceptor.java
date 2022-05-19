@@ -15,24 +15,18 @@
  */
 package io.github.wimdeblauwe.hsbt.mvc;
 
-import java.util.Locale;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectFactory;
-import org.springframework.core.annotation.AnnotatedElementUtils;
 import org.springframework.util.Assert;
 import org.springframework.web.method.HandlerMethod;
-import org.springframework.web.servlet.HandlerInterceptor;
-import org.springframework.web.servlet.LocaleResolver;
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.View;
-import org.springframework.web.servlet.ViewResolver;
+import org.springframework.web.servlet.*;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.Locale;
+import java.util.Map;
 
 /**
  * A {@link HandlerInterceptor} that turns {@link HtmxResponse} instances returned from controller methods into a
@@ -92,27 +86,27 @@ class HtmxViewHandlerInterceptor implements HandlerInterceptor {
         setTriggerHeader(HxTriggerLifecycle.SETTLE, htmxResponse.getTriggersAfterSettle(), response);
         setTriggerHeader(HxTriggerLifecycle.SWAP, htmxResponse.getTriggersAfterSwap(), response);
 
-        if(htmxResponse.getHeaderPushHistory() != null) {
-            response.setHeader("HX-Push", htmxResponse.getHeaderPushHistory());
+        if (htmxResponse.getHeaderPushHistory() != null) {
+            response.setHeader(HtmxResponseHeader.HX_PUSH.getValue(), htmxResponse.getHeaderPushHistory());
         }
-        if(htmxResponse.getHeaderRedirect() != null) {
-            response.setHeader("HX-Redirect", htmxResponse.getHeaderRedirect());
+        if (htmxResponse.getHeaderRedirect() != null) {
+            response.setHeader(HtmxResponseHeader.HX_REDIRECT.getValue(), htmxResponse.getHeaderRedirect());
         }
-        if(htmxResponse.getHeaderRefresh()) {
-            response.setHeader("HX-Refresh", "true");
+        if (htmxResponse.getHeaderRefresh()) {
+            response.setHeader(HtmxResponseHeader.HX_REFRESH.getValue(), "true");
         }
-        if(htmxResponse.getHeaderRetarget() != null) {
-            response.setHeader("HX-Retarget", htmxResponse.getHeaderRetarget());
+        if (htmxResponse.getHeaderRetarget() != null) {
+            response.setHeader(HtmxResponseHeader.HX_RETARGET.getValue(), htmxResponse.getHeaderRetarget());
         }
     }
 
     private void setTriggerHeader(HxTriggerLifecycle triggerHeader, Map<String, String> triggers, HttpServletResponse response) {
-        if(triggers.isEmpty()) {
+        if (triggers.isEmpty()) {
             return;
         }
-        if(triggers.size() == 1) {
+        if (triggers.size() == 1) {
             Map.Entry<String, String> singleHeader = triggers.entrySet().stream().findFirst().orElseThrow();
-            if(singleHeader.getValue() == null || singleHeader.getValue().isBlank()) {
+            if (singleHeader.getValue() == null || singleHeader.getValue().isBlank()) {
                 response.setHeader(triggerHeader.getHeaderName(), singleHeader.getKey());
             } else {
                 try {
@@ -137,9 +131,9 @@ class HtmxViewHandlerInterceptor implements HandlerInterceptor {
         return (model, request, response) -> {
             Locale locale = locales.getObject().resolveLocale(request);
             for (String template : partials.getTemplates()) {
-                views.resolveViewName(template, locale)
-                     .render(model, request, response);
-
+                View view = views.resolveViewName(template, locale);
+                Assert.notNull(view, "Template '" + template + "' could not be resolved");
+                view.render(model, request, response);
             }
         };
     }
