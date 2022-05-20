@@ -34,7 +34,7 @@ public class HtmxHandlerInterceptor implements HandlerInterceptor {
     private void setHxRefresh(HttpServletResponse response, Method method) {
         HxRefresh methodAnnotation = AnnotatedElementUtils.findMergedAnnotation(method, HxRefresh.class);
         if (methodAnnotation != null) {
-            response.setHeader("HX-Refresh", "true");
+            response.setHeader(HX_REFRESH.getValue(), "true");
         }
     }
 
