@@ -10,7 +10,7 @@
     </parent>
     <groupId>io.github.wimdeblauwe</groupId>
     <artifactId>htmx-spring-boot-thymeleaf</artifactId>
-    <version>0.2.0</version>
+    <version>0.3.0-SNAPSHOT</version>
     <name>Spring Boot and Thymeleaf library for htmx</name>
     <description>Spring Boot library to make it easy to work with htmx and Thymeleaf</description>
 
