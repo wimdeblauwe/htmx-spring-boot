@@ -5,21 +5,22 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.5.8</version>
+        <version>3.0.0-M4</version>
         <relativePath/>
     </parent>
     <groupId>io.github.wimdeblauwe</groupId>
     <artifactId>htmx-spring-boot-thymeleaf</artifactId>
-    <version>0.3.0-SNAPSHOT</version>
+    <version>2.0.0-SNAPSHOT</version>
     <name>Spring Boot and Thymeleaf library for htmx</name>
     <description>Spring Boot library to make it easy to work with htmx and Thymeleaf</description>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <java.version>11</java.version>
+        <java.version>17</java.version>
 
         <maven-gpg-plugin.version>3.0.1</maven-gpg-plugin.version>
         <nexus-staging-maven-plugin.version>1.6.13</nexus-staging-maven-plugin.version>
+        <jacoco-maven-plugin.version>0.8.8</jacoco-maven-plugin.version>
     </properties>
     <licenses>
         <license>
@@ -91,7 +92,7 @@
                 <configuration>
                     <rules>
                         <requireJavaVersion>
-                            <version>[${java.version}, 12)</version>
+                            <version>[${java.version}, 18)</version>
                         </requireJavaVersion>
                     </rules>
                 </configuration>
@@ -115,6 +116,7 @@
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
+                <version>${jacoco-maven-plugin.version}</version>
                 <executions>
                     <execution>
                         <id>jacoco-prepare</id>
@@ -166,6 +168,17 @@
                         </plugin>-->
         </plugins>
     </build>
+    <!-- Should be removed once spring-boot 3 is released -->
+    <repositories>
+        <repository>
+            <id>spring-milestones</id>
+            <name>Spring Milestones</name>
+            <url>https://repo.spring.io/milestone</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
     <!-- Should be removed once spring-asciidoctor-backends is in Maven Central -->
     <!--
         <pluginRepositories>

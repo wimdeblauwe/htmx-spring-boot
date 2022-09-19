@@ -7,7 +7,7 @@ import org.thymeleaf.engine.AttributeName;
 import org.thymeleaf.engine.IAttributeDefinitionsAware;
 import org.thymeleaf.model.IProcessableElementTag;
 import org.thymeleaf.processor.element.IElementTagStructureHandler;
-import org.thymeleaf.spring5.requestdata.RequestDataValueProcessorUtils;
+import org.thymeleaf.spring6.requestdata.RequestDataValueProcessorUtils;
 import org.thymeleaf.standard.processor.AbstractStandardExpressionAttributeTagProcessor;
 import org.thymeleaf.standard.util.StandardProcessorUtils;
 import org.thymeleaf.templatemode.TemplateMode;

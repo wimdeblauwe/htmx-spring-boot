@@ -1,7 +1,5 @@
 package io.github.wimdeblauwe.hsbt.mvc;
 
-import java.util.List;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
@@ -14,7 +12,9 @@ import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
-import org.thymeleaf.spring5.view.ThymeleafViewResolver;
+import org.thymeleaf.spring6.view.ThymeleafViewResolver;
+
+import java.util.List;
 
 @Configuration(proxyBeanMethods = false)
 @ConditionalOnWebApplication
