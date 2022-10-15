@@ -109,21 +109,28 @@ For example, this Thymeleaf template:
 Will be rendered as:
 
 ```html
+
 <div hx-get="/users/123" hx-target="#otherElement">Load user details</div>
 ```
 
 The included Thymeleaf dialect has corresponding processors for most of the `hx-*` attributes.
 Please [open an issue](https://github.com/wimdeblauwe/htmx-spring-boot-thymeleaf/issues) if something is missing.
 
+> **Note**
+> Be careful about using `#` in the value. If you do `hx:target="#mydiv"`, then this will not work as Thymeleaf uses
+> the `#` symbol for translation keys. Either use `hx-target="#mydiv"` or `hx:target="${'#mydiv'}"`
+
 ### OOB Swap support
-htmx supports updating multiple targets by returning multiple partial response with 
-[`hx-swap-oop`](https://htmx.org/docs/#oob_swaps). Return partials using this library use the `HtmxResponse` as a return type:
+
+htmx supports updating multiple targets by returning multiple partial response with
+[`hx-swap-oop`](https://htmx.org/docs/#oob_swaps). Return partials using this library use the `HtmxResponse` as a return
+type:
 
 ```java
 @GetMapping("/partials/main-and-partial")
-public HtmxResponse getMainAndPartial(Model model) {
-    model.addAttribute("userCount", 5);
-    return new HtmxResponse()
+public HtmxResponse getMainAndPartial(Model model){
+        model.addAttribute("userCount",5);
+        return new HtmxResponse()
             .addTemplate("users :: list")
             .addTemplate("users :: count");
 }
