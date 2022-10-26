@@ -17,7 +17,6 @@ on [Maven Central](https://mvnrepository.com/artifact/io.github.wimdeblauwe/htmx
 so it is easy to add the dependency to your project.
 
 ```xml
-
 <dependency>
     <groupId>io.github.wimdeblauwe</groupId>
     <artifactId>htmx-spring-boot-thymeleaf</artifactId>
@@ -43,7 +42,7 @@ Methods can be annotated with `@HxRequest` to be selected when an htmx-based req
 public String htmxRequest(HtmxRequest details){
     service.doSomething(details);
 
-    return"partial";
+    return "partial";
 }
 
 @GetMapping("/users")        // Only called on a full page refresh, not an htmx request
@@ -69,7 +68,7 @@ public String htmxRequestDetails(HtmxRequest htmxReq) { // HtmxRequest is inject
         // ...
     }
 
-    return"";
+    return "";
 }
 ```
 
@@ -85,7 +84,7 @@ The `@HxTrigger` annotation supports doing that for you:
 @HxRequest
 @HxTrigger("userUpdated") // 'userUpdated' event will be triggered by htmx
 public String hxUpdateUser(){
-    return"users";
+    return "users";
 }
 ```
 
@@ -109,7 +108,6 @@ For example, this Thymeleaf template:
 Will be rendered as:
 
 ```html
-
 <div hx-get="/users/123" hx-target="#otherElement">Load user details</div>
 ```
 
