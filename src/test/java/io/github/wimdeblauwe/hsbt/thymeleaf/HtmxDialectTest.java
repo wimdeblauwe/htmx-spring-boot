@@ -114,4 +114,14 @@ class HtmxDialectTest {
                 .containsPattern("hx-target-div-with-th-each.*hx-target=\"2\"")
                 .containsPattern("hx-target-div-with-th-each.*hx-target=\"3\"");
     }
+
+    @Test
+    void testWithHxVals() throws Exception {
+        String html = mockMvc.perform(get("/htmx-dialect"))
+                             .andExpect(status().isOk())
+                             .andReturn().getResponse().getContentAsString();
+        //noinspection RegExpSimplifiable
+        assertThat(html)
+                .containsPattern("hx-vals=\"[{][&]quot;trueVariable&quot;:true}\"");
+    }
 }

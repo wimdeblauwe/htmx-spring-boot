@@ -1,10 +1,13 @@
 package io.github.wimdeblauwe.hsbt.thymeleaf;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.thymeleaf.context.ITemplateContext;
 import org.thymeleaf.engine.AttributeDefinition;
 import org.thymeleaf.engine.AttributeDefinitions;
 import org.thymeleaf.engine.AttributeName;
 import org.thymeleaf.engine.IAttributeDefinitionsAware;
+import org.thymeleaf.exceptions.TemplateProcessingException;
 import org.thymeleaf.model.IProcessableElementTag;
 import org.thymeleaf.processor.element.IElementTagStructureHandler;
 import org.thymeleaf.spring5.requestdata.RequestDataValueProcessorUtils;
@@ -14,12 +17,14 @@ import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.util.Validate;
 import org.unbescape.html.HtmlEscape;
 
+import java.util.LinkedHashMap;
+
 public class HtmxAttributeProcessor extends AbstractStandardExpressionAttributeTagProcessor
         implements IAttributeDefinitionsAware {
 
-
     public static final int ATTR_PRECEDENCE = 1000;
     private final String attrName;
+    private final ObjectMapper mapper;
 
     private static final TemplateMode TEMPLATE_MODE = TemplateMode.HTML;
 
@@ -27,9 +32,10 @@ public class HtmxAttributeProcessor extends AbstractStandardExpressionAttributeT
 
 
     public HtmxAttributeProcessor(final String dialectPrefix,
-                                  String attrName) {
+                                  String attrName, ObjectMapper mapper) {
         super(TEMPLATE_MODE, dialectPrefix, attrName, ATTR_PRECEDENCE, false, true);
         this.attrName = attrName;
+        this.mapper = mapper;
     }
 
 
@@ -52,7 +58,18 @@ public class HtmxAttributeProcessor extends AbstractStandardExpressionAttributeT
         if (expressionResult == null) {
             structureHandler.removeAttribute(attributeName);
         } else {
-            String newAttributeValue = HtmlEscape.escapeHtml4Xml(expressionResult.toString());
+            String expressionResultString;
+            if (expressionResult instanceof LinkedHashMap) {
+                try {
+                    expressionResultString = this.mapper.writeValueAsString(expressionResult);
+                } catch (JsonProcessingException e) {
+                    throw new TemplateProcessingException("Exception writing map", tag.getTemplateName() ,tag.getLine(), tag.getLine(), e);
+                }
+            } else {
+                expressionResultString = expressionResult.toString();
+            }
+
+            String newAttributeValue = HtmlEscape.escapeHtml4Xml(expressionResultString);
 
             // Let RequestDataValueProcessor modify the attribute value if needed
             newAttributeValue = RequestDataValueProcessorUtils.processUrl(context, newAttributeValue);
