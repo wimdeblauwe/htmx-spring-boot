@@ -30,14 +30,13 @@ public class HtmxAttributeProcessor extends AbstractStandardExpressionAttributeT
 
     private AttributeDefinition targetAttributeDefinition;
 
-
-    public HtmxAttributeProcessor(final String dialectPrefix,
-                                  String attrName, ObjectMapper mapper) {
+    public HtmxAttributeProcessor(String dialectPrefix,
+                                  String attrName,
+                                  ObjectMapper mapper) {
         super(TEMPLATE_MODE, dialectPrefix, attrName, ATTR_PRECEDENCE, false, true);
         this.attrName = attrName;
         this.mapper = mapper;
     }
-
 
     public void setAttributeDefinitions(final AttributeDefinitions attributeDefinitions) {
         Validate.notNull(attributeDefinitions, "Attribute Definitions cannot be null");
@@ -45,7 +44,6 @@ public class HtmxAttributeProcessor extends AbstractStandardExpressionAttributeT
         // faster methods for setting/replacing attributes on the ElementAttributes implementation
         this.targetAttributeDefinition = attributeDefinitions.forName(TEMPLATE_MODE, this.attrName);
     }
-
 
     @Override
     protected final void doProcess(
@@ -63,7 +61,7 @@ public class HtmxAttributeProcessor extends AbstractStandardExpressionAttributeT
                 try {
                     expressionResultString = this.mapper.writeValueAsString(expressionResult);
                 } catch (JsonProcessingException e) {
-                    throw new TemplateProcessingException("Exception writing map", tag.getTemplateName() ,tag.getLine(), tag.getLine(), e);
+                    throw new TemplateProcessingException("Exception writing map", tag.getTemplateName(), tag.getLine(), tag.getLine(), e);
                 }
             } else {
                 expressionResultString = expressionResult.toString();
