@@ -1,6 +1,7 @@
 package io.github.wimdeblauwe.hsbt.thymeleaf;
 
 import io.github.wimdeblauwe.hsbt.mvc.HtmxSpringStandardExressionObjectFactory;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.thymeleaf.dialect.AbstractProcessorDialect;
 import org.thymeleaf.dialect.IExpressionObjectDialect;
 import org.thymeleaf.expression.IExpressionObjectFactory;
@@ -13,42 +14,45 @@ public class HtmxDialect extends AbstractProcessorDialect implements IExpression
 
     private HtmxSpringStandardExressionObjectFactory expressionObjectFactory;
 
-    public HtmxDialect() {
+    private final ObjectMapper mapper;
+
+    public HtmxDialect(ObjectMapper mapper) {
         super("Htmx", "hx", 1000);
+        this.mapper = mapper;
     }
 
     @Override
     public Set<IProcessor> getProcessors(String dialectPrefix) {
         Set<IProcessor> htmxProcessors = new HashSet<>();
 
-        htmxProcessors.add(new HtmxAttributeProcessor(dialectPrefix, "boost"));
-        htmxProcessors.add(new HtmxAttributeProcessor(dialectPrefix, "confirm"));
-        htmxProcessors.add(new HtmxAttributeProcessor(dialectPrefix, "delete"));
-        htmxProcessors.add(new HtmxAttributeProcessor(dialectPrefix, "disable"));
-        htmxProcessors.add(new HtmxAttributeProcessor(dialectPrefix, "disinherit"));
-        htmxProcessors.add(new HtmxAttributeProcessor(dialectPrefix, "encoding"));
-        htmxProcessors.add(new HtmxAttributeProcessor(dialectPrefix, "ext"));
-        htmxProcessors.add(new HtmxAttributeProcessor(dialectPrefix, "get"));
-        htmxProcessors.add(new HtmxAttributeProcessor(dialectPrefix, "headers"));
-        htmxProcessors.add(new HtmxAttributeProcessor(dialectPrefix, "history-elt"));
-        htmxProcessors.add(new HtmxAttributeProcessor(dialectPrefix, "include"));
-        htmxProcessors.add(new HtmxAttributeProcessor(dialectPrefix, "indicator"));
-        htmxProcessors.add(new HtmxAttributeProcessor(dialectPrefix, "params"));
-        htmxProcessors.add(new HtmxAttributeProcessor(dialectPrefix, "patch"));
-        htmxProcessors.add(new HtmxAttributeProcessor(dialectPrefix, "post"));
-        htmxProcessors.add(new HtmxAttributeProcessor(dialectPrefix, "preserve"));
-        htmxProcessors.add(new HtmxAttributeProcessor(dialectPrefix, "prompt"));
-        htmxProcessors.add(new HtmxAttributeProcessor(dialectPrefix, "put"));
-        htmxProcessors.add(new HtmxAttributeProcessor(dialectPrefix, "push-url"));
-        htmxProcessors.add(new HtmxAttributeProcessor(dialectPrefix, "request"));
-        htmxProcessors.add(new HtmxAttributeProcessor(dialectPrefix, "select"));
-        htmxProcessors.add(new HtmxAttributeProcessor(dialectPrefix, "swap"));
-        htmxProcessors.add(new HtmxAttributeProcessor(dialectPrefix, "swap-oob"));
-        htmxProcessors.add(new HtmxAttributeProcessor(dialectPrefix, "sync"));
-        htmxProcessors.add(new HtmxAttributeProcessor(dialectPrefix, "target"));
-        htmxProcessors.add(new HtmxAttributeProcessor(dialectPrefix, "trigger"));
-        htmxProcessors.add(new HtmxAttributeProcessor(dialectPrefix, "vals"));
-        htmxProcessors.add(new HtmxAttributeProcessor(dialectPrefix, "vars"));
+        htmxProcessors.add(new HtmxAttributeProcessor(dialectPrefix, "boost", mapper));
+        htmxProcessors.add(new HtmxAttributeProcessor(dialectPrefix, "confirm", mapper));
+        htmxProcessors.add(new HtmxAttributeProcessor(dialectPrefix, "delete", mapper));
+        htmxProcessors.add(new HtmxAttributeProcessor(dialectPrefix, "disable", mapper));
+        htmxProcessors.add(new HtmxAttributeProcessor(dialectPrefix, "disinherit", mapper));
+        htmxProcessors.add(new HtmxAttributeProcessor(dialectPrefix, "encoding", mapper));
+        htmxProcessors.add(new HtmxAttributeProcessor(dialectPrefix, "ext", mapper));
+        htmxProcessors.add(new HtmxAttributeProcessor(dialectPrefix, "get", mapper));
+        htmxProcessors.add(new HtmxAttributeProcessor(dialectPrefix, "headers", mapper));
+        htmxProcessors.add(new HtmxAttributeProcessor(dialectPrefix, "history-elt", mapper));
+        htmxProcessors.add(new HtmxAttributeProcessor(dialectPrefix, "include", mapper));
+        htmxProcessors.add(new HtmxAttributeProcessor(dialectPrefix, "indicator", mapper));
+        htmxProcessors.add(new HtmxAttributeProcessor(dialectPrefix, "params", mapper));
+        htmxProcessors.add(new HtmxAttributeProcessor(dialectPrefix, "patch", mapper));
+        htmxProcessors.add(new HtmxAttributeProcessor(dialectPrefix, "post", mapper));
+        htmxProcessors.add(new HtmxAttributeProcessor(dialectPrefix, "preserve", mapper));
+        htmxProcessors.add(new HtmxAttributeProcessor(dialectPrefix, "prompt", mapper));
+        htmxProcessors.add(new HtmxAttributeProcessor(dialectPrefix, "put", mapper));
+        htmxProcessors.add(new HtmxAttributeProcessor(dialectPrefix, "push-url", mapper));
+        htmxProcessors.add(new HtmxAttributeProcessor(dialectPrefix, "request", mapper));
+        htmxProcessors.add(new HtmxAttributeProcessor(dialectPrefix, "select", mapper));
+        htmxProcessors.add(new HtmxAttributeProcessor(dialectPrefix, "swap", mapper));
+        htmxProcessors.add(new HtmxAttributeProcessor(dialectPrefix, "swap-oob", mapper));
+        htmxProcessors.add(new HtmxAttributeProcessor(dialectPrefix, "sync", mapper));
+        htmxProcessors.add(new HtmxAttributeProcessor(dialectPrefix, "target", mapper));
+        htmxProcessors.add(new HtmxAttributeProcessor(dialectPrefix, "trigger", mapper));
+        htmxProcessors.add(new HtmxAttributeProcessor(dialectPrefix, "vals", mapper));
+        htmxProcessors.add(new HtmxAttributeProcessor(dialectPrefix, "vars", mapper));
 
         return htmxProcessors;
     }
