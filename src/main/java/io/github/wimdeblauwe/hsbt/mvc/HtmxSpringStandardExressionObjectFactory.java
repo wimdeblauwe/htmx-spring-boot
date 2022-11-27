@@ -1,9 +1,11 @@
 package io.github.wimdeblauwe.hsbt.mvc;
 
+import jakarta.servlet.http.HttpServletRequest;
 import org.thymeleaf.context.IExpressionContext;
 import org.thymeleaf.context.IWebContext;
 import org.thymeleaf.expression.IExpressionObjectFactory;
-import org.thymeleaf.spring5.expression.*;
+import org.thymeleaf.web.IWebExchange;
+import org.thymeleaf.web.servlet.IServletWebRequest;
 
 import java.util.Collections;
 import java.util.LinkedHashSet;
@@ -29,8 +31,10 @@ public class HtmxSpringStandardExressionObjectFactory implements IExpressionObje
     }
 
     public Object buildObject(final IExpressionContext context, final String expressionObjectName) {
-        if (HTMX_REQUEST_EXPRESSION_OBJECT_NAME.equals(expressionObjectName) && context instanceof IWebContext) {
-            return HtmxHandlerMethodArgumentResolver.createHtmxRequest(((IWebContext) context).getRequest());
+        if (HTMX_REQUEST_EXPRESSION_OBJECT_NAME.equals(expressionObjectName) && context instanceof IWebContext webContext) {
+            IWebExchange exchange = webContext.getExchange();
+            IServletWebRequest request = (IServletWebRequest) exchange.getRequest();
+            return HtmxHandlerMethodArgumentResolver.createHtmxRequest((HttpServletRequest) request.getNativeRequestObject());
         }
 
         return null;
