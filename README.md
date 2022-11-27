@@ -129,9 +129,34 @@ type:
 public HtmxResponse getMainAndPartial(Model model){
         model.addAttribute("userCount",5);
         return new HtmxResponse()
-            .addTemplate("users :: list")
-            .addTemplate("users :: count");
-}
+        .addTemplate("users :: list")
+        .addTemplate("users :: count");
+        }
+```
+
+### Spring Security
+
+The library has an `HxRefreshHeaderAuthenticationEntryPoint` that you can use to have htmx force a full page browser
+refresh in case there is an authentication failure.
+If you don't use this, then your login page might be appearing in place of a swap you want to do somewhere.
+See [htmx-authentication-error-handling](https://www.wimdeblauwe.com/blog/2022/10/04/htmx-authentication-error-handling/)
+blog post for detailed information.
+
+To use it, add it to your security configuration like this:
+
+```java
+    @Bean
+public SecurityFilterChain filterChain(HttpSecurity http)throws Exception{
+        // probably some other configurations here
+        http...
+
+        var entryPoint=new HxRefreshHeaderAuthenticationEntryPoint();
+        var requestMatcher=new RequestHeaderRequestMatcher("HX-Request");
+        http.exceptionHandling(exception->
+        exception.defaultAuthenticationEntryPointFor(entryPoint,
+        requestMatcher));
+        return http.build();
+        }
 ```
 
 ## Contributing
