@@ -4,6 +4,7 @@ package io.github.wimdeblauwe.hsbt.thymeleaf;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -11,6 +12,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(HtmxDialectTestController.class)
+@WithMockUser
 class HtmxDialectTest {
 
     @Autowired
@@ -113,5 +115,18 @@ class HtmxDialectTest {
                 .containsPattern("hx-target-div-with-th-each.*hx-target=\"1\"")
                 .containsPattern("hx-target-div-with-th-each.*hx-target=\"2\"")
                 .containsPattern("hx-target-div-with-th-each.*hx-target=\"3\"");
+    }
+
+    @Test
+    void testWithHxVals() throws Exception {
+        String html = mockMvc.perform(get("/htmx-dialect"))
+                             .andExpect(status().isOk())
+                             .andReturn().getResponse().getContentAsString();
+
+        assertThat(html)
+                .containsPattern("hx-vals-div-boolean.*hx-vals=\"\\{&quot;someBooleanProperty&quot;:true}\"")
+                .containsPattern("hx-vals-div-string.*hx-vals=\"\\{&quot;someStringProperty&quot;:&quot;someString&quot;}\"")
+                .containsPattern("hx-vals-div-number.*hx-vals=\"\\{&quot;someNumberProperty&quot;:12345}\"")
+        ;
     }
 }

@@ -17,7 +17,6 @@ on [Maven Central](https://mvnrepository.com/artifact/io.github.wimdeblauwe/htmx
 so it is easy to add the dependency to your project.
 
 ```xml
-
 <dependency>
     <groupId>io.github.wimdeblauwe</groupId>
     <artifactId>htmx-spring-boot-thymeleaf</artifactId>
@@ -43,7 +42,7 @@ Methods can be annotated with `@HxRequest` to be selected when an htmx-based req
 public String htmxRequest(HtmxRequest details){
     service.doSomething(details);
 
-    return"partial";
+    return "partial";
 }
 
 @GetMapping("/users")        // Only called on a full page refresh, not an htmx request
@@ -69,7 +68,7 @@ public String htmxRequestDetails(HtmxRequest htmxReq) { // HtmxRequest is inject
         // ...
     }
 
-    return"";
+    return "";
 }
 ```
 
@@ -85,7 +84,7 @@ The `@HxTrigger` annotation supports doing that for you:
 @HxRequest
 @HxTrigger("userUpdated") // 'userUpdated' event will be triggered by htmx
 public String hxUpdateUser(){
-    return"users";
+    return "users";
 }
 ```
 
@@ -109,24 +108,79 @@ For example, this Thymeleaf template:
 Will be rendered as:
 
 ```html
+
 <div hx-get="/users/123" hx-target="#otherElement">Load user details</div>
 ```
 
 The included Thymeleaf dialect has corresponding processors for most of the `hx-*` attributes.
 Please [open an issue](https://github.com/wimdeblauwe/htmx-spring-boot-thymeleaf/issues) if something is missing.
 
+> **Note**
+> Be careful about using `#` in the value. If you do `hx:target="#mydiv"`, then this will not work as Thymeleaf uses
+> the `#` symbol for translation keys. Either use `hx-target="#mydiv"` or `hx:target="${'#mydiv'}"`
+
+### Map support for hx:vals
+
+The [hx-vals](https://htmx.org/attributes/hx-vals/) attribute allows to add to the parameters that will be submitted
+with the AJAX request. The value of the attribute should be a JSON string.
+
+The library makes it a bit easier to write such a JSON string by adding support for inline maps.
+
+For example, this Thymeleaf expression:
+
+```html
+
+<div hx:vals="${ {id: user.id } }"></div>
+```
+
+will render as:
+
+```html
+
+<div hx-vals="{&amp;quot;id&amp;quot;: 1234 }"></div>
+```
+
+(Given `user.id` has the value `1234`)
+
 ### OOB Swap support
-htmx supports updating multiple targets by returning multiple partial response with 
-[`hx-swap-oop`](https://htmx.org/docs/#oob_swaps). Return partials using this library use the `HtmxResponse` as a return type:
+
+htmx supports updating multiple targets by returning multiple partial response with
+[`hx-swap-oop`](https://htmx.org/docs/#oob_swaps). Return partials using this library use the `HtmxResponse` as a return
+type:
 
 ```java
 @GetMapping("/partials/main-and-partial")
-public HtmxResponse getMainAndPartial(Model model) {
-    model.addAttribute("userCount", 5);
-    return new HtmxResponse()
-            .addTemplate("users :: list")
-            .addTemplate("users :: count");
-}
+public HtmxResponse getMainAndPartial(Model model){
+        model.addAttribute("userCount",5);
+        return new HtmxResponse()
+        .addTemplate("users :: list")
+        .addTemplate("users :: count");
+        }
+```
+
+### Spring Security
+
+The library has an `HxRefreshHeaderAuthenticationEntryPoint` that you can use to have htmx force a full page browser
+refresh in case there is an authentication failure.
+If you don't use this, then your login page might be appearing in place of a swap you want to do somewhere.
+See [htmx-authentication-error-handling](https://www.wimdeblauwe.com/blog/2022/10/04/htmx-authentication-error-handling/)
+blog post for detailed information.
+
+To use it, add it to your security configuration like this:
+
+```java
+    @Bean
+public SecurityFilterChain filterChain(HttpSecurity http)throws Exception{
+        // probably some other configurations here
+        http...
+
+        var entryPoint=new HxRefreshHeaderAuthenticationEntryPoint();
+        var requestMatcher=new RequestHeaderRequestMatcher("HX-Request");
+        http.exceptionHandling(exception->
+        exception.defaultAuthenticationEntryPointFor(entryPoint,
+        requestMatcher));
+        return http.build();
+        }
 ```
 
 ## Contributing

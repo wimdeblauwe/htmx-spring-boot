@@ -15,6 +15,8 @@ public class HtmxDialectTestController {
         model.addAttribute("trueVariable", true);
         model.addAttribute("falseVariable", false);
         model.addAttribute("listVariable", List.of(1, 2, 3));
+        model.addAttribute("stringVariable", "someString");
+        model.addAttribute("numberVariable", 12345);
         return "htmx-dialect-test";
     }
 }
