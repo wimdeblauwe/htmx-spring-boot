@@ -108,6 +108,7 @@ For example, this Thymeleaf template:
 Will be rendered as:
 
 ```html
+
 <div hx-get="/users/123" hx-target="#otherElement">Load user details</div>
 ```
 
@@ -117,6 +118,29 @@ Please [open an issue](https://github.com/wimdeblauwe/htmx-spring-boot-thymeleaf
 > **Note**
 > Be careful about using `#` in the value. If you do `hx:target="#mydiv"`, then this will not work as Thymeleaf uses
 > the `#` symbol for translation keys. Either use `hx-target="#mydiv"` or `hx:target="${'#mydiv'}"`
+
+### Map support for hx:vals
+
+The [hx-vals](https://htmx.org/attributes/hx-vals/) attribute allows to add to the parameters that will be submitted
+with the AJAX request. The value of the attribute should be a JSON string.
+
+The library makes it a bit easier to write such a JSON string by adding support for inline maps.
+
+For example, this Thymeleaf expression:
+
+```html
+
+<div hx:vals="${ {id: user.id } }"></div>
+```
+
+will render as:
+
+```html
+
+<div hx-vals="{&amp;quot;id&amp;quot;: 1234 }"></div>
+```
+
+(Given `user.id` has the value `1234`)
 
 ### OOB Swap support
 
