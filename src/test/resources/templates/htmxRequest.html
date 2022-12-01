@@ -4,8 +4,7 @@
     <title>htmx request</title>
 </head>
 <body>
-<!--/*@thymesVar id="#htmxRequest" type="HtmxRequest"*/-->
-<div id="webRequest" th:if="${#request.getHeader('HX-Request')}">It is an htmx Request using the underlying request</div>
+<!--/*@thymesVar id="#htmxRequest" type="io.github.wimdeblauwe.hsbt.mvc.HtmxRequest"*/-->
 <div id="htmxRequest" th:if="${#htmxRequest.isHtmxRequest()}">It is an htmx Request</div>
 
 </body>

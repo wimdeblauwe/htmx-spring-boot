@@ -86,8 +86,7 @@ class HtmxPartialHandlerInterceptorTest {
     public void testHtmxRequestExpressionUtility() throws Exception {
         mockMvc.perform(get("/partials/expressionUtility").header("HX-Request", "true"))
                .andExpect(status().isOk())
-               .andExpect(xpath("//div[@id='htmxRequest']").exists())
-               .andExpect(xpath("//div[@id='webRequest']").exists());
+               .andExpect(xpath("//div[@id='htmxRequest']").exists());
     }
 
     @Test
