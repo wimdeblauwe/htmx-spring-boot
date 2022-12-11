@@ -183,13 +183,20 @@ public SecurityFilterChain filterChain(HttpSecurity http)throws Exception{
         }
 ```
 
+## Articles
+
+Links to articles and blog posts about this library:
+
+* [Release 1.0.0 and 2.0.0 of htmx-spring-boot-thymeleaf](https://www.wimdeblauwe.com/blog/2022/12/11/release-1.0.0-and-2.0.0-of-htmx-spring-boot-thymeleaf/)
+* [Htmx authentication error handling](https://www.wimdeblauwe.com/blog/2022/10/04/htmx-authentication-error-handling/)
+* [Thymeleaf and htmx with out of band swaps](https://www.wimdeblauwe.com/blog/2022/06/15/thymeleaf-and-htmx-with-out-of-band-swaps/)
+
 ## Spring Boot compatibility
 
-| htmx-spring-boot-thymeleaf | Spring Boot | Minimum Java version |
-| -------------------------- | ----------- | -------------------- |
-| [2.0.0](https://github.com/wimdeblauwe/htmx-spring-boot-thymeleaf/releases/tag/2.0.0) | 3.0.x | 17 |
-| [1.0.0](https://github.com/wimdeblauwe/htmx-spring-boot-thymeleaf/releases/tag/1.0.0) | 2.7.x | 11 |
-
+| htmx-spring-boot-thymeleaf                                                            | Spring Boot | Minimum Java version |
+|---------------------------------------------------------------------------------------|-------------|----------------------|
+| [2.0.0](https://github.com/wimdeblauwe/htmx-spring-boot-thymeleaf/releases/tag/2.0.0) | 3.0.x       | 17                   |
+| [1.0.0](https://github.com/wimdeblauwe/htmx-spring-boot-thymeleaf/releases/tag/1.0.0) | 2.7.x       | 11                   |
 
 ## Contributing
 
