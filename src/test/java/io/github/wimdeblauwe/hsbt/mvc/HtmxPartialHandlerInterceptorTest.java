@@ -26,27 +26,27 @@ class HtmxPartialHandlerInterceptorTest {
     private MockMvc mockMvc;
 
     @Test
-    public void testASinglePartialCanBeReturned() throws Exception {
+    void testASinglePartialCanBeReturned() throws Exception {
         mockMvc.perform(get("/partials/first"))
-                .andDo(MockMvcResultHandlers.print())
+               .andDo(MockMvcResultHandlers.print())
                .andExpect(status().isOk())
                .andExpect(xpath("/ul").exists())
                .andExpect(xpath("/ul[@hx-swap-oob='true']").doesNotExist());
     }
 
     @Test
-    public void testAMainChange() throws Exception {
+    void testAMainChange() throws Exception {
         mockMvc.perform(get("/partials/main-and-partial"))
                .andDo(MockMvcResultHandlers.print())
                .andExpect(status().isOk())
-                //Note xpath can't be used on partials because the document doesn't have a single root
+               //Note xpath can't be used on partials because the document doesn't have a single root
                .andExpect(partialXpath("//*[@id='userCount'][@hx-swap-oob]").exists())
                .andExpect(partialXpath("/ul").exists())
                .andExpect(partialXpath("/ul[@hx-swap-oob]").doesNotExist());
     }
 
     @Test
-    public void testHeaders() throws Exception {
+    void testHeaders() throws Exception {
         mockMvc.perform(get("/partials/triggers"))
                .andDo(MockMvcResultHandlers.print())
                .andExpect(status().isOk())
@@ -58,8 +58,9 @@ class HtmxPartialHandlerInterceptorTest {
                .andExpect(header().string("HX-Refresh", "true"))
                .andExpect(header().string("HX-Retarget", "#newTarget"));
     }
+
     @Test
-    public void testExtension() throws Exception {
+    void testExtension() throws Exception {
         mockMvc.perform(get("/partials/extension"))
                .andDo(MockMvcResultHandlers.print())
                .andExpect(status().isOk())
@@ -68,7 +69,7 @@ class HtmxPartialHandlerInterceptorTest {
     }
 
     @Test
-    public void testPostTodo() throws Exception {
+    void testPostTodo() throws Exception {
         when(todoRepository.getNumberOfActiveItems()).thenReturn(0);
 
         mockMvc.perform(post("/partials/add-todo")
@@ -76,26 +77,25 @@ class HtmxPartialHandlerInterceptorTest {
                                 .with(csrf()))
                .andDo(MockMvcResultHandlers.print())
                .andExpect(status().isOk())
-                //Note xpath can't be used on partials because the document doesn't have a single root
+               //Note xpath can't be used on partials because the document doesn't have a single root
                .andExpect(partialXpath("//*[@id='active-items-count'][@hx-swap-oob]").exists())
                .andExpect(partialXpath("/span[@id='item']").exists())
                .andExpect(partialXpath("/span[@id='item'][@hx-swap-oob]").doesNotExist());
     }
 
     @Test
-    public void testHtmxRequestExpressionUtility() throws Exception {
+    void testHtmxRequestExpressionUtility() throws Exception {
         mockMvc.perform(get("/partials/expressionUtility").header("HX-Request", "true"))
                .andExpect(status().isOk())
                .andExpect(xpath("//div[@id='htmxRequest']").exists());
     }
 
     @Test
-    public void testHtmxRequestExpressionUtilityWorkEvenWhenNotHtmxRequest() throws Exception {
+    void testHtmxRequestExpressionUtilityWorkEvenWhenNotHtmxRequest() throws Exception {
         mockMvc.perform(get("/partials/expressionUtility")) //No HX-Request header
                .andExpect(status().isOk())
                .andExpect(xpath("//div[@id='htmxRequest']").doesNotExist());
     }
-
 
 
 }

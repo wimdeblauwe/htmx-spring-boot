@@ -2,6 +2,7 @@ package io.github.wimdeblauwe.hsbt.mvc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.ObjectFactory;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.boot.autoconfigure.web.servlet.WebMvcRegistrations;
@@ -12,7 +13,6 @@ import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
-import org.thymeleaf.spring6.view.ThymeleafViewResolver;
 
 import java.util.List;
 
@@ -20,11 +20,13 @@ import java.util.List;
 @ConditionalOnWebApplication
 public class HtmxMvcConfiguration implements WebMvcRegistrations, WebMvcConfigurer {
 
-    private final ViewResolver resolver;
+    private final ObjectProvider<ViewResolver> resolver;
     private final ObjectFactory<LocaleResolver> locales;
     private final ObjectMapper objectMapper;
 
-    HtmxMvcConfiguration(ThymeleafViewResolver resolver, ObjectFactory<LocaleResolver> locales, ObjectMapper objectMapper) {
+    HtmxMvcConfiguration(ObjectProvider<ViewResolver> resolver,
+                         ObjectFactory<LocaleResolver> locales,
+                         ObjectMapper objectMapper) {
         Assert.notNull(resolver, "ViewResovler must not be null!");
         Assert.notNull(locales, "LocaleResolver must not be null!");
 

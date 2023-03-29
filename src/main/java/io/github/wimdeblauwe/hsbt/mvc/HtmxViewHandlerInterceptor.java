@@ -21,6 +21,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectFactory;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.util.Assert;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.*;
@@ -36,11 +37,13 @@ import java.util.Map;
 class HtmxViewHandlerInterceptor implements HandlerInterceptor {
     private static final Logger LOG = LoggerFactory.getLogger(HtmxViewHandlerInterceptor.class);
 
-    private final ViewResolver views;
+    private final ObjectProvider<ViewResolver> views;
     private final ObjectFactory<LocaleResolver> locales;
     private final ObjectMapper objectMapper;
 
-    public HtmxViewHandlerInterceptor(ViewResolver views, ObjectFactory<LocaleResolver> locales, ObjectMapper objectMapper) {
+    public HtmxViewHandlerInterceptor(ObjectProvider<ViewResolver> views,
+                                      ObjectFactory<LocaleResolver> locales,
+                                      ObjectMapper objectMapper) {
         this.views = views;
         this.locales = locales;
         this.objectMapper = objectMapper;
@@ -54,32 +57,22 @@ class HtmxViewHandlerInterceptor implements HandlerInterceptor {
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler,
                            ModelAndView modelAndView) throws Exception {
 
-        if (modelAndView == null || !HandlerMethod.class.isInstance(handler)) {
-            return;
+        if ((modelAndView != null && handler instanceof HandlerMethod method)) {
+            String partialsAttributeName = null;
+            if (method.getReturnType().getParameterType().equals(HtmxResponse.class)) {
+                partialsAttributeName = "htmxResponse";
+            }
+            if (partialsAttributeName == null) {
+                return;
+            }
+            Object attribute = modelAndView.getModel().get(partialsAttributeName);
+            if (attribute instanceof HtmxResponse htmxResponse) {
+                modelAndView.setView(toView(htmxResponse));
+                addHxHeaders(htmxResponse, response);
+            }
         }
-
-        HandlerMethod method = (HandlerMethod) handler;
-
-        String partialsAttributeName = null;
-        if (method.getReturnType().getParameterType().equals(HtmxResponse.class)) {
-            partialsAttributeName = "htmxResponse";
-        }
-        if (partialsAttributeName == null) {
-            return;
-        }
-
-        Object attribute = modelAndView.getModel().get(partialsAttributeName);
-
-        if (!HtmxResponse.class.isInstance(attribute)) {
-            return;
-        }
-
-        HtmxResponse htmxResponse = (HtmxResponse) attribute;
-
-        modelAndView.setView(toView(htmxResponse));
-
-        addHxHeaders(htmxResponse, response);
     }
+
 
     private void addHxHeaders(HtmxResponse htmxResponse, HttpServletResponse response) {
         setTriggerHeader(HxTriggerLifecycle.RECEIVE, htmxResponse.getTriggers(), response);
@@ -131,10 +124,19 @@ class HtmxViewHandlerInterceptor implements HandlerInterceptor {
         return (model, request, response) -> {
             Locale locale = locales.getObject().resolveLocale(request);
             for (String template : partials.getTemplates()) {
-                View view = views.resolveViewName(template, locale);
-                Assert.notNull(view, "Template '" + template + "' could not be resolved");
+                View view = views.stream().map(resolver -> doResolveView(locale, template, resolver))
+                                 .findFirst()
+                                 .orElseThrow(() -> new IllegalArgumentException("Template '" + template + "' could not be resolved"));
                 view.render(model, request, response);
             }
         };
+    }
+
+    private View doResolveView(Locale locale, String template, ViewResolver resolver) {
+        try {
+            return resolver.resolveViewName(template, locale);
+        } catch (Exception e) {
+            throw new IllegalStateException("Error resolving view",e);
+        }
     }
 }

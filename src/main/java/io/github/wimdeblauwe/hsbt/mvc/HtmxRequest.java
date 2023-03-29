@@ -12,7 +12,14 @@ public final class HtmxRequest {
     private final String triggerName;
     private final String triggerId;
 
-    HtmxRequest(boolean htmxRequest, boolean boosted, String currentUrl, boolean historyRestoreRequest, String promptResponse, String target, String triggerName, String triggerId) {
+    HtmxRequest(boolean htmxRequest,
+                boolean boosted,
+                String currentUrl,
+                boolean historyRestoreRequest,
+                String promptResponse,
+                String target,
+                String triggerName,
+                String triggerId) {
         this.htmxRequest = htmxRequest;
         this.boosted = boosted;
         this.currentUrl = currentUrl;

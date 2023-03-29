@@ -17,8 +17,8 @@ public class HtmxHandlerInterceptor implements HandlerInterceptor {
                            HttpServletResponse response,
                            Object handler,
                            ModelAndView modelAndView) throws Exception {
-        if (handler instanceof HandlerMethod) {
-            Method method = ((HandlerMethod) handler).getMethod();
+        if (handler instanceof HandlerMethod handlerMethod) {
+            Method method = handlerMethod.getMethod();
             setHxTrigger(response, method);
             setHxRefresh(response, method);
         }
