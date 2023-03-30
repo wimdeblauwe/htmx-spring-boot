@@ -13,15 +13,16 @@ import static io.github.wimdeblauwe.hsbt.mvc.HtmxResponseHeader.*;
 
 public class HtmxHandlerInterceptor implements HandlerInterceptor {
     @Override
-    public void postHandle(HttpServletRequest request,
+    public boolean preHandle(HttpServletRequest request,
                            HttpServletResponse response,
-                           Object handler,
-                           ModelAndView modelAndView) throws Exception {
+                           Object handler) {
         if (handler instanceof HandlerMethod) {
             Method method = ((HandlerMethod) handler).getMethod();
             setHxTrigger(response, method);
             setHxRefresh(response, method);
         }
+
+        return true;
     }
 
     private void setHxTrigger(HttpServletResponse response, Method method) {
