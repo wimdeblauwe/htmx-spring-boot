@@ -145,7 +145,7 @@ will render as:
 ### OOB Swap support
 
 htmx supports updating multiple targets by returning multiple partial response with
-[`hx-swap-oop`](https://htmx.org/docs/#oob_swaps). Return partials using this library use the `HtmxResponse` as a return
+[`hx-swap-oob`](https://htmx.org/docs/#oob_swaps). Return partials using this library use the `HtmxResponse` as a return
 type:
 
 ```java
