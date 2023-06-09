@@ -102,7 +102,7 @@ Note the `:` colon instead of the typical hyphen.
 For example, this Thymeleaf template:
 
 ```html
-<div hx:get="@{/users/{id}(id=$userId}" hx-target="#otherElement">Load user details</div>
+<div hx:get="@{/users/{id}(id=${userId})}" hx-target="#otherElement">Load user details</div>
 ```
 
 Will be rendered as:
