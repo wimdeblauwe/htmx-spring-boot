@@ -22,8 +22,6 @@ public class HtmxHandlerMethodArgumentResolver implements HandlerMethodArgumentR
                                   ModelAndViewContainer mavContainer,
                                   NativeWebRequest webRequest,
                                   WebDataBinderFactory binderFactory) throws Exception {
-        Object nativeRequest = webRequest.getNativeRequest();
-        System.out.println("nativeRequest = " + nativeRequest);
         return createHtmxRequest(Objects.requireNonNull(webRequest.getNativeRequest(HttpServletRequest.class)));
     }
 
