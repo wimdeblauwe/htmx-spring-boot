@@ -38,7 +38,7 @@ public class HtmxResponseTest {
         sut.addTemplate(myTemplateAndFragment);
         sut.addTemplate(myTemplate);
 
-        assertThat(sut.getTemplates()).containsExactlyInAnyOrder(myTemplate, myTemplateAndFragment);
+        assertThat(sut.getTemplates()).containsExactly(myTemplate, myTemplateAndFragment);
     }
 
     @Test
@@ -78,6 +78,20 @@ public class HtmxResponseTest {
         assertThat(sut.getHeaderRedirect()).isEqualTo("/a/new/page");
         assertThat(sut.getHeaderRefresh()).isTrue();
         assertThat(sut.getHeaderRetarget()).isEqualTo("#theThing");
+    }
+
+    /**
+     * The order of templates can play a role in some scenarios in HTMX,
+     * see https://github.com/bigskysoftware/htmx/issues/1198
+     */
+    @Test
+    public void addedTemplatesPreserveTheirOrder() {
+        String template1 = "form-validation-fragments :: person-list-item";
+        String template2 = "form-validation-fragments :: form";
+        sut.addTemplate(template1);
+        sut.addTemplate(template2);
+
+        assertThat(sut.getTemplates()).containsExactly(template1, template2);
     }
 
 }
