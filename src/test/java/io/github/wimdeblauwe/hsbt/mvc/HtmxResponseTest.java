@@ -60,8 +60,8 @@ public class HtmxResponseTest {
 
         sut.and(new HtmxResponse().addTemplate("myTemplate2")
                                   .addTrigger("myEvent2")
-                        .addTrigger(myTrigger)
-                        .addTemplate(myTemplate));
+                                  .addTrigger(myTrigger)
+                                  .addTemplate(myTemplate));
 
         assertThat(sut.getTriggers()).hasSize(2);
         assertThat(sut.getTemplates()).hasSize(2);
@@ -70,9 +70,9 @@ public class HtmxResponseTest {
     @Test
     public void extraHxHeaders() {
         sut.pushHistory("/a/history")
-                .browserRedirect("/a/new/page")
-                .browserRefresh(true)
-                .retarget("#theThing");
+           .browserRedirect("/a/new/page")
+           .browserRefresh(true)
+           .retarget("#theThing");
 
         assertThat(sut.getHeaderPushHistory()).isEqualTo("/a/history");
         assertThat(sut.getHeaderRedirect()).isEqualTo("/a/new/page");
@@ -94,4 +94,21 @@ public class HtmxResponseTest {
         assertThat(sut.getTemplates()).containsExactly(template1, template2);
     }
 
+    @Test
+    public void mergingResponsesPreserveTemplateOrder() {
+        HtmxResponse response1 = new HtmxResponse().addTemplate("response1 :: template 11")
+                                                   .addTemplate("response1 :: template 12");
+        HtmxResponse response2 = new HtmxResponse().addTemplate("response2 :: template 21")
+                                                   .addTemplate("response2 :: template 22");
+
+        response1.and(response2);
+
+        assertThat(response1.getTemplates())
+                .hasSize(4)
+                .containsExactly("response1 :: template 11",
+                                 "response1 :: template 12",
+                                 "response2 :: template 21",
+                                 "response2 :: template 22");
+
+    }
 }
