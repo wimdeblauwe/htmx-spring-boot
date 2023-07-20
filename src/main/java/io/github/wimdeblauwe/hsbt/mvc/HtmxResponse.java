@@ -25,12 +25,12 @@ final public class HtmxResponse {
     private String headerPushHistory;
 
     public HtmxResponse() {
-        this.templates = new HashSet<>();
+        this.templates = new LinkedHashSet<>();
         this.triggers = new HashMap<>();
         this.triggersAfterSettle = new HashMap<>();
         this.triggersAfterSwap = new HashMap<>();
 	}
-	
+
 	/**
 	 * Append the rendered template or fragment.
 	 *
@@ -179,8 +179,8 @@ final public class HtmxResponse {
     }
 
 
-	Set<String> getTemplates() {
-		return new HashSet<>(templates);
+	Collection<String> getTemplates() {
+		return Collections.unmodifiableCollection(templates);
 	}
 
     Map<String, String> getTriggers() {

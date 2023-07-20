@@ -38,7 +38,7 @@ public class HtmxResponseTest {
         sut.addTemplate(myTemplateAndFragment);
         sut.addTemplate(myTemplate);
 
-        assertThat(sut.getTemplates()).containsExactlyInAnyOrder(myTemplate, myTemplateAndFragment);
+        assertThat(sut.getTemplates()).containsExactly(myTemplate, myTemplateAndFragment);
     }
 
     @Test
@@ -60,8 +60,8 @@ public class HtmxResponseTest {
 
         sut.and(new HtmxResponse().addTemplate("myTemplate2")
                                   .addTrigger("myEvent2")
-                        .addTrigger(myTrigger)
-                        .addTemplate(myTemplate));
+                                  .addTrigger(myTrigger)
+                                  .addTemplate(myTemplate));
 
         assertThat(sut.getTriggers()).hasSize(2);
         assertThat(sut.getTemplates()).hasSize(2);
@@ -70,9 +70,9 @@ public class HtmxResponseTest {
     @Test
     public void extraHxHeaders() {
         sut.pushHistory("/a/history")
-                .browserRedirect("/a/new/page")
-                .browserRefresh(true)
-                .retarget("#theThing");
+           .browserRedirect("/a/new/page")
+           .browserRefresh(true)
+           .retarget("#theThing");
 
         assertThat(sut.getHeaderPushHistory()).isEqualTo("/a/history");
         assertThat(sut.getHeaderRedirect()).isEqualTo("/a/new/page");
@@ -80,4 +80,35 @@ public class HtmxResponseTest {
         assertThat(sut.getHeaderRetarget()).isEqualTo("#theThing");
     }
 
+    /**
+     * The order of templates can play a role in some scenarios in HTMX,
+     * see https://github.com/bigskysoftware/htmx/issues/1198
+     */
+    @Test
+    public void addedTemplatesPreserveTheirOrder() {
+        String template1 = "form-validation-fragments :: person-list-item";
+        String template2 = "form-validation-fragments :: form";
+        sut.addTemplate(template1);
+        sut.addTemplate(template2);
+
+        assertThat(sut.getTemplates()).containsExactly(template1, template2);
+    }
+
+    @Test
+    public void mergingResponsesPreserveTemplateOrder() {
+        HtmxResponse response1 = new HtmxResponse().addTemplate("response1 :: template 11")
+                                                   .addTemplate("response1 :: template 12");
+        HtmxResponse response2 = new HtmxResponse().addTemplate("response2 :: template 21")
+                                                   .addTemplate("response2 :: template 22");
+
+        response1.and(response2);
+
+        assertThat(response1.getTemplates())
+                .hasSize(4)
+                .containsExactly("response1 :: template 11",
+                                 "response1 :: template 12",
+                                 "response2 :: template 21",
+                                 "response2 :: template 22");
+
+    }
 }
