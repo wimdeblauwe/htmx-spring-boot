@@ -1,15 +1,18 @@
 package io.github.wimdeblauwe.hsbt.mvc;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.core.annotation.AnnotatedElementUtils;
-import org.springframework.web.method.HandlerMethod;
-import org.springframework.web.servlet.HandlerInterceptor;
-import org.springframework.web.servlet.ModelAndView;
+import static io.github.wimdeblauwe.hsbt.mvc.HtmxResponseHeader.HX_REFRESH;
+import static io.github.wimdeblauwe.hsbt.mvc.HtmxResponseHeader.HX_TRIGGER;
+import static io.github.wimdeblauwe.hsbt.mvc.HtmxResponseHeader.HX_TRIGGER_AFTER_SETTLE;
+import static io.github.wimdeblauwe.hsbt.mvc.HtmxResponseHeader.HX_TRIGGER_AFTER_SWAP;
 
 import java.lang.reflect.Method;
 
-import static io.github.wimdeblauwe.hsbt.mvc.HtmxResponseHeader.*;
+import org.springframework.core.annotation.AnnotatedElementUtils;
+import org.springframework.web.method.HandlerMethod;
+import org.springframework.web.servlet.HandlerInterceptor;
+
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 public class HtmxHandlerInterceptor implements HandlerInterceptor {
     @Override
