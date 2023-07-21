@@ -1,10 +1,12 @@
 package io.github.wimdeblauwe.hsbt.mvc;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.List;
+
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.boot.autoconfigure.web.servlet.WebMvcRegistrations;
+import org.springframework.context.ApplicationContext;
 import org.springframework.util.Assert;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.LocaleResolver;
@@ -12,23 +14,22 @@ import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
-import org.thymeleaf.spring6.view.ThymeleafViewResolver;
 
-import java.util.List;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @AutoConfiguration
 @ConditionalOnWebApplication
 public class HtmxMvcConfiguration implements WebMvcRegistrations, WebMvcConfigurer {
 
-    private final ViewResolver resolver;
+    private final ApplicationContext context;
     private final ObjectFactory<LocaleResolver> locales;
     private final ObjectMapper objectMapper;
 
-    HtmxMvcConfiguration(ThymeleafViewResolver resolver, ObjectFactory<LocaleResolver> locales, ObjectMapper objectMapper) {
-        Assert.notNull(resolver, "ViewResovler must not be null!");
+    HtmxMvcConfiguration(ApplicationContext context, ObjectFactory<LocaleResolver> locales, ObjectMapper objectMapper) {
+        Assert.notNull(context, "ApplicationContext must not be null!");
         Assert.notNull(locales, "LocaleResolver must not be null!");
 
-        this.resolver = resolver;
+        this.context = context;
         this.locales = locales;
         this.objectMapper = objectMapper;
     }
@@ -40,6 +41,7 @@ public class HtmxMvcConfiguration implements WebMvcRegistrations, WebMvcConfigur
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
+        ViewResolver resolver = context.getBean("viewResolver", ViewResolver.class);
         registry.addInterceptor(new HtmxHandlerInterceptor());
         registry.addInterceptor(new HtmxViewHandlerInterceptor(resolver, locales, objectMapper));
     }
