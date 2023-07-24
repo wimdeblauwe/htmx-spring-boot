@@ -24,6 +24,7 @@ import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.util.Assert;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.*;
+import org.springframework.web.util.ContentCachingResponseWrapper;
 
 import java.util.Locale;
 import java.util.Map;
@@ -130,11 +131,13 @@ class HtmxViewHandlerInterceptor implements HandlerInterceptor {
 
         return (model, request, response) -> {
             Locale locale = locales.getObject().resolveLocale(request);
+            ContentCachingResponseWrapper wrapper = new ContentCachingResponseWrapper(response);
             for (String template : partials.getTemplates()) {
                 View view = views.resolveViewName(template, locale);
                 Assert.notNull(view, "Template '" + template + "' could not be resolved");
-                view.render(model, request, response);
+                view.render(model, request, wrapper);
             }
+            wrapper.copyBodyToResponse();
         };
     }
 }
