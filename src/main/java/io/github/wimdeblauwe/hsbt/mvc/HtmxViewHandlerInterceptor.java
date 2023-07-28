@@ -15,22 +15,29 @@
  */
 package io.github.wimdeblauwe.hsbt.mvc;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
+import java.util.Locale;
+import java.util.Map;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.util.Assert;
 import org.springframework.web.method.HandlerMethod;
-import org.springframework.web.servlet.*;
+import org.springframework.web.servlet.HandlerInterceptor;
+import org.springframework.web.servlet.LocaleResolver;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.View;
+import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.util.ContentCachingResponseWrapper;
 
-import java.util.Locale;
-import java.util.Map;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 /**
- * A {@link HandlerInterceptor} that turns {@link HtmxResponse} instances returned from controller methods into a
+ * A {@link HandlerInterceptor} that turns {@link HtmxResponse} instances
+ * returned from controller methods into a
  *
  * @author Oliver Drotbohm
  */
@@ -41,7 +48,8 @@ class HtmxViewHandlerInterceptor implements HandlerInterceptor {
     private final ObjectFactory<LocaleResolver> locales;
     private final ObjectMapper objectMapper;
 
-    public HtmxViewHandlerInterceptor(ViewResolver views, ObjectFactory<LocaleResolver> locales, ObjectMapper objectMapper) {
+    public HtmxViewHandlerInterceptor(ViewResolver views, ObjectFactory<LocaleResolver> locales,
+            ObjectMapper objectMapper) {
         this.views = views;
         this.locales = locales;
         this.objectMapper = objectMapper;
@@ -49,11 +57,15 @@ class HtmxViewHandlerInterceptor implements HandlerInterceptor {
 
     /*
      * (non-Javadoc)
-     * @see org.springframework.web.servlet.HandlerInterceptor#postHandle(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse, java.lang.Object, org.springframework.web.servlet.ModelAndView)
+     * 
+     * @see
+     * org.springframework.web.servlet.HandlerInterceptor#postHandle(javax.servlet.
+     * http.HttpServletRequest, javax.servlet.http.HttpServletResponse,
+     * java.lang.Object, org.springframework.web.servlet.ModelAndView)
      */
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler,
-                           ModelAndView modelAndView) throws Exception {
+            ModelAndView modelAndView) throws Exception {
 
         if (modelAndView == null || !HandlerMethod.class.isInstance(handler)) {
             return;
@@ -101,7 +113,8 @@ class HtmxViewHandlerInterceptor implements HandlerInterceptor {
         }
     }
 
-    private void setTriggerHeader(HxTriggerLifecycle triggerHeader, Map<String, String> triggers, HttpServletResponse response) {
+    private void setTriggerHeader(HxTriggerLifecycle triggerHeader, Map<String, String> triggers,
+            HttpServletResponse response) {
         if (triggers.isEmpty()) {
             return;
         }
@@ -132,10 +145,18 @@ class HtmxViewHandlerInterceptor implements HandlerInterceptor {
         return (model, request, response) -> {
             Locale locale = locales.getObject().resolveLocale(request);
             ContentCachingResponseWrapper wrapper = new ContentCachingResponseWrapper(response);
-            for (String template : partials.getTemplates()) {
-                View view = views.resolveViewName(template, locale);
+            for (ModelAndView template : partials.getTemplates()) {
+                View view = template.getView();
+                if (view == null) {
+                    view = views.resolveViewName(template.getViewName(), locale);
+                }
+                for (String key: model.keySet()) {
+                    if(!template.getModel().containsKey(key)) {
+                        template.getModel().put(key, model.get(key));
+                    }
+                }
                 Assert.notNull(view, "Template '" + template + "' could not be resolved");
-                view.render(model, request, wrapper);
+                view.render(template.getModel(), request, wrapper);
             }
             wrapper.copyBodyToResponse();
         };

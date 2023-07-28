@@ -1,11 +1,18 @@
 package io.github.wimdeblauwe.hsbt.mvc;
 
+import static io.github.wimdeblauwe.hsbt.mvc.CommonHtmxResponses.sendAlertPartial;
+
+import java.util.Map;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.view.AbstractView;
 
-import static io.github.wimdeblauwe.hsbt.mvc.CommonHtmxResponses.sendAlertPartial;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 @Controller
 public class PartialsController {
@@ -39,6 +46,23 @@ public class PartialsController {
     @GetMapping("/partials/first")
     public HtmxResponse getFirstPartials() {
         return new HtmxResponse().addTemplate("users :: list");
+    }
+
+    @GetMapping("/partials/view")
+    public HtmxResponse getFirstView() {
+        return new HtmxResponse().addTemplate(new AbstractView() {
+            @Override
+            protected void renderMergedOutputModel(Map<String, Object> model, HttpServletRequest request,
+                    HttpServletResponse response) throws Exception {
+                        response.getWriter().write("<ul><li>A list</li></ul>");
+            }
+            
+        });
+    }
+
+    @GetMapping("/partials/mav")
+    public HtmxResponse getFirstModelAndView() {
+        return new HtmxResponse().addTemplate(new ModelAndView("fragments :: todoItem", Map.of("item", new TodoItem("Foo"))));
     }
 
     @GetMapping("/partials/main-and-partial")
