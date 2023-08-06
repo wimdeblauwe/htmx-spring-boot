@@ -27,7 +27,7 @@ public class HtmxResponseTest {
         String myTemplate = "myTemplate";
         sut.addTemplate(myTemplate);
 
-        assertThat(sut.getTemplates()).containsExactly(myTemplate);
+        assertThat(sut.getTemplates()).extracting(mav -> mav.getViewName()).containsExactly(myTemplate);
     }
 
     @Test
@@ -38,7 +38,7 @@ public class HtmxResponseTest {
         sut.addTemplate(myTemplateAndFragment);
         sut.addTemplate(myTemplate);
 
-        assertThat(sut.getTemplates()).containsExactly(myTemplate, myTemplateAndFragment);
+        assertThat(sut.getTemplates()).extracting(mav -> mav.getViewName()).containsExactly(myTemplate, myTemplateAndFragment);
     }
 
     @Test
@@ -91,7 +91,7 @@ public class HtmxResponseTest {
         sut.addTemplate(template1);
         sut.addTemplate(template2);
 
-        assertThat(sut.getTemplates()).containsExactly(template1, template2);
+        assertThat(sut.getTemplates()).extracting(mav -> mav.getViewName()).containsExactly(template1, template2);
     }
 
     @Test
@@ -103,7 +103,7 @@ public class HtmxResponseTest {
 
         response1.and(response2);
 
-        assertThat(response1.getTemplates())
+        assertThat(response1.getTemplates()).extracting(mav -> mav.getViewName())
                 .hasSize(4)
                 .containsExactly("response1 :: template 11",
                                  "response1 :: template 12",

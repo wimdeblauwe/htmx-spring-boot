@@ -158,6 +158,20 @@ public HtmxResponse getMainAndPartial(Model model){
         }
 ```
 
+An `HtmxResponse` can be formed from view names, as above, or fully resolved `View` instances, if the controller knows how
+to do that, or from `ModelAndView` instances (resolved or unresolved). For example:
+
+```java
+@GetMapping("/partials/main-and-partial")
+public HtmxResponse getMainAndPartial(Model model){
+        return new HtmxResponse()
+        .addTemplate(new ModelAndView("users :: list")
+        .addTemplate(new ModelAndView("users :: count", Map.of("userCount",5));
+        }
+```
+
+Using `ModelAndView` means that each fragment can have its own model (which is merged with the controller model before rendering).
+
 ### Spring Security
 
 The library has an `HxRefreshHeaderAuthenticationEntryPoint` that you can use to have htmx force a full page browser

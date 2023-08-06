@@ -1,10 +1,17 @@
 package io.github.wimdeblauwe.hsbt.mvc;
 
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedHashSet;
+import java.util.Map;
+import java.util.Set;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.Assert;
-
-import java.util.*;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.View;
 
 /**
  * Representation of HTMX partials.
@@ -15,7 +22,7 @@ import java.util.*;
 final public class HtmxResponse {
     private static final Logger LOG = LoggerFactory.getLogger(HtmxResponse.class);
 
-	private final Set<String> templates;
+	private final Set<ModelAndView> templates;
 	private final Map<String, String> triggers;
 	private final Map<String, String> triggersAfterSettle;
 	private final Map<String, String> triggersAfterSwap;
@@ -39,6 +46,34 @@ final public class HtmxResponse {
 	 */
 	public HtmxResponse addTemplate(String template) {
         Assert.hasText(template, "template should not be blank");
+        if (!templates.stream().anyMatch(mav -> template.equals(mav.getViewName()))) {
+            templates.add(new ModelAndView(template));
+        }
+        return this;
+	}
+
+	/**
+	 * Append the rendered template or fragment as a resolved {@link View}.
+	 *
+	 * @param template must not be {@literal null}.
+	 * @return same HtmxResponse for chaining
+	 */
+	public HtmxResponse addTemplate(View template) {
+        Assert.notNull(template, "template should not be null");
+        if (!templates.stream().anyMatch(mav -> template.equals(mav.getView()))) {
+            templates.add(new ModelAndView(template));
+        }
+        return this;
+	}
+
+	/**
+	 * Append the rendered template or fragment as a {@link ModelAndView}.
+	 *
+	 * @param template must not be {@literal null}.
+	 * @return same HtmxResponse for chaining
+	 */
+	public HtmxResponse addTemplate(ModelAndView template) {
+        Assert.notNull(template, "template should not be null");
         templates.add(template);
         return this;
 	}
@@ -142,8 +177,10 @@ final public class HtmxResponse {
      */
     public HtmxResponse and(HtmxResponse otherResponse){
         otherResponse.templates.forEach(otherTemplate -> {
-            if(!this.templates.add(otherTemplate)) {
+            if(this.templates.stream().anyMatch(mav -> same(otherTemplate, mav))) {
                 LOG.info("Duplicate template '{}' found while merging HtmxResponse", otherTemplate);
+            } else {
+                templates.add(otherTemplate);
             }
         });
         mergeMapAndLog(HxTriggerLifecycle.RECEIVE, this.triggers, otherResponse.triggers);
@@ -166,6 +203,22 @@ final public class HtmxResponse {
         return this;
     }
 
+    private boolean same(ModelAndView one, ModelAndView two) {
+        if (one == two) {
+            return true;
+        }
+        if (one == null || two == null) {
+            return false;
+        }
+        if (one.getViewName() !=null && one.getViewName().equals(two.getViewName())) {
+            return true;
+        }
+        if (one.getView() !=null && one.getView().equals(two.getView())) {
+            return true;
+        }
+        return false;
+    }
+
     private void mergeMapAndLog(HxTriggerLifecycle receive, Map<String, String> triggers, Map<String, String> otherTriggers) {
         otherTriggers.forEach((key, value) -> {
             if(LOG.isInfoEnabled()) {
@@ -179,7 +232,7 @@ final public class HtmxResponse {
     }
 
 
-	Collection<String> getTemplates() {
+	Collection<ModelAndView> getTemplates() {
 		return Collections.unmodifiableCollection(templates);
 	}
 

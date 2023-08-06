@@ -1,5 +1,16 @@
 package io.github.wimdeblauwe.hsbt.mvc;
 
+import static io.github.wimdeblauwe.hsbt.mvc.support.PartialXpathResultMatchers.partialXpath;
+import static org.hamcrest.core.StringContains.containsString;
+import static org.mockito.Mockito.when;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.xpath;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -7,13 +18,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
-
-import static io.github.wimdeblauwe.hsbt.mvc.support.PartialXpathResultMatchers.partialXpath;
-import static org.mockito.Mockito.when;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(PartialsController.class)
 @WithMockUser
@@ -32,6 +36,23 @@ class HtmxPartialHandlerInterceptorTest {
                .andExpect(status().isOk())
                .andExpect(xpath("/ul").exists())
                .andExpect(xpath("/ul[@hx-swap-oob='true']").doesNotExist());
+    }
+
+    @Test
+    public void testASingleViewCanBeReturned() throws Exception {
+        mockMvc.perform(get("/partials/view"))
+                .andDo(MockMvcResultHandlers.print())
+               .andExpect(status().isOk())
+               .andExpect(xpath("/ul").exists());
+    }
+
+    @Test
+    public void testASingleModelAndViewCanBeReturned() throws Exception {
+        mockMvc.perform(get("/partials/mav"))
+                .andDo(MockMvcResultHandlers.print())
+               .andExpect(status().isOk())
+               .andExpect(partialXpath("/span[@id='item']").exists())
+               .andExpect(content().string(containsString("Foo")));
     }
 
     @Test
