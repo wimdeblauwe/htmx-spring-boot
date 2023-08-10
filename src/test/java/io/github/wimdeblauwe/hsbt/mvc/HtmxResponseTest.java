@@ -72,12 +72,14 @@ public class HtmxResponseTest {
         sut.pushHistory("/a/history")
            .browserRedirect("/a/new/page")
            .browserRefresh(true)
-           .retarget("#theThing");
+           .retarget("#theThing")
+           .reswap(HxSwapType.AFTER_BEGIN);
 
         assertThat(sut.getHeaderPushHistory()).isEqualTo("/a/history");
         assertThat(sut.getHeaderRedirect()).isEqualTo("/a/new/page");
         assertThat(sut.getHeaderRefresh()).isTrue();
         assertThat(sut.getHeaderRetarget()).isEqualTo("#theThing");
+        assertThat(sut.getHeaderReswap()).isEqualTo("afterbegin");
     }
 
     /**
