@@ -174,7 +174,7 @@ final public class HtmxResponse {
     /**
      * Set a new swap to specify how the response will be swapped
      *
-     * @param swapType must not be {@literal null} or empty.
+     * @param swapType must not be {@literal null}.
      * @return same HtmxResponse for chaining
      */
     public HtmxResponse reswap(HxSwapType swapType) {
