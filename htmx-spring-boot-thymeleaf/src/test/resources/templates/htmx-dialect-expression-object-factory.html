@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>htmx request</title>
+</head>
+<body>
+<!--/*@thymesVar id="#htmxRequest" type="io.github.wimdeblauwe.htmx.spring.boot.mvc.HtmxRequest"*/-->
+<div id="htmxRequest" th:if="${#htmxRequest.isHtmxRequest()}">It is an htmx Request</div>
+
+</body>
+</html>

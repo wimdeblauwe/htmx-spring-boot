@@ -1,0 +1,7 @@
+<h1>Users</h1>
+<ul th:fragment="list">
+<li>A list entry</li>
+</ul>
+<div th:fragment="count" id="userCount" th:hx-swap-oob="${userCountOob} ?: ''">There are <span th:text="${userCount}">10</span> users.</div>
+
+<div id="alert" th:fragment="alert" th:text="${alertText}" hx-swap-oob="true"></div>
