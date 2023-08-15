@@ -1,5 +1,6 @@
-package io.github.wimdeblauwe.hsbt.mvc;
+package io.github.wimdeblauwe.hsbt.thymeleaf;
 
+import io.github.wimdeblauwe.hsbt.mvc.HtmxHandlerMethodArgumentResolver;
 import jakarta.servlet.http.HttpServletRequest;
 import org.thymeleaf.context.IExpressionContext;
 import org.thymeleaf.context.IWebContext;
@@ -11,7 +12,7 @@ import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-public class HtmxSpringStandardExressionObjectFactory implements IExpressionObjectFactory {
+public class HtmxExpressionObjectFactory implements IExpressionObjectFactory {
 
     /*
      * Any new objects added here should also be added to the "ALL_EXPRESSION_OBJECT_NAMES" See below.

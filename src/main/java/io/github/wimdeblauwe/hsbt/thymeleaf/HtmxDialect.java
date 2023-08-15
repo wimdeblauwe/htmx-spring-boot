@@ -12,7 +12,7 @@ import java.util.Set;
 
 public class HtmxDialect extends AbstractProcessorDialect implements IExpressionObjectDialect {
 
-    private HtmxSpringStandardExressionObjectFactory expressionObjectFactory;
+    private HtmxExpressionObjectFactory expressionObjectFactory;
 
     private final ObjectMapper mapper;
 
@@ -61,7 +61,7 @@ public class HtmxDialect extends AbstractProcessorDialect implements IExpression
     @Override
     public IExpressionObjectFactory getExpressionObjectFactory() {
         if (this.expressionObjectFactory == null) {
-            this.expressionObjectFactory = new HtmxSpringStandardExressionObjectFactory();
+            this.expressionObjectFactory = new HtmxExpressionObjectFactory();
         }
         return this.expressionObjectFactory;
     }
