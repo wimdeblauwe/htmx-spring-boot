@@ -30,6 +30,7 @@ final public class HtmxResponse {
     private boolean headerRefresh;
     private String headerRedirect;
     private String headerPushHistory;
+    private String headerReswap;
 
     public HtmxResponse() {
         this.templates = new LinkedHashSet<>();
@@ -171,6 +172,18 @@ final public class HtmxResponse {
     }
 
     /**
+     * Set a new swap to specify how the response will be swapped
+     *
+     * @param swapType must not be {@literal null}.
+     * @return same HtmxResponse for chaining
+     */
+    public HtmxResponse reswap(HxSwapType swapType) {
+        Assert.notNull(swapType, "swapType should not be null");
+        this.headerReswap = swapType.getValue();
+        return this;
+    }
+
+    /**
      *
      * @param otherResponse Another HtmxResponse that will be merged into this response.
      * @return this for chaining
@@ -198,6 +211,9 @@ final public class HtmxResponse {
         }
         if(otherResponse.getHeaderRedirect() != null) {
             this.headerRedirect = otherResponse.getHeaderRedirect();
+        }
+        if(otherResponse.getHeaderReswap() != null) {
+            this.headerReswap = otherResponse.getHeaderReswap();
         }
 
         return this;
@@ -271,5 +287,9 @@ final public class HtmxResponse {
 
      String getHeaderPushHistory() {
         return headerPushHistory;
+    }
+
+    public String getHeaderReswap() {
+        return headerReswap;
     }
 }

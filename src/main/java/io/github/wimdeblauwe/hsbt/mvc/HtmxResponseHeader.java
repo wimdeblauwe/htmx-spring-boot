@@ -7,7 +7,8 @@ public enum HtmxResponseHeader {
     HX_RETARGET("HX-Retarget"),
     HX_TRIGGER("HX-Trigger"),
     HX_TRIGGER_AFTER_SETTLE("HX-Trigger-After-Settle"),
-    HX_TRIGGER_AFTER_SWAP("HX-Trigger-After-Swap");
+    HX_TRIGGER_AFTER_SWAP("HX-Trigger-After-Swap"),
+    HX_RESWAP("HX-Reswap");
 
     private final String value;
 

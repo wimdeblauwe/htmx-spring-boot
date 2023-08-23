@@ -111,6 +111,9 @@ class HtmxViewHandlerInterceptor implements HandlerInterceptor {
         if (htmxResponse.getHeaderRetarget() != null) {
             response.setHeader(HtmxResponseHeader.HX_RETARGET.getValue(), htmxResponse.getHeaderRetarget());
         }
+        if (htmxResponse.getHeaderReswap() != null) {
+            response.setHeader(HtmxResponseHeader.HX_RESWAP.getValue(), htmxResponse.getHeaderReswap());
+        }
     }
 
     private void setTriggerHeader(HxTriggerLifecycle triggerHeader, Map<String, String> triggers,
