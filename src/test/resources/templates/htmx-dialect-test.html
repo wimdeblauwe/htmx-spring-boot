@@ -25,5 +25,6 @@
 <div id="hx-swap-div-with-null" hx:swap="${falseVariable}?'afterend':null"></div>
 <div id="hx-swap-div-with-th-with" th:with="sum = ${1+1}" hx:swap="${sum.equals(2)}?'afterend':null"></div>
 <div id="hx-target-div-with-th-each" th:each="number : ${listVariable}" hx:target="${number}"></div>
+<div id="hx-validate-div" hx:validate="${trueVariable}"></div>
 </body>
 </html>

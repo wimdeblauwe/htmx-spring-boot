@@ -129,4 +129,12 @@ class HtmxDialectTest {
                 .containsPattern("hx-vals-div-number.*hx-vals=\"\\{&quot;someNumberProperty&quot;:12345}\"")
         ;
     }
+
+    @Test
+    void testHxValidate() throws Exception {
+        String html = mockMvc.perform(get("/htmx-dialect"))
+                             .andExpect(status().isOk())
+                             .andReturn().getResponse().getContentAsString();
+        assertThat(html).containsPattern("hx-validate-div.*hx-validate=\"true\"");
+    }
 }
