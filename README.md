@@ -209,7 +209,7 @@ Links to articles and blog posts about this library:
 
 | htmx-spring-boot-thymeleaf                                                            | Spring Boot | Minimum Java version |
 |---------------------------------------------------------------------------------------|-------------|----------------------|
-| [2.1.0](https://github.com/wimdeblauwe/htmx-spring-boot-thymeleaf/releases/tag/2.1.0) | 3.x.        | 17                   |
+| [2.2.0](https://github.com/wimdeblauwe/htmx-spring-boot-thymeleaf/releases/tag/2.2.0) | 3.x.        | 17                   |
 | [1.0.0](https://github.com/wimdeblauwe/htmx-spring-boot-thymeleaf/releases/tag/1.0.0) | 2.7.x       | 11                   |
 
 ## Contributing
