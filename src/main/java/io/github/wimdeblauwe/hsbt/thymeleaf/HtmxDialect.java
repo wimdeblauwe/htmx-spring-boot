@@ -1,7 +1,7 @@
 package io.github.wimdeblauwe.hsbt.thymeleaf;
 
-import io.github.wimdeblauwe.hsbt.mvc.HtmxSpringStandardExressionObjectFactory;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.github.wimdeblauwe.hsbt.mvc.HtmxSpringStandardExressionObjectFactory;
 import org.thymeleaf.dialect.AbstractProcessorDialect;
 import org.thymeleaf.dialect.IExpressionObjectDialect;
 import org.thymeleaf.expression.IExpressionObjectFactory;
@@ -51,6 +51,7 @@ public class HtmxDialect extends AbstractProcessorDialect implements IExpression
         htmxProcessors.add(new HtmxAttributeProcessor(dialectPrefix, "sync", mapper));
         htmxProcessors.add(new HtmxAttributeProcessor(dialectPrefix, "target", mapper));
         htmxProcessors.add(new HtmxAttributeProcessor(dialectPrefix, "trigger", mapper));
+        htmxProcessors.add(new HtmxAttributeProcessor(dialectPrefix, "validate", mapper));
         htmxProcessors.add(new HtmxAttributeProcessor(dialectPrefix, "vals", mapper));
         htmxProcessors.add(new HtmxAttributeProcessor(dialectPrefix, "vars", mapper));
 
