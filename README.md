@@ -218,9 +218,9 @@ Links to articles and blog posts about this library:
 
 ## Spring Boot compatibility
 
-| htmx-spring-boot-thymeleaf                                                            | Spring Boot | Minimum Java version |
+| Library version                                                                       | Spring Boot | Minimum Java version |
 |---------------------------------------------------------------------------------------|-------------|----------------------|
-| [3.0.0](https://github.com/wimdeblauwe/htmx-spring-boot-thymeleaf/releases/tag/2.1.0) | 3.1.x       | 17                   |
+| [3.0.0](https://github.com/wimdeblauwe/htmx-spring-boot-thymeleaf/releases/tag/3.0.0) | 3.1.x       | 17                   |
 | [2.2.0](https://github.com/wimdeblauwe/htmx-spring-boot-thymeleaf/releases/tag/2.2.0) | 3.0.x       | 17                   |
 | [1.0.0](https://github.com/wimdeblauwe/htmx-spring-boot-thymeleaf/releases/tag/1.0.0) | 2.7.x       | 11                   |
 
@@ -238,11 +238,12 @@ Please make sure to update tests as appropriate.
 
 To release a new version of the project, follow these steps:
 
-1. Update `pom.xml` with the new version and commit
-2. Tag the commit with the version (e.g. `1.0.0`) and push the tag.
-3. Create a new release in GitHub via https://github.com/wimdeblauwe/htmx-spring-boot/releases/new
-   - Select the newly pushed tag
-   - Update the release notes. This should automatically start
-     the [release action](https://github.com/wimdeblauwe/htmx-spring-boot-thymeleaf/actions).
-4. Update `pom.xml` again with the next `SNAPSHOT` version.
-5. Close the milestone in the GitHub issue tracker.
+1. Update `pom.xml` with the new version (Use `mvn versions:set -DgenerateBackupPoms=false -DnewVersion=<VERSION>`)
+2. Commit the changes locally.
+3. Tag the commit with the version (e.g. `1.0.0`) and push the tag.
+4. Create a new release in GitHub via https://github.com/wimdeblauwe/htmx-spring-boot/releases/new
+    - Select the newly pushed tag
+    - Update the release notes. This should automatically start
+      the [release action](https://github.com/wimdeblauwe/htmx-spring-boot-thymeleaf/actions).
+5. Update `pom.xml` again with the next `SNAPSHOT` version.
+6. Close the milestone in the GitHub issue tracker.
