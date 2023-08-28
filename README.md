@@ -110,6 +110,7 @@ See [Response Headers Reference](https://htmx.org/reference/#response_headers) f
 The following annotations are currently supported:
 * [@HxLocation](https://javadoc.io/doc/io.github.wimdeblauwe/htmx-spring-boot/latest/io/github/wimdeblauwe/htmx/spring/boot/mvc/HxLocation.html)
 * [@HxRefresh](https://javadoc.io/doc/io.github.wimdeblauwe/htmx-spring-boot/latest/io/github/wimdeblauwe/htmx/spring/boot/mvc/HxRefresh.html)
+* [@HxReplaceUrl](https://javadoc.io/doc/io.github.wimdeblauwe/htmx-spring-boot/latest/io/github/wimdeblauwe/htmx/spring/boot/mvc/HxReplaceUrl.html)
 * [@HxTrigger](https://javadoc.io/doc/io.github.wimdeblauwe/htmx-spring-boot/latest/io/github/wimdeblauwe/htmx/spring/boot/mvc/HxTrigger.html)
 
 >**Note** Please refer to the related Javadoc to learn more about the available options.
