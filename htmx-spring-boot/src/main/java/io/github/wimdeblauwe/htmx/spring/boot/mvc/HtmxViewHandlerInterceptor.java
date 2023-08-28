@@ -57,7 +57,7 @@ class HtmxViewHandlerInterceptor implements HandlerInterceptor {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.springframework.web.servlet.HandlerInterceptor#postHandle(javax.servlet.
      * http.HttpServletRequest, javax.servlet.http.HttpServletResponse,
@@ -65,7 +65,7 @@ class HtmxViewHandlerInterceptor implements HandlerInterceptor {
      */
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler,
-            ModelAndView modelAndView) throws Exception {
+           ModelAndView modelAndView) throws Exception {
 
         if (modelAndView == null || !HandlerMethod.class.isInstance(handler)) {
             return;
@@ -99,20 +99,20 @@ class HtmxViewHandlerInterceptor implements HandlerInterceptor {
         setTriggerHeader(HxTriggerLifecycle.SETTLE, htmxResponse.getTriggersAfterSettle(), response);
         setTriggerHeader(HxTriggerLifecycle.SWAP, htmxResponse.getTriggersAfterSwap(), response);
 
-        if (htmxResponse.getHeaderPushHistory() != null) {
-            response.setHeader(HtmxResponseHeader.HX_PUSH_URL.getValue(), htmxResponse.getHeaderPushHistory());
+        if (htmxResponse.getPushUrl() != null) {
+            response.setHeader(HtmxResponseHeader.HX_PUSH_URL.getValue(), htmxResponse.getPushUrl());
         }
-        if (htmxResponse.getHeaderRedirect() != null) {
-            response.setHeader(HtmxResponseHeader.HX_REDIRECT.getValue(), htmxResponse.getHeaderRedirect());
+        if (htmxResponse.getRedirect() != null) {
+            response.setHeader(HtmxResponseHeader.HX_REDIRECT.getValue(), htmxResponse.getRedirect());
         }
-        if (htmxResponse.getHeaderRefresh()) {
+        if (htmxResponse.isRefresh()) {
             response.setHeader(HtmxResponseHeader.HX_REFRESH.getValue(), "true");
         }
-        if (htmxResponse.getHeaderRetarget() != null) {
-            response.setHeader(HtmxResponseHeader.HX_RETARGET.getValue(), htmxResponse.getHeaderRetarget());
+        if (htmxResponse.getRetarget() != null) {
+            response.setHeader(HtmxResponseHeader.HX_RETARGET.getValue(), htmxResponse.getRetarget());
         }
-        if (htmxResponse.getHeaderReswap() != null) {
-            response.setHeader(HtmxResponseHeader.HX_RESWAP.getValue(), htmxResponse.getHeaderReswap());
+        if (htmxResponse.getReswap() != null) {
+            response.setHeader(HtmxResponseHeader.HX_RESWAP.getValue(), htmxResponse.getReswap().getValue());
         }
     }
 
