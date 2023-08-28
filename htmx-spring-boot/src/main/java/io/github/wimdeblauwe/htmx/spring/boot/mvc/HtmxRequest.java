@@ -21,6 +21,7 @@ import org.springframework.lang.Nullable;
  * @see <a href="https://htmx.org/reference/#request_headers">Request Headers Reference</a>
  */
 public final class HtmxRequest {
+
     private final boolean htmxRequest;
     private final boolean boosted;
     private final String currentUrl;
@@ -114,6 +115,7 @@ public final class HtmxRequest {
     }
 
     public static final class Builder {
+
         private final boolean htmxRequest;
         private boolean boosted;
         private String currentUrl;
@@ -127,37 +129,37 @@ public final class HtmxRequest {
             this.htmxRequest = htmxRequest;
         }
 
-        public Builder withBoosted(boolean boosted) {
+        public Builder boosted(boolean boosted) {
             this.boosted = boosted;
             return this;
         }
 
-        public Builder withCurrentUrl(String currentUrl) {
+        public Builder currentUrl(String currentUrl) {
             this.currentUrl = currentUrl;
             return this;
         }
 
-        public Builder withHistoryRestoreRequest(boolean historyRestoreRequest) {
+        public Builder historyRestoreRequest(boolean historyRestoreRequest) {
             this.historyRestoreRequest = historyRestoreRequest;
             return this;
         }
 
-        public Builder withPromptResponse(String promptResponse) {
+        public Builder promptResponse(String promptResponse) {
             this.promptResponse = promptResponse;
             return this;
         }
 
-        public Builder withTarget(String target) {
+        public Builder target(String target) {
             this.target = target;
             return this;
         }
 
-        public Builder withTriggerName(String triggerName) {
+        public Builder triggerName(String triggerName) {
             this.triggerName = triggerName;
             return this;
         }
 
-        public Builder withTriggerId(String triggerId) {
+        public Builder triggerId(String triggerId) {
             this.triggerId = triggerId;
             return this;
         }
