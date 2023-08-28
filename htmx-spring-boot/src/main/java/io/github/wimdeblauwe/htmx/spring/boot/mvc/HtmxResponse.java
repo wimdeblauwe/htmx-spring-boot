@@ -25,10 +25,10 @@ import org.springframework.web.servlet.View;
 final public class HtmxResponse {
     private static final Logger LOG = LoggerFactory.getLogger(HtmxResponse.class);
 
-	private final Set<ModelAndView> templates;
-	private final Map<String, String> triggers;
-	private final Map<String, String> triggersAfterSettle;
-	private final Map<String, String> triggersAfterSwap;
+    private final Set<ModelAndView> templates;
+    private final Map<String, String> triggers;
+    private final Map<String, String> triggersAfterSettle;
+    private final Map<String, String> triggersAfterSwap;
     private String headerRetarget;
     private boolean headerRefresh;
     private String headerRedirect;
@@ -40,55 +40,54 @@ final public class HtmxResponse {
         this.triggers = new HashMap<>();
         this.triggersAfterSettle = new HashMap<>();
         this.triggersAfterSwap = new HashMap<>();
-	}
+    }
 
-	/**
-	 * Append the rendered template or fragment.
-	 *
-	 * @param template must not be {@literal null} or empty.
-	 * @return same HtmxResponse for chaining
-	 */
-	public HtmxResponse addTemplate(String template) {
+    /**
+     * Append the rendered template or fragment.
+     *
+     * @param template must not be {@literal null} or empty.
+     * @return same HtmxResponse for chaining
+     */
+    public HtmxResponse addTemplate(String template) {
         Assert.hasText(template, "template should not be blank");
         if (!templates.stream().anyMatch(mav -> template.equals(mav.getViewName()))) {
             templates.add(new ModelAndView(template));
         }
         return this;
-	}
+    }
 
-	/**
-	 * Append the rendered template or fragment as a resolved {@link View}.
-	 *
-	 * @param template must not be {@literal null}.
-	 * @return same HtmxResponse for chaining
-	 */
-	public HtmxResponse addTemplate(View template) {
+    /**
+     * Append the rendered template or fragment as a resolved {@link View}.
+     *
+     * @param template must not be {@literal null}.
+     * @return same HtmxResponse for chaining
+     */
+    public HtmxResponse addTemplate(View template) {
         Assert.notNull(template, "template should not be null");
         if (!templates.stream().anyMatch(mav -> template.equals(mav.getView()))) {
             templates.add(new ModelAndView(template));
         }
         return this;
-	}
+    }
 
-	/**
-	 * Append the rendered template or fragment as a {@link ModelAndView}.
-	 *
-	 * @param template must not be {@literal null}.
-	 * @return same HtmxResponse for chaining
-	 */
-	public HtmxResponse addTemplate(ModelAndView template) {
+    /**
+     * Append the rendered template or fragment as a {@link ModelAndView}.
+     *
+     * @param template must not be {@literal null}.
+     * @return same HtmxResponse for chaining
+     */
+    public HtmxResponse addTemplate(ModelAndView template) {
         Assert.notNull(template, "template should not be null");
         templates.add(template);
         return this;
-	}
+    }
 
     /**
      * Set a HX-Trigger header. Multiple trigger were automatically be merged into the same header.
      *
-     * @see <a href="https://htmx.org/headers/hx-trigger/">HX-Trigger Response Headers</a>
-     *
      * @param eventName must not be {@literal null} or empty.
      * @return same HtmxResponse for chaining
+     * @see <a href="https://htmx.org/headers/hx-trigger/">HX-Trigger Response Headers</a>
      */
     public HtmxResponse addTrigger(String eventName) {
         Assert.hasText(eventName, "eventName should not be blank");
@@ -100,16 +99,15 @@ final public class HtmxResponse {
      * Multiple trigger were
      * automatically be merged into the same header.
      *
-     * @see <a href="https://htmx.org/headers/hx-trigger/">HX-Trigger Response Headers</a>
-     *
-     * @param eventName must not be {@literal null} or empty.
+     * @param eventName   must not be {@literal null} or empty.
      * @param eventDetail can be {@literal null}.
-     * @param step must not be {@literal null} or empty.
+     * @param step        must not be {@literal null} or empty.
      * @return same HtmxResponse for chaining
+     * @see <a href="https://htmx.org/headers/hx-trigger/">HX-Trigger Response Headers</a>
      */
     public HtmxResponse addTrigger(String eventName, String eventDetail, HxTriggerLifecycle step) {
         Assert.hasText(eventName, "eventName should not be blank");
-        switch(step) {
+        switch (step) {
             case RECEIVE:
                 triggers.put(eventName, eventDetail);
                 break;
@@ -120,7 +118,7 @@ final public class HtmxResponse {
                 triggersAfterSwap.put(eventName, eventDetail);
                 break;
             default:
-                throw new IllegalArgumentException("Unknown step "+ step);
+                throw new IllegalArgumentException("Unknown step " + step);
         }
         return this;
     }
@@ -130,7 +128,6 @@ final public class HtmxResponse {
      *
      * @param url must not be {@literal null} or empty. {@literal false} prevents the browser history from being updated
      * @return same HtmxResponse for chaining
-     *
      * @see <a href="https://htmx.org/headers/hx-push/">HX-Push Response Header</a> documentation
      */
     public HtmxResponse pushHistory(String url) {
@@ -187,13 +184,12 @@ final public class HtmxResponse {
     }
 
     /**
-     *
      * @param otherResponse Another HtmxResponse that will be merged into this response.
      * @return this for chaining
      */
-    public HtmxResponse and(HtmxResponse otherResponse){
+    public HtmxResponse and(HtmxResponse otherResponse) {
         otherResponse.templates.forEach(otherTemplate -> {
-            if(this.templates.stream().anyMatch(mav -> same(otherTemplate, mav))) {
+            if (this.templates.stream().anyMatch(mav -> same(otherTemplate, mav))) {
                 LOG.info("Duplicate template '{}' found while merging HtmxResponse", otherTemplate);
             } else {
                 templates.add(otherTemplate);
@@ -203,19 +199,19 @@ final public class HtmxResponse {
         mergeMapAndLog(HxTriggerLifecycle.SETTLE, this.triggersAfterSettle, otherResponse.triggersAfterSettle);
         mergeMapAndLog(HxTriggerLifecycle.SWAP, this.triggersAfterSwap, otherResponse.triggersAfterSwap);
 
-        if(otherResponse.getHeaderPushHistory() != null) {
+        if (otherResponse.getHeaderPushHistory() != null) {
             this.headerPushHistory = otherResponse.getHeaderPushHistory();
         }
-        if(otherResponse.getHeaderRedirect() != null) {
+        if (otherResponse.getHeaderRedirect() != null) {
             this.headerRedirect = otherResponse.getHeaderRedirect();
         }
-        if(otherResponse.getHeaderRefresh()) {
+        if (otherResponse.getHeaderRefresh()) {
             this.headerRefresh = true;
         }
-        if(otherResponse.getHeaderRedirect() != null) {
+        if (otherResponse.getHeaderRedirect() != null) {
             this.headerRedirect = otherResponse.getHeaderRedirect();
         }
-        if(otherResponse.getHeaderReswap() != null) {
+        if (otherResponse.getHeaderReswap() != null) {
             this.headerReswap = otherResponse.getHeaderReswap();
         }
 
@@ -229,10 +225,10 @@ final public class HtmxResponse {
         if (one == null || two == null) {
             return false;
         }
-        if (one.getViewName() !=null && one.getViewName().equals(two.getViewName())) {
+        if (one.getViewName() != null && one.getViewName().equals(two.getViewName())) {
             return true;
         }
-        if (one.getView() !=null && one.getView().equals(two.getView())) {
+        if (one.getView() != null && one.getView().equals(two.getView())) {
             return true;
         }
         return false;
@@ -240,8 +236,8 @@ final public class HtmxResponse {
 
     private void mergeMapAndLog(HxTriggerLifecycle receive, Map<String, String> triggers, Map<String, String> otherTriggers) {
         otherTriggers.forEach((key, value) -> {
-            if(LOG.isInfoEnabled()) {
-                if(triggers.containsKey(key)) {
+            if (LOG.isInfoEnabled()) {
+                if (triggers.containsKey(key)) {
                     String matchingTrigger = triggers.get(key);
                     LOG.info("Duplicate {} entry: event '{}' details '{}' will be overwritten by with '{}'", receive.getHeaderName(), key, matchingTrigger, value);
                 }
@@ -251,26 +247,26 @@ final public class HtmxResponse {
     }
 
 
-	Collection<ModelAndView> getTemplates() {
-		return Collections.unmodifiableCollection(templates);
-	}
+    Collection<ModelAndView> getTemplates() {
+        return Collections.unmodifiableCollection(templates);
+    }
 
     Map<String, String> getTriggers() {
-        if(this.triggers.isEmpty()) {
+        if (this.triggers.isEmpty()) {
             return Collections.emptyMap();
         }
         return new HashMap<>(this.triggers);
     }
 
     Map<String, String> getTriggersAfterSettle() {
-        if(this.triggers.isEmpty()) {
+        if (this.triggers.isEmpty()) {
             return Collections.emptyMap();
         }
         return new HashMap<>(this.triggersAfterSettle);
     }
 
     Map<String, String> getTriggersAfterSwap() {
-        if(this.triggers.isEmpty()) {
+        if (this.triggers.isEmpty()) {
             return Collections.emptyMap();
         }
         return new HashMap<>(this.triggersAfterSwap);
@@ -288,7 +284,7 @@ final public class HtmxResponse {
         return headerRedirect;
     }
 
-     String getHeaderPushHistory() {
+    String getHeaderPushHistory() {
         return headerPushHistory;
     }
 
