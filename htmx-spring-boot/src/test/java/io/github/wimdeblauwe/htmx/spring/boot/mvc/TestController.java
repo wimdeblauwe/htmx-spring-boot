@@ -95,4 +95,11 @@ public class TestController {
         return "";
     }
 
+    @GetMapping("/hx-reswap")
+    @HxReswap(value = HxSwapType.INNER_HTML, swap = 300)
+    @ResponseBody
+    public String hxReswap() {
+        return "";
+    }
+
 }

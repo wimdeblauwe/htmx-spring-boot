@@ -1,18 +1,17 @@
 package io.github.wimdeblauwe.htmx.spring.boot.mvc;
 
-import static io.github.wimdeblauwe.htmx.spring.boot.mvc.HtmxResponseHeader.*;
-
-import java.lang.reflect.Method;
-
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.core.annotation.AnnotatedElementUtils;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
+import java.lang.reflect.Method;
+import java.time.Duration;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import static io.github.wimdeblauwe.htmx.spring.boot.mvc.HtmxResponseHeader.*;
 
 public class HtmxHandlerInterceptor implements HandlerInterceptor {
 
@@ -32,6 +31,7 @@ public class HtmxHandlerInterceptor implements HandlerInterceptor {
             setHxPushUrl(response, method);
             setHxRedirect(response, method);
             setHxReplaceUrl(response, method);
+            setHxReswap(response, method);
             setHxTrigger(response, method);
             setHxRefresh(response, method);
         }
@@ -69,6 +69,13 @@ public class HtmxHandlerInterceptor implements HandlerInterceptor {
         HxReplaceUrl methodAnnotation = AnnotatedElementUtils.findMergedAnnotation(method, HxReplaceUrl.class);
         if (methodAnnotation != null) {
             response.setHeader(HX_REPLACE_URL.getValue(), methodAnnotation.value());
+        }
+    }
+
+    private void setHxReswap(HttpServletResponse response, Method method) {
+        HxReswap methodAnnotation = AnnotatedElementUtils.findMergedAnnotation(method, HxReswap.class);
+        if (methodAnnotation != null) {
+            response.setHeader(HX_RESWAP.getValue(), convertToReswap(methodAnnotation));
         }
     }
 
@@ -127,4 +134,44 @@ public class HtmxHandlerInterceptor implements HandlerInterceptor {
         }
         return location;
     }
+
+    private String convertToReswap(HxReswap annotation) {
+
+        var reswap = new HtmxReswap(annotation.value());
+        if (annotation.swap() != -1) {
+            reswap.swap(Duration.ofMillis(annotation.swap()));
+        }
+        if (annotation.settle() != -1) {
+            reswap.swap(Duration.ofMillis(annotation.settle()));
+        }
+        if (annotation.transition()) {
+            reswap.transition();
+        }
+        if (annotation.focusScroll() != HxReswap.FocusScroll.UNDEFINED) {
+            reswap.focusScroll(annotation.focusScroll() == HxReswap.FocusScroll.TRUE);
+        }
+        if (annotation.show() != HxReswap.Position.UNDEFINED) {
+            reswap.show(convertToPosition(annotation.show()));
+            if (!annotation.showTarget().isEmpty()) {
+                reswap.scrollTarget(annotation.showTarget());
+            }
+        }
+        if (annotation.scroll() != HxReswap.Position.UNDEFINED) {
+            reswap.scroll(convertToPosition(annotation.scroll()));
+            if (!annotation.scrollTarget().isEmpty()) {
+                reswap.scrollTarget(annotation.scrollTarget());
+            }
+        }
+
+        return reswap.toString();
+    }
+
+    private HtmxReswap.Position convertToPosition(HxReswap.Position position) {
+        return switch (position) {
+            case TOP -> HtmxReswap.Position.TOP;
+            case BOTTOM -> HtmxReswap.Position.BOTTOM;
+            default -> throw new IllegalStateException("Unexpected value: " + position);
+        };
+    }
+
 }
