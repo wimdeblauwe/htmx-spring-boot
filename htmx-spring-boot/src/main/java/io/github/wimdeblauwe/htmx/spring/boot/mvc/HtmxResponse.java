@@ -31,6 +31,7 @@ public final class HtmxResponse {
     private final Set<HtmxTrigger> triggersAfterSettle;
     private final Set<HtmxTrigger> triggersAfterSwap;
     private final HtmxLocation location;
+    private final String replaceUrl;
     private final String retarget;
     private final boolean refresh;
     private final String redirect;
@@ -46,12 +47,13 @@ public final class HtmxResponse {
         return new Builder();
     }
 
-    HtmxResponse(Set<ModelAndView> templates, Set<HtmxTrigger> triggers, Set<HtmxTrigger> triggersAfterSettle, Set<HtmxTrigger> triggersAfterSwap, HtmxLocation location, String retarget, boolean refresh, String redirect, String pushUrl, HtmxReswap reswap) {
+    HtmxResponse(Set<ModelAndView> templates, Set<HtmxTrigger> triggers, Set<HtmxTrigger> triggersAfterSettle, Set<HtmxTrigger> triggersAfterSwap, HtmxLocation location, String replaceUrl, String retarget, boolean refresh, String redirect, String pushUrl, HtmxReswap reswap) {
         this.templates = templates;
         this.triggers = triggers;
         this.triggersAfterSettle = triggersAfterSettle;
         this.triggersAfterSwap = triggersAfterSwap;
         this.location = location;
+        this.replaceUrl = replaceUrl;
         this.retarget = retarget;
         this.refresh = refresh;
         this.redirect = redirect;
@@ -69,6 +71,10 @@ public final class HtmxResponse {
 
     public String getRedirect() {
         return redirect;
+    }
+
+    public String getReplaceUrl() {
+        return replaceUrl;
     }
 
     public HtmxReswap getReswap() {
@@ -106,6 +112,7 @@ public final class HtmxResponse {
         private Set<HtmxTrigger> triggersAfterSettle = new LinkedHashSet<>();
         private Set<HtmxTrigger> triggersAfterSwap = new LinkedHashSet<>();
         private HtmxLocation location;
+        private String replaceUrl;
         private String pushUrl;
         private String redirect;
         private boolean refresh;
@@ -276,7 +283,7 @@ public final class HtmxResponse {
         }
 
         public HtmxResponse build() {
-            return new HtmxResponse(templates, triggers, triggersAfterSettle, triggersAfterSwap, location, retarget, refresh, redirect, pushUrl, reswap);
+            return new HtmxResponse(templates, triggers, triggersAfterSettle, triggersAfterSwap, location, replaceUrl, retarget, refresh, redirect, pushUrl, reswap);
         }
 
         /**
@@ -288,6 +295,22 @@ public final class HtmxResponse {
          */
         public Builder location(String path) {
             this.location = new HtmxLocation(path);
+            return this;
+        }
+
+        /**
+         * Allows you to replace the current URL in the location bar.
+         *
+         * @param url the URL to replace the current URL in the location bar.
+         *            This may be relative or absolute, as per
+         *            <a href="https://developer.mozilla.org/en-US/docs/Web/API/History/replaceState">history.replaceState()</a>,
+         *            but must have the same origin as the current URL.
+         *            Or {@link HtmxValue#FALSE} which prevents the browser’s current URL from being updated.
+         * @return the builder
+         * @see <a href="https://htmx.org/headers/hx-replace-url/">HX-Replace-Url Response Header</a>
+         */
+        public Builder replaceUrl(String url) {
+            this.replaceUrl = url;
             return this;
         }
 
@@ -306,7 +329,7 @@ public final class HtmxResponse {
         /**
          * Pushes a new url into the history stack
          *
-         * @param url the URL or {@literal false} which prevents the browser history from being updated.
+         * @param url the URL or {@link HtmxValue#FALSE} which prevents the browser history from being updated.
          * @return the builder
          * @see <a href="https://htmx.org/headers/hx-push/">HX-Push Response Header</a> documentation
          */

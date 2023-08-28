@@ -29,4 +29,12 @@ class HtmxViewHandlerInterceptorTest {
                .andExpect(status().isOk())
                .andExpect(header().string("HX-Location", "/path"));
     }
+
+    @Test
+    public void testHxReplaceUrl() throws Exception {
+        mockMvc.perform(get("/hvhi/hx-replace-url"))
+               .andExpect(status().isOk())
+               .andExpect(header().string("HX-Replace-Url", "/path"));
+    }
+
 }

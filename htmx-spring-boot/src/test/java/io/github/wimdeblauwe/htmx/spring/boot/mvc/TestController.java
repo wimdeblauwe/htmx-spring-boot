@@ -74,4 +74,11 @@ public class TestController {
         return "";
     }
 
+    @GetMapping("/hx-replace-url")
+    @HxReplaceUrl("/path")
+    @ResponseBody
+    public String hxReplaceUrl() {
+        return "";
+    }
+
 }

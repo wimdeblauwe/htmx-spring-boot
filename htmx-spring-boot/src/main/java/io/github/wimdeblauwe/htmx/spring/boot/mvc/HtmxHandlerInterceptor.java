@@ -1,9 +1,6 @@
 package io.github.wimdeblauwe.htmx.spring.boot.mvc;
 
-import static io.github.wimdeblauwe.htmx.spring.boot.mvc.HtmxResponseHeader.HX_REFRESH;
-import static io.github.wimdeblauwe.htmx.spring.boot.mvc.HtmxResponseHeader.HX_TRIGGER;
-import static io.github.wimdeblauwe.htmx.spring.boot.mvc.HtmxResponseHeader.HX_TRIGGER_AFTER_SETTLE;
-import static io.github.wimdeblauwe.htmx.spring.boot.mvc.HtmxResponseHeader.HX_TRIGGER_AFTER_SWAP;
+import static io.github.wimdeblauwe.htmx.spring.boot.mvc.HtmxResponseHeader.*;
 
 import java.lang.reflect.Method;
 
@@ -32,6 +29,7 @@ public class HtmxHandlerInterceptor implements HandlerInterceptor {
         if (handler instanceof HandlerMethod) {
             Method method = ((HandlerMethod) handler).getMethod();
             setHxLocation(response, method);
+            setHxReplaceUrl(response, method);
             setHxTrigger(response, method);
             setHxRefresh(response, method);
         }
@@ -48,6 +46,13 @@ public class HtmxHandlerInterceptor implements HandlerInterceptor {
             } else {
                 response.setHeader(HtmxResponseHeader.HX_LOCATION.getValue(), location.getPath());
             }
+        }
+    }
+
+    private void setHxReplaceUrl(HttpServletResponse response, Method method) {
+        HxReplaceUrl methodAnnotation = AnnotatedElementUtils.findMergedAnnotation(method, HxReplaceUrl.class);
+        if (methodAnnotation != null) {
+            response.setHeader(HX_REPLACE_URL.getValue(), methodAnnotation.value());
         }
     }
 

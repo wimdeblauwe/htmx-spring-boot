@@ -31,4 +31,9 @@ class HtmxViewHandlerInterceptorController {
         return HtmxResponse.builder().location(location).build();
     }
 
+    @GetMapping("/hx-replace-url")
+    public HtmxResponse hxReplaceUrl() {
+        return HtmxResponse.builder().replaceUrl("/path").build();
+    }
+
 }
