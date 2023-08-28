@@ -5,10 +5,13 @@ import org.springframework.ui.Model;
 public class CommonHtmxResponses {
 
     public static HtmxResponse sendAlertPartial(Model model, String alertText) {
-        HtmxResponse alertResponse = new HtmxResponse();
-        alertResponse.addTemplate("users :: alert");
         model.addAttribute("alertText", alertText);
-        alertResponse.addTrigger("alertSent");
+
+        HtmxResponse alertResponse = HtmxResponse.builder()
+            .template("users :: alert")
+            .trigger("alertSent")
+            .build();
+
         return alertResponse;
     }
 

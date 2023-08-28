@@ -43,33 +43,39 @@ public class PartialsController {
 
     @GetMapping("/partials/first")
     public HtmxResponse getFirstPartials() {
-        return new HtmxResponse().addTemplate("users :: list");
+        return HtmxResponse.builder().template("users :: list").build();
     }
 
     @GetMapping("/partials/view")
     public HtmxResponse getFirstView() {
-        return new HtmxResponse().addTemplate(new AbstractView() {
+        var view = new AbstractView() {
             @Override
             protected void renderMergedOutputModel(Map<String, Object> model, HttpServletRequest request,
-                    HttpServletResponse response) throws Exception {
-                        response.getWriter().write("<ul><li>A list</li></ul>");
+                                                   HttpServletResponse response) throws Exception {
+                response.getWriter().write("<ul><li>A list</li></ul>");
             }
-            
-        });
+
+        };
+
+        return HtmxResponse.builder().template(view).build();
     }
 
     @GetMapping("/partials/mav")
     public HtmxResponse getFirstModelAndView() {
-        return new HtmxResponse().addTemplate(new ModelAndView("fragments :: todoItem", Map.of("item", new TodoItem("Foo"))));
+        return HtmxResponse.builder()
+            .template(new ModelAndView("fragments :: todoItem", Map.of("item", new TodoItem("Foo"))))
+            .build();
     }
 
     @GetMapping("/partials/main-and-partial")
     public HtmxResponse getMainAndPartial(Model model) {
         model.addAttribute("userCountOob", true);
         model.addAttribute("userCount", 5);
-        return new HtmxResponse()
-                .addTemplate("users :: list")
-                .addTemplate("users :: count");
+
+        return HtmxResponse.builder()
+                .template("users :: list")
+                .template("users :: count")
+                .build();
     }
 
     @PostMapping("/partials/add-todo")
@@ -77,9 +83,11 @@ public class PartialsController {
         model.addAttribute("item", item);
         model.addAttribute("itemCountSwap", "true");
         model.addAttribute("numberOfActiveItems", todoRepository.getNumberOfActiveItems());
-        return new HtmxResponse()
-                .addTemplate("fragments :: todoItem")
-                .addTemplate("fragments :: active-items-count");
+
+        return HtmxResponse.builder()
+                .template("fragments :: todoItem")
+                .template("fragments :: active-items-count")
+                .build();
     }
 
     @GetMapping("/partials/triggers")
@@ -87,17 +95,18 @@ public class PartialsController {
         model.addAttribute("userCountOob", true);
         model.addAttribute("userCount", 5);
 
-        return new HtmxResponse().addTemplate("users :: list")
-                                 .addTemplate("users :: count")
-                                 .addTrigger("usersCounted")
-                                 .addTrigger("usersCountedSwap", "swap detail", HxTriggerLifecycle.SWAP)
-                                 .addTrigger("usersCountedSettle1", "aDetail", HxTriggerLifecycle.SETTLE)
-                                 .addTrigger("usersCountedSettle2", null, HxTriggerLifecycle.SETTLE)
-                .retarget("#newTarget")
-                .pushHistory("/a/newHistory")
-                .browserRefresh(true)
-                .browserRedirect("/a/redirect");
-
+        return HtmxResponse.builder()
+            .template("users :: list")
+            .template("users :: count")
+            .trigger("usersCounted")
+            .trigger("usersCountedSwap", "swap detail", HxTriggerLifecycle.SWAP)
+            .trigger("usersCountedSettle1", "aDetail", HxTriggerLifecycle.SETTLE)
+            .trigger("usersCountedSettle2", null, HxTriggerLifecycle.SETTLE)
+            .retarget("#newTarget")
+            .pushUrl("/a/newHistory")
+            .refresh()
+            .redirect("/a/redirect")
+            .build();
     }
 
 
@@ -106,9 +115,11 @@ public class PartialsController {
         model.addAttribute("userCountOob", true);
         model.addAttribute("userCount", 5);
 
-        return new HtmxResponse().addTemplate("users :: list")
-                                 .addTemplate("users :: count")
-                                 .and(CommonHtmxResponses.sendAlertPartial(model, "Warning! Odium approaches!"));
+        return HtmxResponse.builder()
+            .template("users :: list")
+            .template("users :: count")
+            .and(CommonHtmxResponses.sendAlertPartial(model, "Warning! Odium approaches!"))
+            .build();
     }
 
 
@@ -116,6 +127,5 @@ public class PartialsController {
     public String getWithExpressionUtility() {
         return "htmxRequest";
     }
-
 
 }
