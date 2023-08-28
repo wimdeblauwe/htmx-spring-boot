@@ -14,10 +14,13 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.View;
 
 /**
- * Representation of HTMX partials.
+ * Can be used as a controller method return value to specify htmx
+ * related response options and returning multiple partials in a single response.
  *
  * @author Oliver Drotbohm
  * @author Clint Checketts
+ * @author Sascha Woo
+ * @see <a href="https://htmx.org/reference/#response_headers">Response Headers Reference</a>
  */
 final public class HtmxResponse {
     private static final Logger LOG = LoggerFactory.getLogger(HtmxResponse.class);
@@ -146,7 +149,7 @@ final public class HtmxResponse {
     }
 
     /**
-     * If set to "true" the client side will do a a full refresh of the page
+     * If set to "true" the client side will do a full refresh of the page
      *
      * @param refresh boolean to indicate full refresh or not.
      * @return same HtmxResponse for chaining
