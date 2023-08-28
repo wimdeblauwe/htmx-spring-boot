@@ -108,6 +108,7 @@ The first is to use annotations, e.g. `@HxTrigger`, and the second is to use the
 See [Response Headers Reference](https://htmx.org/reference/#response_headers) for the related htmx documentation.
 
 The following annotations are currently supported:
+* [@HxLocation](https://javadoc.io/doc/io.github.wimdeblauwe/htmx-spring-boot/latest/io/github/wimdeblauwe/htmx/spring/boot/mvc/HxLocation.html)
 * [@HxRefresh](https://javadoc.io/doc/io.github.wimdeblauwe/htmx-spring-boot/latest/io/github/wimdeblauwe/htmx/spring/boot/mvc/HxRefresh.html)
 * [@HxTrigger](https://javadoc.io/doc/io.github.wimdeblauwe/htmx-spring-boot/latest/io/github/wimdeblauwe/htmx/spring/boot/mvc/HxTrigger.html)
 

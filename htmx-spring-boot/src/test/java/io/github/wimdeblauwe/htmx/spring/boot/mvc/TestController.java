@@ -50,7 +50,6 @@ public class TestController {
         return "";
     }
 
-
     @GetMapping("/hx-refresh")
     @HxRefresh
     @ResponseBody
@@ -61,6 +60,20 @@ public class TestController {
     @GetMapping("/hx-vary")
     @ResponseBody
     public String hxVary() {
+        return "";
+    }
+
+    @GetMapping("/hx-location-without-context-data")
+    @HxLocation("/path")
+    @ResponseBody
+    public String hxLocationWithoutContextData() {
+        return "";
+    }
+
+    @GetMapping("/hx-location-with-context-data")
+    @HxLocation(path = "/path", source = "source", event = "event", handler = "handler", target = "target", swap = "swap")
+    @ResponseBody
+    public String hxLocationWithContextData() {
         return "";
     }
 
