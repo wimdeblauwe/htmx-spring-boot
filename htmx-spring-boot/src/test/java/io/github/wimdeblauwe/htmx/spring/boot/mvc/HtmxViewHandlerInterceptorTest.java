@@ -40,6 +40,13 @@ public class HtmxViewHandlerInterceptorTest {
     }
 
     @Test
+    public void testHxReselect() throws Exception {
+        mockMvc.perform(get("/hvhi/hx-reselect"))
+               .andExpect(status().isOk())
+               .andExpect(header().string("HX-Reselect", "#target"));
+    }
+
+    @Test
     public void testHxReswap() throws Exception {
         mockMvc.perform(get("/hvhi/hx-reswap"))
                .andExpect(status().isOk())
