@@ -81,6 +81,13 @@ class HtmxHandlerInterceptorTest {
     }
 
     @Test
+    public void testHxRedirect() throws Exception {
+        mockMvc.perform(get("/hx-redirect"))
+               .andExpect(status().isOk())
+               .andExpect(header().string("HX-Redirect", "/path"));
+    }
+
+    @Test
     public void testHxReplaceUrl() throws Exception {
         mockMvc.perform(get("/hx-replace-url"))
                .andExpect(status().isOk())

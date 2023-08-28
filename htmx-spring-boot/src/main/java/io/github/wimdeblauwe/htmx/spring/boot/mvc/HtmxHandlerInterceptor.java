@@ -29,6 +29,7 @@ public class HtmxHandlerInterceptor implements HandlerInterceptor {
         if (handler instanceof HandlerMethod) {
             Method method = ((HandlerMethod) handler).getMethod();
             setHxLocation(response, method);
+            setHxRedirect(response, method);
             setHxReplaceUrl(response, method);
             setHxTrigger(response, method);
             setHxRefresh(response, method);
@@ -46,6 +47,13 @@ public class HtmxHandlerInterceptor implements HandlerInterceptor {
             } else {
                 response.setHeader(HtmxResponseHeader.HX_LOCATION.getValue(), location.getPath());
             }
+        }
+    }
+
+    private void setHxRedirect(HttpServletResponse response, Method method) {
+        HxRedirect methodAnnotation = AnnotatedElementUtils.findMergedAnnotation(method, HxRedirect.class);
+        if (methodAnnotation != null) {
+            response.setHeader(HX_REDIRECT.getValue(), methodAnnotation.value());
         }
     }
 
