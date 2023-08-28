@@ -100,7 +100,7 @@ class HtmxViewHandlerInterceptor implements HandlerInterceptor {
         setTriggerHeader(HxTriggerLifecycle.SWAP, htmxResponse.getTriggersAfterSwap(), response);
 
         if (htmxResponse.getHeaderPushHistory() != null) {
-            response.setHeader(HtmxResponseHeader.HX_PUSH.getValue(), htmxResponse.getHeaderPushHistory());
+            response.setHeader(HtmxResponseHeader.HX_PUSH_URL.getValue(), htmxResponse.getHeaderPushHistory());
         }
         if (htmxResponse.getHeaderRedirect() != null) {
             response.setHeader(HtmxResponseHeader.HX_REDIRECT.getValue(), htmxResponse.getHeaderRedirect());

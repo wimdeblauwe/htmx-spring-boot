@@ -1,7 +1,7 @@
 package io.github.wimdeblauwe.htmx.spring.boot.mvc;
 
 public enum HtmxResponseHeader {
-    HX_PUSH("HX-Push"),
+    HX_PUSH_URL("HX-Push-Url"),
     HX_REDIRECT("HX-Redirect"),
     HX_REFRESH("HX-Refresh"),
     HX_RETARGET("HX-Retarget"),
@@ -20,3 +20,4 @@ public enum HtmxResponseHeader {
         return value;
     }
 }
+
