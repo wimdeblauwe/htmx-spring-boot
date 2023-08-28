@@ -8,6 +8,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.time.Duration;
+import java.util.Map;
+import java.util.TreeMap;
+
 @Controller
 @RequestMapping("/hvhi")
 public class HtmxViewHandlerInterceptorController {
@@ -30,6 +34,11 @@ public class HtmxViewHandlerInterceptorController {
     @GetMapping("/hx-location-without-context-data")
     public HtmxResponse hxLocationWithoutContextData() {
         return HtmxResponse.builder().location("/path").build();
+    }
+
+    @GetMapping("/hx-replace-url")
+    public HtmxResponse hxReplaceUrl() {
+        return HtmxResponse.builder().replaceUrl("/path").build();
     }
 
     @GetMapping("/hx-reswap")

@@ -13,6 +13,12 @@ public enum HtmxResponseHeader {
      */
     HX_LOCATION("HX-Location"),
     /**
+     * Allows you to replace the current URL in the location bar.
+     *
+     * @see <a href="https://htmx.org/headers/hx-replace-url/">HX-Replace-Url</a>
+     */
+    HX_REPLACE_URL("HX-Replace-Url"),
+    /**
      * Pushes a new url into the history stack.
      *
      * @see <a href="https://htmx.org/headers/hx-push-url">HX-Push</a>
