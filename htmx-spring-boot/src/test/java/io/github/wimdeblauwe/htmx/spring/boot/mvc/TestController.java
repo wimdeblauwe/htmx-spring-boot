@@ -105,4 +105,11 @@ public class TestController {
         return "";
     }
 
+    @GetMapping("/hx-retarget")
+    @HxRetarget("#target")
+    @ResponseBody
+    public String hxRetarget() {
+        return "";
+    }
+
 }

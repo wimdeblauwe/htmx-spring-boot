@@ -35,6 +35,7 @@ public class HtmxHandlerInterceptor implements HandlerInterceptor {
             setHxRedirect(response, method);
             setHxReplaceUrl(response, method);
             setHxReswap(response, method);
+            setHxRetarget(response, method);
             setHxTrigger(response, method);
             setHxRefresh(response, method);
             setVary(request, response);
@@ -86,6 +87,13 @@ public class HtmxHandlerInterceptor implements HandlerInterceptor {
         HxReswap methodAnnotation = AnnotatedElementUtils.findMergedAnnotation(method, HxReswap.class);
         if (methodAnnotation != null) {
             response.setHeader(HX_RESWAP.getValue(), convertToReswap(methodAnnotation));
+        }
+    }
+
+    private void setHxRetarget(HttpServletResponse response, Method method) {
+        HxRetarget methodAnnotation = AnnotatedElementUtils.findMergedAnnotation(method, HxRetarget.class);
+        if (methodAnnotation != null) {
+            response.setHeader(HX_RETARGET.getValue(), methodAnnotation.value());
         }
     }
 
