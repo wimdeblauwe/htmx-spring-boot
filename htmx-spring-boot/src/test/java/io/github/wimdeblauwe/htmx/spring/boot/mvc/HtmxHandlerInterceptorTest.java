@@ -117,4 +117,11 @@ class HtmxHandlerInterceptorTest {
                .andExpect(header().string("HX-Replace-Url", "/path"));
     }
 
+    @Test
+    public void testHxReswap() throws Exception {
+        mockMvc.perform(get("/hx-reswap"))
+               .andExpect(status().isOk())
+               .andExpect(header().string("HX-Reswap", "innerHTML swap:300ms"));
+    }
+
 }
