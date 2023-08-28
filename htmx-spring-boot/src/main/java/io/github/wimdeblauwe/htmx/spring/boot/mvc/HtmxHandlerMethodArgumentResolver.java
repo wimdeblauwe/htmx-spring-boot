@@ -33,25 +33,25 @@ public class HtmxHandlerMethodArgumentResolver implements HandlerMethodArgumentR
 
         HtmxRequest.Builder builder = new HtmxRequest.Builder(true);
         if (request.getHeader(HX_BOOSTED.getValue()) != null) {
-            builder.withBoosted(true);
+            builder.boosted(true);
         }
         if (request.getHeader(HX_CURRENT_URL.getValue()) != null) {
-            builder.withCurrentUrl(request.getHeader(HX_CURRENT_URL.getValue()));
+            builder.currentUrl(request.getHeader(HX_CURRENT_URL.getValue()));
         }
         if (request.getHeader(HX_HISTORY_RESTORE_REQUEST.getValue()) != null) {
-            builder.withHistoryRestoreRequest(true);
+            builder.historyRestoreRequest(true);
         }
         if (request.getHeader(HX_PROMPT.getValue()) != null) {
-            builder.withPromptResponse(request.getHeader(HX_PROMPT.getValue()));
+            builder.promptResponse(request.getHeader(HX_PROMPT.getValue()));
         }
         if (request.getHeader(HX_TARGET.getValue()) != null) {
-            builder.withTarget(request.getHeader(HX_TARGET.getValue()));
+            builder.target(request.getHeader(HX_TARGET.getValue()));
         }
         if (request.getHeader(HX_TRIGGER_NAME.getValue()) != null) {
-            builder.withTriggerName(request.getHeader(HX_TRIGGER_NAME.getValue()));
+            builder.triggerName(request.getHeader(HX_TRIGGER_NAME.getValue()));
         }
         if (request.getHeader(HX_TRIGGER.getValue()) != null) {
-            builder.withTriggerId(request.getHeader(HX_TRIGGER.getValue()));
+            builder.triggerId(request.getHeader(HX_TRIGGER.getValue()));
         }
         return builder.build();
     }
