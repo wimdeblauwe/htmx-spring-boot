@@ -37,4 +37,11 @@ class HtmxViewHandlerInterceptorTest {
                .andExpect(header().string("HX-Replace-Url", "/path"));
     }
 
+    @Test
+    public void testHxReselect() throws Exception {
+        mockMvc.perform(get("/hvhi/hx-reselect"))
+               .andExpect(status().isOk())
+               .andExpect(header().string("HX-Reselect", "#target"));
+    }
+
 }

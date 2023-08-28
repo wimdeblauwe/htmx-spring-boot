@@ -36,4 +36,9 @@ class HtmxViewHandlerInterceptorController {
         return HtmxResponse.builder().replaceUrl("/path").build();
     }
 
+    @GetMapping("/hx-reselect")
+    public HtmxResponse hxReselect() {
+        return HtmxResponse.builder().reselect("#target").build();
+    }
+
 }

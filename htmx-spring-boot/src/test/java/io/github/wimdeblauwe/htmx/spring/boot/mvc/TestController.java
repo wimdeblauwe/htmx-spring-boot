@@ -109,4 +109,11 @@ public class TestController {
         return "";
     }
 
+    @GetMapping("/hx-reselect")
+    @HxReselect("#target")
+    @ResponseBody
+    public String hxReselect() {
+        return "";
+    }
+
 }

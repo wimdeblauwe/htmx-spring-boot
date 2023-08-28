@@ -115,4 +115,11 @@ class HtmxHandlerInterceptorTest {
                .andExpect(header().string("HX-Retarget", "#target"));
     }
 
+    @Test
+    public void testHxReselect() throws Exception {
+        mockMvc.perform(get("/hx-reselect"))
+               .andExpect(status().isOk())
+               .andExpect(header().string("HX-Reselect", "#target"));
+    }
+
 }

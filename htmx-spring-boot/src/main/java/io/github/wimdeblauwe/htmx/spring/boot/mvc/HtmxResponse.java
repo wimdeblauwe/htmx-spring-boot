@@ -33,6 +33,7 @@ public final class HtmxResponse {
     private final HtmxLocation location;
     private final String replaceUrl;
     private final String retarget;
+    private final String reselect;
     private final boolean refresh;
     private final String redirect;
     private final String pushUrl;
@@ -47,7 +48,7 @@ public final class HtmxResponse {
         return new Builder();
     }
 
-    HtmxResponse(Set<ModelAndView> templates, Set<HtmxTrigger> triggers, Set<HtmxTrigger> triggersAfterSettle, Set<HtmxTrigger> triggersAfterSwap, HtmxLocation location, String replaceUrl, String retarget, boolean refresh, String redirect, String pushUrl, HtmxReswap reswap) {
+    HtmxResponse(Set<ModelAndView> templates, Set<HtmxTrigger> triggers, Set<HtmxTrigger> triggersAfterSettle, Set<HtmxTrigger> triggersAfterSwap, HtmxLocation location, String replaceUrl, String retarget, String reselect, boolean refresh, String redirect, String pushUrl, HtmxReswap reswap) {
         this.templates = templates;
         this.triggers = triggers;
         this.triggersAfterSettle = triggersAfterSettle;
@@ -55,6 +56,7 @@ public final class HtmxResponse {
         this.location = location;
         this.replaceUrl = replaceUrl;
         this.retarget = retarget;
+        this.reselect = reselect;
         this.refresh = refresh;
         this.redirect = redirect;
         this.pushUrl = pushUrl;
@@ -75,6 +77,10 @@ public final class HtmxResponse {
 
     public String getReplaceUrl() {
         return replaceUrl;
+    }
+
+    public String getReselect() {
+        return reselect;
     }
 
     public HtmxReswap getReswap() {
@@ -118,6 +124,7 @@ public final class HtmxResponse {
         private boolean refresh;
         private HtmxReswap reswap;
         private String retarget;
+        private String reselect;
 
         /**
          * Append the rendered template or fragment.
@@ -283,7 +290,7 @@ public final class HtmxResponse {
         }
 
         public HtmxResponse build() {
-            return new HtmxResponse(templates, triggers, triggersAfterSettle, triggersAfterSwap, location, replaceUrl, retarget, refresh, redirect, pushUrl, reswap);
+            return new HtmxResponse(templates, triggers, triggersAfterSettle, triggersAfterSwap, location, replaceUrl, retarget, reselect, refresh, redirect, pushUrl, reswap);
         }
 
         /**
@@ -384,6 +391,19 @@ public final class HtmxResponse {
         public Builder retarget(String cssSelector) {
             Assert.hasText(cssSelector, "cssSelector should not be blank");
             this.retarget = cssSelector;
+            return this;
+        }
+
+        /**
+         * Set a CSS selector that allows you to choose which part of the response is used to be swapped in.
+         * <p>Overrides an existing <a href="https://htmx.org/attributes/hx-select/">hx-select</a> on the triggering element.
+         *
+         * @param cssSelector the CSS selector
+         * @return the builder
+         */
+        public Builder reselect(String cssSelector) {
+            Assert.hasText(cssSelector, "cssSelector should not be blank");
+            this.reselect = cssSelector;
             return this;
         }
 

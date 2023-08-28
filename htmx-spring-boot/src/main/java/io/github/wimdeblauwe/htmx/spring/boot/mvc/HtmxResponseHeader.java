@@ -43,6 +43,12 @@ public enum HtmxResponseHeader {
      */
     HX_RETARGET("HX-Retarget"),
     /**
+     * A CSS selector that allows you to choose which part of the response is used to be swapped in.
+     *
+     * @see <a href="https://htmx.org/reference/#response_headers">HX-Reselect</a>
+     */
+    HX_RESELECT("HX-Reselect"),
+    /**
      * Can be used to trigger client side events.
      *
      * @see <a href="https://htmx.org/headers/hx-trigger/">HX-Trigger</a>
