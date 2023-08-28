@@ -41,7 +41,7 @@ public class HtmxMvcAutoConfiguration implements WebMvcRegistrations, WebMvcConf
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(new HtmxHandlerInterceptor());
+        registry.addInterceptor(new HtmxHandlerInterceptor(objectMapper));
         registry.addInterceptor(new HtmxViewHandlerInterceptor(resolver.getObject(), locales, objectMapper));
     }
 

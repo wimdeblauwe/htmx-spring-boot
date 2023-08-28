@@ -30,6 +30,7 @@ public final class HtmxResponse {
     private final Set<HtmxTrigger> triggers;
     private final Set<HtmxTrigger> triggersAfterSettle;
     private final Set<HtmxTrigger> triggersAfterSwap;
+    private final HtmxLocation location;
     private final String retarget;
     private final boolean refresh;
     private final String redirect;
@@ -45,16 +46,21 @@ public final class HtmxResponse {
         return new Builder();
     }
 
-    HtmxResponse(Set<ModelAndView> templates, Set<HtmxTrigger> triggers, Set<HtmxTrigger> triggersAfterSettle, Set<HtmxTrigger> triggersAfterSwap, String retarget, boolean refresh, String redirect, String pushUrl, HtmxReswap reswap) {
+    HtmxResponse(Set<ModelAndView> templates, Set<HtmxTrigger> triggers, Set<HtmxTrigger> triggersAfterSettle, Set<HtmxTrigger> triggersAfterSwap, HtmxLocation location, String retarget, boolean refresh, String redirect, String pushUrl, HtmxReswap reswap) {
         this.templates = templates;
         this.triggers = triggers;
         this.triggersAfterSettle = triggersAfterSettle;
         this.triggersAfterSwap = triggersAfterSwap;
+        this.location = location;
         this.retarget = retarget;
         this.refresh = refresh;
         this.redirect = redirect;
         this.pushUrl = pushUrl;
         this.reswap = reswap;
+    }
+
+    public HtmxLocation getLocation() {
+        return location;
     }
 
     public String getPushUrl() {
@@ -99,6 +105,7 @@ public final class HtmxResponse {
         private Set<HtmxTrigger> triggers = new LinkedHashSet<>();
         private Set<HtmxTrigger> triggersAfterSettle = new LinkedHashSet<>();
         private Set<HtmxTrigger> triggersAfterSwap = new LinkedHashSet<>();
+        private HtmxLocation location;
         private String pushUrl;
         private String redirect;
         private boolean refresh;
@@ -269,7 +276,31 @@ public final class HtmxResponse {
         }
 
         public HtmxResponse build() {
-            return new HtmxResponse(templates, triggers, triggersAfterSettle, triggersAfterSwap, retarget, refresh, redirect, pushUrl, reswap);
+            return new HtmxResponse(templates, triggers, triggersAfterSettle, triggersAfterSwap, location, retarget, refresh, redirect, pushUrl, reswap);
+        }
+
+        /**
+         * Allows you to do a client-side redirect that does not do a full page reload.
+         *
+         * @param path the path
+         * @return the builder
+         * @see <a href="https://htmx.org/headers/hx-location/">HX-Location Response Header</a>
+         */
+        public Builder location(String path) {
+            this.location = new HtmxLocation(path);
+            return this;
+        }
+
+        /**
+         * Allows you to do a client-side redirect that does not do a full page reload.
+         *
+         * @param location the location
+         * @return the builder
+         * @see <a href="https://htmx.org/headers/hx-location/">HX-Location Response Header</a>
+         */
+        public Builder location(HtmxLocation location) {
+            this.location = location;
+            return this;
         }
 
         /**
@@ -362,4 +393,5 @@ public final class HtmxResponse {
         }
 
     }
+
 }

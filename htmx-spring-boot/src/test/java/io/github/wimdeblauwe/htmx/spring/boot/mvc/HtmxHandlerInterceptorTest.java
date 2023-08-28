@@ -65,4 +65,19 @@ class HtmxHandlerInterceptorTest {
                .andExpect(status().isOk())
                .andExpect(header().string("HX-Refresh", "true"));
     }
+
+    @Test
+    public void testHxLocationWithContextData() throws Exception {
+        mockMvc.perform(get("/hx-location-with-context-data"))
+               .andExpect(status().isOk())
+               .andExpect(header().string("HX-Location", "{\"path\":\"/path\",\"source\":\"source\",\"event\":\"event\",\"handler\":\"handler\",\"target\":\"target\",\"swap\":\"swap\"}"));
+    }
+
+    @Test
+    public void testHxLocationWithoutContextData() throws Exception {
+        mockMvc.perform(get("/hx-location-without-context-data"))
+               .andExpect(status().isOk())
+               .andExpect(header().string("HX-Location", "/path"));
+    }
+
 }

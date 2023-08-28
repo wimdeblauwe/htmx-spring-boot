@@ -14,18 +14,41 @@ import org.springframework.web.servlet.HandlerInterceptor;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 public class HtmxHandlerInterceptor implements HandlerInterceptor {
+
+    private final ObjectMapper objectMapper;
+
+    public HtmxHandlerInterceptor(ObjectMapper objectMapper) {
+        this.objectMapper = objectMapper;
+    }
+
     @Override
     public boolean preHandle(HttpServletRequest request,
-                           HttpServletResponse response,
-                           Object handler) {
+                             HttpServletResponse response,
+                             Object handler) {
         if (handler instanceof HandlerMethod) {
             Method method = ((HandlerMethod) handler).getMethod();
+            setHxLocation(response, method);
             setHxTrigger(response, method);
             setHxRefresh(response, method);
         }
 
         return true;
+    }
+
+    private void setHxLocation(HttpServletResponse response, Method method) {
+        HxLocation methodAnnotation = AnnotatedElementUtils.findMergedAnnotation(method, HxLocation.class);
+        if (methodAnnotation != null) {
+            var location = convertToLocation(methodAnnotation);
+            if (location.hasContextData()) {
+                setHeaderJsonValue(response, HtmxResponseHeader.HX_LOCATION.getValue(), location);
+            } else {
+                response.setHeader(HtmxResponseHeader.HX_LOCATION.getValue(), location.getPath());
+            }
+        }
     }
 
     private void setHxTrigger(HttpServletResponse response, Method method) {
@@ -53,5 +76,34 @@ public class HtmxHandlerInterceptor implements HandlerInterceptor {
             default:
                 throw new IllegalArgumentException("Unknown lifecycle:" + lifecycle);
         }
+    }
+
+    private void setHeaderJsonValue(HttpServletResponse response, String name, Object value) {
+        try {
+            response.setHeader(name, objectMapper.writeValueAsString(value));
+        } catch (JsonProcessingException e) {
+            throw new IllegalArgumentException("Unable to set header " + name + " to " + value, e);
+        }
+    }
+
+    private HtmxLocation convertToLocation(HxLocation annotation) {
+        var location = new HtmxLocation();
+        location.setPath(annotation.path());
+        if (!annotation.source().isEmpty()) {
+            location.setSource(annotation.source());
+        }
+        if (!annotation.event().isEmpty()) {
+            location.setEvent(annotation.event());
+        }
+        if (!annotation.handler().isEmpty()) {
+            location.setHandler(annotation.handler());
+        }
+        if (!annotation.target().isEmpty()) {
+            location.setTarget(annotation.target());
+        }
+        if (!annotation.target().isEmpty()) {
+            location.setSwap(annotation.swap());
+        }
+        return location;
     }
 }

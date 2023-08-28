@@ -7,6 +7,12 @@ package io.github.wimdeblauwe.htmx.spring.boot.mvc;
  */
 public enum HtmxResponseHeader {
     /**
+     * Allows you to do a client-side redirect that does not do a full page reload.
+     *
+     * @see <a href="https://htmx.org/headers/hx-location/">HX-Location</a>
+     */
+    HX_LOCATION("HX-Location"),
+    /**
      * Pushes a new url into the history stack.
      *
      * @see <a href="https://htmx.org/reference/#response_headers">HX-Push-Url</a>
@@ -15,7 +21,7 @@ public enum HtmxResponseHeader {
     /**
      * Can be used to do a client-side redirect to a new location.
      *
-     * @see <a href="https://htmx.org/reference/#response_headers">HX-Redirect</a>
+     * @see <a href="https://htmx.org/headers/hx-push-url/">HX-Redirect</a>
      */
     HX_REDIRECT("HX-Redirect"),
     /**
