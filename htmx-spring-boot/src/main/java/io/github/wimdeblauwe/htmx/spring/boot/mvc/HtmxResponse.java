@@ -24,7 +24,7 @@ import org.springframework.web.servlet.View;
  */
 public final class HtmxResponse {
 
-    private static final Logger LOG = LoggerFactory.getLogger(HtmxResponse.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(HtmxResponse.class);
 
     private final Set<ModelAndView> templates;
     private final Set<HtmxTrigger> triggers;
@@ -239,7 +239,7 @@ public final class HtmxResponse {
 
             otherResponse.templates.forEach(otherTemplate -> {
                 if (this.templates.stream().anyMatch(mav -> same(otherTemplate, mav))) {
-                    LOG.info("Duplicate template '{}' found while merging HtmxResponse", otherTemplate);
+                    LOGGER.warn("Duplicate template '{}' found while merging HtmxResponse", otherTemplate);
                 } else {
                     templates.add(otherTemplate);
                 }
@@ -333,10 +333,10 @@ public final class HtmxResponse {
 
         private void mergeTriggers(Collection<HtmxTrigger> triggers, Collection<HtmxTrigger> otherTriggers) {
             for (HtmxTrigger otherTrigger : otherTriggers) {
-                if (LOG.isInfoEnabled()) {
+                if (LOGGER.isWarnEnabled()) {
                     Optional<HtmxTrigger> otrigger = triggers.stream().filter(t -> t.getEventName().equals(otherTrigger.getEventName())).findFirst();
                     if (otrigger.isPresent()) {
-                        LOG.info("Duplicate trigger event '{}' found. Details '{}' will be overwritten by with '{}'", otherTrigger.getEventName(), otrigger.get().getEventDetail(), otherTrigger.getEventDetail());
+                        LOGGER.warn("Duplicate trigger event '{}' found. Details '{}' will be overwritten by with '{}'", otherTrigger.getEventName(), otrigger.get().getEventDetail(), otherTrigger.getEventDetail());
                     }
                 }
                 triggers.add(otherTrigger);
