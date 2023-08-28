@@ -108,4 +108,11 @@ class HtmxHandlerInterceptorTest {
                .andExpect(header().string("HX-Reswap", "innerHTML swap:300ms"));
     }
 
+    @Test
+    public void testHxRetarget() throws Exception {
+        mockMvc.perform(get("/hx-retarget"))
+               .andExpect(status().isOk())
+               .andExpect(header().string("HX-Retarget", "#target"));
+    }
+
 }
