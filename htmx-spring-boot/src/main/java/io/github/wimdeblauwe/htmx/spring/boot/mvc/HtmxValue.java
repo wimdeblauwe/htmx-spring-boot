@@ -10,4 +10,9 @@ public class HtmxValue {
      */
     public static final String FALSE = "false";
 
+    /**
+     * Constant for use in annotations that support a {@code true} value to enable functions.
+     */
+    public static final String TRUE = "true";
+
 }

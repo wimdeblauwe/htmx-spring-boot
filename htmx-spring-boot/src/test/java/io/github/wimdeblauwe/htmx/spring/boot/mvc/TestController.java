@@ -77,6 +77,13 @@ public class TestController {
         return "";
     }
 
+    @GetMapping("/hx-push-url")
+    @HxPushUrl("/path")
+    @ResponseBody
+    public String hxPushUrl() {
+        return "";
+    }
+
     @GetMapping("/hx-redirect")
     @HxRedirect("/path")
     @ResponseBody
