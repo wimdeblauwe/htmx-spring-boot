@@ -2,6 +2,24 @@ package io.github.wimdeblauwe.htmx.spring.boot.mvc;
 
 import org.springframework.lang.Nullable;
 
+/**
+ * This class can be used as a controller method argument to access
+ * the <a href="https://htmx.org/reference/#request_headers">htmx Request Headers</a>.
+ * <p/>
+ * <pre>
+ * {@code
+ * @GetMapping("/users")
+ * @HxRequest
+ * public String users(HtmxRequest htmxRequest) {
+ *     if (htmxRequest.isBoosted()) {
+ *         ...
+ *     }
+ * }
+ * }
+ * </pre>
+ *
+ * @see <a href="https://htmx.org/reference/#request_headers">Request Headers Reference</a>
+ */
 public final class HtmxRequest {
     private final boolean htmxRequest;
     private final boolean boosted;

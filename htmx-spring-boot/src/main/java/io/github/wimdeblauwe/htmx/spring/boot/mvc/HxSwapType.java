@@ -1,5 +1,10 @@
 package io.github.wimdeblauwe.htmx.spring.boot.mvc;
 
+/**
+ * Represents the swap options.
+ *
+ * @see <a href="https://htmx.org/attributes/hx-swap/">hx-swap</a>
+ */
 public enum HxSwapType {
 
     INNER_HTML("innerHTML"),
