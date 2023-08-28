@@ -9,9 +9,9 @@ public enum HtmxResponseHeader {
     /**
      * Pushes a new url into the history stack.
      *
-     * @see <a href="https://htmx.org/reference/#response_headers">HX-Push</a>
+     * @see <a href="https://htmx.org/reference/#response_headers">HX-Push-Url</a>
      */
-    HX_PUSH("HX-Push"),
+    HX_PUSH_URL("HX-Push-Url"),
     /**
      * Can be used to do a client-side redirect to a new location.
      *
