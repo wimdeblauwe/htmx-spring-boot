@@ -1,5 +1,6 @@
 package io.github.wimdeblauwe.htmx.spring.boot.mvc;
 
+import java.time.Duration;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -10,11 +11,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 @RequestMapping("/hvhi")
 class HtmxViewHandlerInterceptorController {
-
-    @GetMapping("/hx-location-without-context-data")
-    public HtmxResponse hxLocationWithoutContextData() {
-        return HtmxResponse.builder().location("/path").build();
-    }
 
     @GetMapping("/hx-location-with-context-data")
     public HtmxResponse hxLocationWithContextData() {
@@ -31,6 +27,26 @@ class HtmxViewHandlerInterceptorController {
         return HtmxResponse.builder().location(location).build();
     }
 
+    @GetMapping("/hx-location-without-context-data")
+    public HtmxResponse hxLocationWithoutContextData() {
+        return HtmxResponse.builder().location("/path").build();
+    }
+
+    @GetMapping("/hx-push-url")
+    public HtmxResponse hxPushUrl() {
+        return HtmxResponse.builder().pushUrl("/path").build();
+    }
+
+    @GetMapping("/hx-redirect")
+    public HtmxResponse hxRedirect() {
+        return HtmxResponse.builder().redirect("/path").build();
+    }
+
+    @GetMapping("/hx-refresh")
+    public HtmxResponse hxRefresh() {
+        return HtmxResponse.builder().refresh().build();
+    }
+
     @GetMapping("/hx-replace-url")
     public HtmxResponse hxReplaceUrl() {
         return HtmxResponse.builder().replaceUrl("/path").build();
@@ -39,6 +55,74 @@ class HtmxViewHandlerInterceptorController {
     @GetMapping("/hx-reselect")
     public HtmxResponse hxReselect() {
         return HtmxResponse.builder().reselect("#target").build();
+    }
+
+    @GetMapping("/hx-reswap")
+    public HtmxResponse hxReswapOuterHtmlWithSwap() {
+        var reswap = HtmxReswap.outerHtml()
+                               .settle(Duration.ofMillis(300))
+                               .swap(Duration.ofMillis(100))
+                               .show(HtmxReswap.Position.TOP)
+                               .showTarget("#target")
+                               .scroll(HtmxReswap.Position.BOTTOM)
+                               .scrollTarget("#target")
+                               .transition()
+                               .focusScroll(true);
+
+        return HtmxResponse.builder().reswap(reswap).build();
+    }
+
+    @GetMapping("/hx-retarget")
+    public HtmxResponse hxRetarget() {
+        return HtmxResponse.builder().retarget("#target").build();
+    }
+
+    @GetMapping("/hx-trigger-after-settle-with-details")
+    public HtmxResponse hxTriggerAfterSettleWithDetails() {
+        return HtmxResponse.builder()
+                           .triggerAfterSettle("event1")
+                           .triggerAfterSettle("event2", Map.of("var", "value"))
+                           .build();
+    }
+
+    @GetMapping("/hx-trigger-after-settle-without-details")
+    public HtmxResponse hxTriggerAfterSettleWithoutDetails() {
+        return HtmxResponse.builder()
+                           .triggerAfterSettle("event1")
+                           .triggerAfterSettle("event2")
+                           .build();
+    }
+
+    @GetMapping("/hx-trigger-after-swap-with-details")
+    public HtmxResponse hxTriggerAfterSwapWithDetails() {
+        return HtmxResponse.builder()
+                           .triggerAfterSwap("event1")
+                           .triggerAfterSwap("event2", Map.of("var", "value"))
+                           .build();
+    }
+
+    @GetMapping("/hx-trigger-after-swap-without-details")
+    public HtmxResponse hxTriggerAfterSwapWithoutDetails() {
+        return HtmxResponse.builder()
+                           .triggerAfterSwap("event1")
+                           .triggerAfterSwap("event2")
+                           .build();
+    }
+
+    @GetMapping("/hx-trigger-with-details")
+    public HtmxResponse hxTriggerWithDetails() {
+        return HtmxResponse.builder()
+                           .trigger("event1")
+                           .trigger("event2", Map.of("var", "value"))
+                           .build();
+    }
+
+    @GetMapping("/hx-trigger-without-details")
+    public HtmxResponse hxTriggerWithoutDetails() {
+        return HtmxResponse.builder()
+                           .trigger("event1")
+                           .trigger("event2")
+                           .build();
     }
 
 }
