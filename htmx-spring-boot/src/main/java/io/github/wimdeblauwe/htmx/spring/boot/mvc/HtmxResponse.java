@@ -34,7 +34,7 @@ public final class HtmxResponse {
     private final boolean refresh;
     private final String redirect;
     private final String pushUrl;
-    private final HxSwapType reswap;
+    private final HtmxReswap reswap;
 
     /**
      * Return a builder to build a {@link HtmxResponse}.
@@ -45,7 +45,7 @@ public final class HtmxResponse {
         return new Builder();
     }
 
-    HtmxResponse(Set<ModelAndView> templates, Set<HtmxTrigger> triggers, Set<HtmxTrigger> triggersAfterSettle, Set<HtmxTrigger> triggersAfterSwap, String retarget, boolean refresh, String redirect, String pushUrl, HxSwapType reswap) {
+    HtmxResponse(Set<ModelAndView> templates, Set<HtmxTrigger> triggers, Set<HtmxTrigger> triggersAfterSettle, Set<HtmxTrigger> triggersAfterSwap, String retarget, boolean refresh, String redirect, String pushUrl, HtmxReswap reswap) {
         this.templates = templates;
         this.triggers = triggers;
         this.triggersAfterSettle = triggersAfterSettle;
@@ -65,7 +65,7 @@ public final class HtmxResponse {
         return redirect;
     }
 
-    public HxSwapType getReswap() {
+    public HtmxReswap getReswap() {
         return reswap;
     }
 
@@ -102,7 +102,7 @@ public final class HtmxResponse {
         private String pushUrl;
         private String redirect;
         private boolean refresh;
-        private HxSwapType reswap;
+        private HtmxReswap reswap;
         private String retarget;
 
         /**
@@ -308,14 +308,16 @@ public final class HtmxResponse {
         }
 
         /**
-         * Set a new swap to specify how the response will be swapped
+         * Set a new swap to specify how the response will be swapped.
          *
-         * @param swapType the swap style
+         * @param reswap the reswap options.
          * @return the builder
+         * @see <a href="https://htmx.org/reference/#response_headers">HX-Reswap</a>
+         * @see <a href="https://htmx.org/attributes/hx-swap/">hx-swap</a>
          */
-        public Builder reswap(HxSwapType swapType) {
-            Assert.notNull(swapType, "swapType should not be null");
-            this.reswap = swapType;
+        public Builder reswap(HtmxReswap reswap) {
+            Assert.notNull(reswap, "reswap should not be null");
+            this.reswap = reswap;
             return this;
         }
 

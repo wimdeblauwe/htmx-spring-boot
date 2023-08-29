@@ -83,14 +83,14 @@ public class HtmxResponseTest {
             .redirect("/a/new/page")
             .refresh()
             .retarget("#theThing")
-            .reswap(HxSwapType.AFTER_BEGIN)
+            .reswap(HtmxReswap.afterBegin())
             .build();
 
         assertThat(response.getPushUrl()).isEqualTo("/a/history");
         assertThat(response.getRedirect()).isEqualTo("/a/new/page");
         assertThat(response.isRefresh()).isTrue();
         assertThat(response.getRetarget()).isEqualTo("#theThing");
-        assertThat(response.getReswap()).isEqualTo(HxSwapType.AFTER_BEGIN);
+        assertThat(response.getReswap()).isEqualTo(HtmxReswap.afterBegin());
     }
 
     /**
