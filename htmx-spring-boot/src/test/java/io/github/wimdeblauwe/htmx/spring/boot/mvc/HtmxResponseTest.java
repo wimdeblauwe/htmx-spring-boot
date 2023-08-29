@@ -51,7 +51,7 @@ public class HtmxResponseTest {
             .build();
 
         assertThat(response.getTriggers()).hasSize(1);
-        assertThat(response.getTriggers()).containsOnlyKeys(myTrigger);
+        assertThat(response.getTriggers()).first().extracting(HtmxTrigger::getEventName).isEqualTo("myEvent");
     }
 
     @Test

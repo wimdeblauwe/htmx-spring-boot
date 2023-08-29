@@ -2,9 +2,9 @@ package io.github.wimdeblauwe.htmx.spring.boot.mvc;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 import org.slf4j.Logger;
@@ -27,9 +27,9 @@ public final class HtmxResponse {
     private static final Logger LOG = LoggerFactory.getLogger(HtmxResponse.class);
 
     private final Set<ModelAndView> templates;
-    private final Map<String, String> triggers;
-    private final Map<String, String> triggersAfterSettle;
-    private final Map<String, String> triggersAfterSwap;
+    private final Set<HtmxTrigger> triggers;
+    private final Set<HtmxTrigger> triggersAfterSettle;
+    private final Set<HtmxTrigger> triggersAfterSwap;
     private final String retarget;
     private final boolean refresh;
     private final String redirect;
@@ -45,7 +45,7 @@ public final class HtmxResponse {
         return new Builder();
     }
 
-    HtmxResponse(Set<ModelAndView> templates, Map<String, String> triggers, Map<String, String> triggersAfterSettle, Map<String, String> triggersAfterSwap, String retarget, boolean refresh, String redirect, String pushUrl, HxSwapType reswap) {
+    HtmxResponse(Set<ModelAndView> templates, Set<HtmxTrigger> triggers, Set<HtmxTrigger> triggersAfterSettle, Set<HtmxTrigger> triggersAfterSwap, String retarget, boolean refresh, String redirect, String pushUrl, HxSwapType reswap) {
         this.templates = templates;
         this.triggers = triggers;
         this.triggersAfterSettle = triggersAfterSettle;
@@ -81,24 +81,24 @@ public final class HtmxResponse {
         return Collections.unmodifiableCollection(templates);
     }
 
-    public Map<String, String> getTriggers() {
-        return Collections.unmodifiableMap(this.triggers);
+    public Collection<HtmxTrigger> getTriggers() {
+        return Collections.unmodifiableCollection(this.triggers);
     }
 
-    public Map<String, String> getTriggersAfterSettle() {
-        return Collections.unmodifiableMap(this.triggersAfterSettle);
+    public Collection<HtmxTrigger> getTriggersAfterSettle() {
+        return Collections.unmodifiableCollection(this.triggersAfterSettle);
     }
 
-    public Map<String, String> getTriggersAfterSwap() {
-        return Collections.unmodifiableMap(this.triggersAfterSwap);
+    public Collection<HtmxTrigger> getTriggersAfterSwap() {
+        return Collections.unmodifiableCollection(this.triggersAfterSwap);
     }
 
     public static final class Builder {
 
         private Set<ModelAndView> templates = new LinkedHashSet<>();
-        private Map<String, String> triggers = new HashMap<>();
-        private Map<String, String> triggersAfterSettle = new HashMap<>();
-        private Map<String, String> triggersAfterSwap = new HashMap<>();
+        private Set<HtmxTrigger> triggers = new LinkedHashSet<>();
+        private Set<HtmxTrigger> triggersAfterSettle = new LinkedHashSet<>();
+        private Set<HtmxTrigger> triggersAfterSwap = new LinkedHashSet<>();
         private String pushUrl;
         private String redirect;
         private boolean refresh;
@@ -146,43 +146,86 @@ public final class HtmxResponse {
         }
 
         /**
-         * Set a HX-Trigger header. Multiple trigger were automatically be merged into the same header.
+         * Adds an event that will be triggered once the response is received.
+         * <p>Multiple trigger were automatically be merged into the same header.
          *
-         * @param eventName must not be {@literal null} or empty.
+         * @param eventName the event name
          * @return the builder
          * @see <a href="https://htmx.org/headers/hx-trigger/">HX-Trigger Response Headers</a>
          */
         public Builder trigger(String eventName) {
             Assert.hasText(eventName, "eventName should not be blank");
-            return trigger(eventName, null, HxTriggerLifecycle.RECEIVE);
+            return trigger(eventName, null);
         }
 
         /**
-         * Set a HX-Trigger (or HX-Trigger-After-Settle or HX-Trigger-After-Swap headers.
-         * Multiple trigger were
-         * automatically be merged into the same header.
+         * Adds an event that will be triggered once the response is received.
+         * <p>Multiple trigger were automatically be merged into the same header.
          *
-         * @param eventName   must not be {@literal null} or empty.
-         * @param eventDetail can be {@literal null}.
-         * @param step        must not be {@literal null} or empty.
+         * @param eventName the event name
+         * @param eventDetail details along with the event
          * @return the builder
          * @see <a href="https://htmx.org/headers/hx-trigger/">HX-Trigger Response Headers</a>
          */
-        public Builder trigger(String eventName, String eventDetail, HxTriggerLifecycle step) {
+        public Builder trigger(String eventName, Map<String, Object> eventDetail) {
             Assert.hasText(eventName, "eventName should not be blank");
-            switch (step) {
-                case RECEIVE:
-                    triggers.put(eventName, eventDetail);
-                    break;
-                case SETTLE:
-                    triggersAfterSettle.put(eventName, eventDetail);
-                    break;
-                case SWAP:
-                    triggersAfterSwap.put(eventName, eventDetail);
-                    break;
-                default:
-                    throw new IllegalArgumentException("Unknown step " + step);
-            }
+            triggers.add(new HtmxTrigger(eventName, eventDetail));
+            return this;
+        }
+
+        /**
+         * Adds an event that will be triggered after the <a href="https://htmx.org/docs/#request-operations">settling step</a>.
+         * <p>Multiple triggers were automatically be merged into the same header.
+         *
+         * @param eventName the event name
+         * @return the builder
+         * @see <a href="https://htmx.org/headers/hx-trigger/">HX-Trigger Response Headers</a>
+         */
+        public Builder triggerAfterSettle(String eventName) {
+            Assert.hasText(eventName, "eventName should not be blank");
+            return triggerAfterSettle(eventName, null);
+        }
+
+        /**
+         * Adds an event that will be triggered after the <a href="https://htmx.org/docs/#request-operations">settling step</a>.
+         * <p>Multiple triggers were automatically be merged into the same header.
+         *
+         * @param eventName the event name
+         * @param eventDetail details along with the event
+         * @return the builder
+         * @see <a href="https://htmx.org/headers/hx-trigger/">HX-Trigger Response Headers</a>
+         */
+        public Builder triggerAfterSettle(String eventName, Map<String, Object> eventDetail) {
+            Assert.hasText(eventName, "eventName should not be blank");
+            triggersAfterSettle.add(new HtmxTrigger(eventName, eventDetail));
+            return this;
+        }
+
+        /**
+         * Adds an event that will be triggered after the <a href="https://htmx.org/docs/#request-operations">swap step</a>.
+         * <p>Multiple triggers were automatically be merged into the same header.
+         *
+         * @param eventName the event name
+         * @return the builder
+         * @see <a href="https://htmx.org/headers/hx-trigger/">HX-Trigger Response Headers</a>
+         */
+        public Builder triggerAfterSwap(String eventName) {
+            Assert.hasText(eventName, "eventName should not be blank");
+            return triggerAfterSwap(eventName, null);
+        }
+
+        /**
+         * Adds an event that will be triggered after the <a href="https://htmx.org/docs/#request-operations">swap step</a>.
+         * <p>Multiple triggers were automatically be merged into the same header.
+         *
+         * @param eventName the event name
+         * @param eventDetail details along with the event
+         * @return the builder
+         * @see <a href="https://htmx.org/headers/hx-trigger/">HX-Trigger Response Headers</a>
+         */
+        public Builder triggerAfterSwap(String eventName, Map<String, Object> eventDetail) {
+            Assert.hasText(eventName, "eventName should not be blank");
+            triggersAfterSwap.add(new HtmxTrigger(eventName, eventDetail));
             return this;
         }
 
@@ -202,9 +245,9 @@ public final class HtmxResponse {
                 }
             });
 
-            mergeTrigger(HxTriggerLifecycle.RECEIVE, this.triggers, otherResponse.triggers);
-            mergeTrigger(HxTriggerLifecycle.SETTLE, this.triggersAfterSettle, otherResponse.triggersAfterSettle);
-            mergeTrigger(HxTriggerLifecycle.SWAP, this.triggersAfterSwap, otherResponse.triggersAfterSwap);
+            mergeTriggers(this.triggers, otherResponse.triggers);
+            mergeTriggers(this.triggersAfterSettle, otherResponse.triggersAfterSettle);
+            mergeTriggers(this.triggersAfterSwap, otherResponse.triggersAfterSwap);
 
             if (otherResponse.pushUrl != null) {
                 this.pushUrl = otherResponse.pushUrl;
@@ -288,16 +331,16 @@ public final class HtmxResponse {
             return this;
         }
 
-        private void mergeTrigger(HxTriggerLifecycle receive, Map<String, String> triggers, Map<String, String> otherTriggers) {
-            otherTriggers.forEach((key, value) -> {
+        private void mergeTriggers(Collection<HtmxTrigger> triggers, Collection<HtmxTrigger> otherTriggers) {
+            for (HtmxTrigger otherTrigger : otherTriggers) {
                 if (LOG.isInfoEnabled()) {
-                    if (triggers.containsKey(key)) {
-                        String matchingTrigger = triggers.get(key);
-                        LOG.info("Duplicate {} entry: event '{}' details '{}' will be overwritten by with '{}'", receive.getHeaderName(), key, matchingTrigger, value);
+                    Optional<HtmxTrigger> otrigger = triggers.stream().filter(t -> t.getEventName().equals(otherTrigger.getEventName())).findFirst();
+                    if (otrigger.isPresent()) {
+                        LOG.info("Duplicate trigger event '{}' found. Details '{}' will be overwritten by with '{}'", otherTrigger.getEventName(), otrigger.get().getEventDetail(), otherTrigger.getEventDetail());
                     }
                 }
-                triggers.put(key, value);
-            });
+                triggers.add(otherTrigger);
+            }
         }
 
         private boolean same(ModelAndView one, ModelAndView two) {

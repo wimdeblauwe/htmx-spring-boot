@@ -15,8 +15,8 @@
  */
 package io.github.wimdeblauwe.htmx.spring.boot.mvc;
 
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,6 +30,7 @@ import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.util.ContentCachingResponseWrapper;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -95,9 +96,9 @@ class HtmxViewHandlerInterceptor implements HandlerInterceptor {
     }
 
     private void addHxHeaders(HtmxResponse htmxResponse, HttpServletResponse response) {
-        setTriggerHeader(HxTriggerLifecycle.RECEIVE, htmxResponse.getTriggers(), response);
-        setTriggerHeader(HxTriggerLifecycle.SETTLE, htmxResponse.getTriggersAfterSettle(), response);
-        setTriggerHeader(HxTriggerLifecycle.SWAP, htmxResponse.getTriggersAfterSwap(), response);
+        addHxTriggerHeader(response, HtmxResponseHeader.HX_TRIGGER, htmxResponse.getTriggers());
+        addHxTriggerHeader(response, HtmxResponseHeader.HX_TRIGGER_AFTER_SETTLE, htmxResponse.getTriggersAfterSettle());
+        addHxTriggerHeader(response, HtmxResponseHeader.HX_TRIGGER_AFTER_SWAP, htmxResponse.getTriggersAfterSwap());
 
         if (htmxResponse.getPushUrl() != null) {
             response.setHeader(HtmxResponseHeader.HX_PUSH_URL.getValue(), htmxResponse.getPushUrl());
@@ -116,29 +117,27 @@ class HtmxViewHandlerInterceptor implements HandlerInterceptor {
         }
     }
 
-    private void setTriggerHeader(HxTriggerLifecycle triggerHeader, Map<String, String> triggers,
-            HttpServletResponse response) {
+    private void addHxTriggerHeader(HttpServletResponse response, HtmxResponseHeader headerName, Collection<HtmxTrigger> triggers) {
         if (triggers.isEmpty()) {
             return;
         }
-        if (triggers.size() == 1) {
-            Map.Entry<String, String> singleHeader = triggers.entrySet().stream().findFirst().orElseThrow();
-            if (singleHeader.getValue() == null || singleHeader.getValue().isBlank()) {
-                response.setHeader(triggerHeader.getHeaderName(), singleHeader.getKey());
-            } else {
-                try {
-                    response.setHeader(triggerHeader.getHeaderName(), objectMapper.writeValueAsString(triggers));
-                } catch (Exception e) {
-                    LOG.warn("Unable to set header {} to {}", triggerHeader.getHeaderName(), triggers, e);
-                }
-            }
-        } else {
-            try {
-                response.setHeader(triggerHeader.getHeaderName(), objectMapper.writeValueAsString(triggers));
-            } catch (Exception e) {
-                LOG.warn("Unable to set header {} to {}", triggerHeader.getHeaderName(), triggers, e);
-            }
+
+        // separate event names by commas if no additional details are available
+        if (triggers.stream().allMatch(t -> t.getEventDetail() == null)) {
+            String value = triggers.stream()
+                                   .map(HtmxTrigger::getEventName)
+                                   .collect(Collectors.joining(","));
+
+            response.setHeader(headerName.getValue(), value);
+            return;
         }
+
+        // multiple events with or without details
+        var triggerMap = new HashMap<String, Map<String, Object>>();
+        for (HtmxTrigger trigger : triggers) {
+            triggerMap.put(trigger.getEventName(), trigger.getEventDetail());
+        }
+        setHeaderJsonValue(response, headerName.getValue(), triggerMap);
     }
 
     private View toView(HtmxResponse partials) {
@@ -163,5 +162,13 @@ class HtmxViewHandlerInterceptor implements HandlerInterceptor {
             }
             wrapper.copyBodyToResponse();
         };
+    }
+
+    private void setHeaderJsonValue(HttpServletResponse response, String name, Object value) {
+        try {
+            response.setHeader(name, objectMapper.writeValueAsString(value));
+        } catch (JsonProcessingException e) {
+            throw new IllegalArgumentException("Unable to set header " + name + " to " + value, e);
+        }
     }
 }
