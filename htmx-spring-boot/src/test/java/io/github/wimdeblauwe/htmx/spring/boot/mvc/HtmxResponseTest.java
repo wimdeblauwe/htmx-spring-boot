@@ -6,6 +6,8 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.Map;
+
 public class HtmxResponseTest {
 
     @Test
@@ -48,33 +50,69 @@ public class HtmxResponseTest {
     }
 
     @Test
-    public void testAddingTriggers() {
+    public void testAddingTrigger() {
         HtmxResponse response = HtmxResponse.builder()
                                             .trigger("event")
                                             .build();
 
-        assertThat(response.getTriggers())
-                .containsOnlyKeys("event");
+        assertThat(response.getTriggersInternal())
+                .extracting(HtmxTrigger::getEventName)
+                .containsExactly("event");
     }
 
     @Test
-    public void testAddingTriggersAfterSwap() {
+    public void testAddingTriggerWithDetails() {
+        var eventDetail = Map.of("detail1", "message1", "detail2", "message2");
         HtmxResponse response = HtmxResponse.builder()
-                .trigger("event", null, HxTriggerLifecycle.SWAP)
-                .build();
+            .trigger("event", eventDetail)
+            .build();
 
-        assertThat(response.getTriggersAfterSwap())
-                .containsKey("event");
+        assertThat(response.getTriggersInternal())
+            .containsExactly(new HtmxTrigger("event", eventDetail));
     }
 
     @Test
-    public void testAddingTriggersAfterSettle() {
+    public void testAddingTriggerAfterSwap() {
         HtmxResponse response = HtmxResponse.builder()
-                .trigger("event", null, HxTriggerLifecycle.SETTLE)
+                .triggerAfterSwap("event")
                 .build();
 
-        assertThat(response.getTriggersAfterSettle())
-                .containsKey("event");
+        assertThat(response.getTriggersAfterSwapInternal())
+                .extracting(HtmxTrigger::getEventName)
+                .containsExactly("event");
+    }
+
+    @Test
+    public void testAddingTriggerAfterSwapWithDetails() {
+        var eventDetail = Map.of("detail1", "message1", "detail2", "message2");
+        HtmxResponse response = HtmxResponse.builder()
+            .triggerAfterSwap("event", eventDetail)
+            .build();
+
+        assertThat(response.getTriggersAfterSwapInternal())
+            .containsExactly(new HtmxTrigger("event", eventDetail));
+    }
+
+    @Test
+    public void testAddingTriggerAfterSettle() {
+        HtmxResponse response = HtmxResponse.builder()
+                .triggerAfterSettle("event")
+                .build();
+
+        assertThat(response.getTriggersAfterSettleInternal())
+                .extracting(HtmxTrigger::getEventName)
+                .containsExactly("event");
+    }
+
+    @Test
+    public void testAddingTriggerAfterSettleWithDetails() {
+        var eventDetail = Map.of("detail1", "message1", "detail2", "message2");
+        HtmxResponse response = HtmxResponse.builder()
+            .triggerAfterSettle("event", eventDetail)
+            .build();
+
+        assertThat(response.getTriggersAfterSettleInternal())
+            .containsExactly(new HtmxTrigger("event", eventDetail));
     }
 
     @Test
@@ -97,8 +135,9 @@ public class HtmxResponseTest {
                     .extracting(m -> m.getViewName())
                     .containsExactly("view1", "view2");
 
-            assertThat(response.getTriggers())
-                    .containsOnlyKeys("trigger1", "trigger2");
+            assertThat(response.getTriggersInternal())
+                    .extracting(HtmxTrigger::getEventName)
+                    .containsExactly("trigger1", "trigger2");
         });
     }
 
@@ -139,7 +178,8 @@ public class HtmxResponseTest {
                 .reswap(HxSwapType.AFTER_BEGIN)
                 .build();
 
-        assertThat(response.getTriggers()).containsOnlyKeys("my-trigger");
+        assertThat(response.getTriggers())
+            .containsOnlyKeys("my-trigger");
         assertThat(response.getPushUrl()).isEqualTo("/a/history");
         assertThat(response.getRedirect()).isEqualTo("/a/new/page");
         assertThat(response.isRefresh()).isTrue();
@@ -227,7 +267,7 @@ public class HtmxResponseTest {
         }
 
         @Test
-        public void testAddingTriggers() {
+        public void testAddingTrigger() {
             var response = new HtmxResponse()
                 .addTrigger("event");
 
@@ -236,21 +276,48 @@ public class HtmxResponseTest {
         }
 
         @Test
-        public void testAddingTriggersAfterSwap() {
+        public void testAddingTriggerWithDetails() {
+            var response = new HtmxResponse()
+                    .addTrigger("event", "message", HxTriggerLifecycle.RECEIVE);
+
+            assertThat(response.getTriggers())
+                    .containsExactly(Map.entry("event", "message"));
+        }
+
+        @Test
+        public void testAddingTriggerAfterSwap() {
             var response = new HtmxResponse()
                 .addTrigger("event", null, HxTriggerLifecycle.SWAP);
 
             assertThat(response.getTriggersAfterSwap())
-                .containsKey("event");
+                .containsOnlyKeys("event");
         }
 
         @Test
-        public void testAddingTriggersAfterSettle() {
+        public void testAddingTriggerAfterSwapWithDetails() {
+            var response = new HtmxResponse()
+                    .addTrigger("event", "message", HxTriggerLifecycle.SWAP);
+
+            assertThat(response.getTriggersAfterSwap())
+                    .containsExactly(Map.entry("event", "message"));
+        }
+
+        @Test
+        public void testAddingTriggerAfterSettle() {
             var response = new HtmxResponse()
                 .addTrigger("event", null, HxTriggerLifecycle.SETTLE);
 
             assertThat(response.getTriggersAfterSettle())
-                .containsKey("event");
+                .containsOnlyKeys("event");
+        }
+
+        @Test
+        public void testAddingTriggerAfterSettleWithDetails() {
+            var response = new HtmxResponse()
+                    .addTrigger("event", "message", HxTriggerLifecycle.SETTLE);
+
+            assertThat(response.getTriggersAfterSettle())
+                    .containsExactly(Map.entry("event", "message"));
         }
 
         @Test
@@ -313,7 +380,8 @@ public class HtmxResponseTest {
                 .retarget("#theThing")
                 .reswap(HxSwapType.AFTER_BEGIN);
 
-            assertThat(response.getTriggers()).containsOnlyKeys("my-trigger");
+            assertThat(response.getTriggers())
+                .containsOnlyKeys("my-trigger");
             assertThat(response.getHeaderPushHistory()).isEqualTo("/a/history");
             assertThat(response.getHeaderRedirect()).isEqualTo("/a/new/page");
             assertThat(response.getHeaderRefresh()).isTrue();
