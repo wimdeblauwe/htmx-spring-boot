@@ -118,7 +118,7 @@ class HtmxViewHandlerInterceptor implements HandlerInterceptor {
             response.setHeader(HtmxResponseHeader.HX_RETARGET.getValue(), htmxResponse.getRetarget());
         }
         if (htmxResponse.getReswap() != null) {
-            response.setHeader(HtmxResponseHeader.HX_RESWAP.getValue(), htmxResponse.getReswap().getValue());
+            response.setHeader(HtmxResponseHeader.HX_RESWAP.getValue(), htmxResponse.getReswap().toHeaderValue());
         }
     }
 

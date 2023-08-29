@@ -1,5 +1,6 @@
 package io.github.wimdeblauwe.htmx.spring.boot.mvc;
 
+import java.time.Duration;
 import java.util.Map;
 
 import org.springframework.stereotype.Controller;
@@ -9,6 +10,21 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 @RequestMapping("/hvhi")
 public class HtmxViewHandlerInterceptorController {
+
+    @GetMapping("/hx-reswap")
+    public HtmxResponse hxReswapOuterHtmlWithSwap() {
+        var reswap = HtmxReswap.outerHtml()
+                               .settle(Duration.ofMillis(300))
+                               .swap(Duration.ofMillis(100))
+                               .show(HtmxReswap.Position.TOP)
+                               .showTarget("#target")
+                               .scroll(HtmxReswap.Position.BOTTOM)
+                               .scrollTarget("#target")
+                               .transition()
+                               .focusScroll(true);
+
+        return HtmxResponse.builder().reswap(reswap).build();
+    }
 
     @GetMapping("/hx-trigger-after-settle-with-details")
     public HtmxResponse hxTriggerAfterSettleWithDetails() {

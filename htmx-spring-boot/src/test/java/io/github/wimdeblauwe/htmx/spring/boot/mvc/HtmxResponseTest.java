@@ -145,13 +145,13 @@ public class HtmxResponseTest {
     public void testAddingResponseToExistingOneShouldOverrideProperties() {
         var response1 = HtmxResponse.builder()
                                     .retarget("selector1")
-                                    .reswap(HxSwapType.INNER_HTML)
+                                    .reswap(HtmxReswap.innerHtml())
                                     .redirect("url1")
                                     .pushUrl("url1");
 
         var response2 = HtmxResponse.builder()
                                     .retarget("selector2")
-                                    .reswap(HxSwapType.OUTER_HTML)
+                                    .reswap(HtmxReswap.outerHtml())
                                     .redirect("url2")
                                     .refresh()
                                     .pushUrl("url2");
@@ -160,7 +160,7 @@ public class HtmxResponseTest {
 
         assertThat(response1.build()).satisfies(response -> {
             assertThat(response.getRetarget()).isEqualTo("selector2");
-            assertThat(response.getReswap()).isEqualTo(HxSwapType.OUTER_HTML);
+            assertThat(response.getReswap()).isEqualTo(HtmxReswap.outerHtml());
             assertThat(response.getRedirect()).isEqualTo("url2");
             assertThat(response.isRefresh()).isEqualTo(true);
             assertThat(response.getPushUrl()).isEqualTo("url2");
@@ -175,7 +175,7 @@ public class HtmxResponseTest {
                 .redirect("/a/new/page")
                 .refresh()
                 .retarget("#theThing")
-                .reswap(HxSwapType.AFTER_BEGIN)
+                .reswap(HtmxReswap.afterBegin())
                 .build();
 
         assertThat(response.getTriggers())
@@ -184,7 +184,7 @@ public class HtmxResponseTest {
         assertThat(response.getRedirect()).isEqualTo("/a/new/page");
         assertThat(response.isRefresh()).isTrue();
         assertThat(response.getRetarget()).isEqualTo("#theThing");
-        assertThat(response.getReswap()).isEqualTo(HxSwapType.AFTER_BEGIN);
+        assertThat(response.getReswap()).isEqualTo(HtmxReswap.afterBegin());
     }
 
     /**
