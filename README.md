@@ -49,21 +49,21 @@ The included Spring Boot Auto-configuration will enable the htmx integrations.
 
 _See [Request Headers Reference](https://htmx.org/reference/#request_headers) for the related htmx documentation._
 
-Methods can be annotated with `@HxRequest` to be selected when an htmx-based request (ie `hx-get`) is made.
+Methods can be annotated with `@HxRequest` to be selected only if it is an htmx-based request (e.g. `hx-get`).
 
 ```java
+// Called when the request was made with htmx
+@HxRequest 
 @GetMapping("/users")
-@HxRequest                  // Called when hx-get request to '/users/' is made 
 public String htmxRequest(HtmxRequest details){
     service.doSomething(details);
-
     return "partial";
 }
 
-@GetMapping("/users")        // Only called on a full page refresh, not an htmx request
+// Called when a normal request was made
+@GetMapping("/users")
 public String normalRequest(HtmxRequest details){
     service.doSomething(details);
-
     return "users";
 }
 ```
@@ -71,19 +71,17 @@ public String normalRequest(HtmxRequest details){
 These annotations allow for composition if you wish to combine them,
 so you could combine annotations to make a custom `@HxGetMapping`.
 
-#### Using `HtmxRequest` to inspect HTML request headers
+#### Using `HtmxRequest` to access HTTP request headers sent by htmx
 
-The `HtmxRequest` object can be injected into controller methods to check the various htmx request headers.
+The [HtmxRequest](https://javadoc.io/doc/io.github.wimdeblauwe/htmx-spring-boot/latest/io/github/wimdeblauwe/htmx/spring/boot/mvc/HtmxRequest.html) object can be used as controller method parameter to access the various [htmx Request Headers](https://htmx.org/reference/#request_headers).
 
 ```java
 @GetMapping
-@ResponseBody
-public String htmxRequestDetails(HtmxRequest htmxReq) { // HtmxRequest is injected
-    if(htmxReq.isHistoryRestoreRequest()){
-        // ...
+public String htmxRequestDetails(HtmxRequest htmxRequest) {
+    if(htmxRequest.isHistoryRestoreRequest()){
+        // do something
     }
-
-    return "";
+    return "partial";
 }
 ```
 
@@ -91,9 +89,24 @@ public String htmxRequestDetails(HtmxRequest htmxReq) { // HtmxRequest is inject
 
 _See [Response Headers Reference](https://htmx.org/reference/#response_headers) for the related htmx documentation._
 
-Setting the `hx-trigger` header triggers an event when the response is swapped in by htmx.
-The `@HxTrigger` annotation supports doing that for you:
+There are two ways to set htmx response headers on controller methods.
+The first is to use annotations, e.g. `@HxTrigger`, and the second is to use the class [HtmxResponse](https://javadoc.io/doc/io.github.wimdeblauwe/htmx-spring-boot/latest/io/github/wimdeblauwe/htmx/spring/boot/mvc/HtmxResponse.html) as the return type of the controller method.
 
+Here you can find a list of all available annotations:
+* [@HxLocation](https://javadoc.io/doc/io.github.wimdeblauwe/htmx-spring-boot/latest/io/github/wimdeblauwe/htmx/spring/boot/mvc/HxLocation.html)
+* [@HxPushUrl](https://javadoc.io/doc/io.github.wimdeblauwe/htmx-spring-boot/latest/io/github/wimdeblauwe/htmx/spring/boot/mvc/HxPushUrl.html)
+* [@HxRedirect](https://javadoc.io/doc/io.github.wimdeblauwe/htmx-spring-boot/latest/io/github/wimdeblauwe/htmx/spring/boot/mvc/HxRedirect.html)
+* [@HxRefresh](https://javadoc.io/doc/io.github.wimdeblauwe/htmx-spring-boot/latest/io/github/wimdeblauwe/htmx/spring/boot/mvc/HxRefresh.html)
+* [@HxReplaceUrl](https://javadoc.io/doc/io.github.wimdeblauwe/htmx-spring-boot/latest/io/github/wimdeblauwe/htmx/spring/boot/mvc/HxReplaceUrl.html)
+* [@HxReselect](https://javadoc.io/doc/io.github.wimdeblauwe/htmx-spring-boot/latest/io/github/wimdeblauwe/htmx/spring/boot/mvc/HxReselect.html)
+* [@HxReswap](https://javadoc.io/doc/io.github.wimdeblauwe/htmx-spring-boot/latest/io/github/wimdeblauwe/htmx/spring/boot/mvc/HxReswap.html)
+* [@HxRetarget](https://javadoc.io/doc/io.github.wimdeblauwe/htmx-spring-boot/latest/io/github/wimdeblauwe/htmx/spring/boot/mvc/HxRetarget.html)
+* [@HxTrigger](https://javadoc.io/doc/io.github.wimdeblauwe/htmx-spring-boot/latest/io/github/wimdeblauwe/htmx/spring/boot/mvc/HxTrigger.html)
+
+>**Note** Please check the corresponding Javadoc to learn about the available options.
+
+#### Examples
+If you want htmx to trigger an event by setting the response header [HX-Trigger](https://htmx.org/headers/hx-trigger/), you can use the annotation `@HxTrigger`.
 ```java
 @GetMapping("/users")
 @HxRequest
@@ -103,19 +116,31 @@ public String hxUpdateUser(){
 }
 ```
 
+If you want to do the same, but in a more flexible way, you can use `HtmxResponse` as the return type in the controller method instead.
+```java
+@GetMapping("/users")
+@HxRequest
+public HtmxResponse hxUpdateUser(){
+    return HtmxResponse.builder()
+        .template("users")
+        .trigger("userUpdated") // 'userUpdated' event will be triggered by htmx
+        .build();
+}
+```
+
 ### OOB Swap support
 
 htmx supports updating multiple targets by returning multiple partials in a single response with
-[`hx-swap-oob`](https://htmx.org/docs/#oob_swaps). Return partials using this library use the `HtmxResponse` as a return
-type:
-
+[hx-swap-oob](https://htmx.org/docs/#oob_swaps). Return partials using this library use the `HtmxResponse` as a return
+type.
 ```java
 @GetMapping("/partials/main-and-partial")
 public HtmxResponse getMainAndPartial(Model model){
     model.addAttribute("userCount", 5);
-    return new HtmxResponse()
-        .addTemplate("users :: list")
-        .addTemplate("users :: count");
+    return HtmxResponse.builder()
+        .template("users :: list")
+        .template("users :: count")
+        .build();
 }
 ```
 
@@ -125,9 +150,10 @@ to do that, or from `ModelAndView` instances (resolved or unresolved). For examp
 ```java
 @GetMapping("/partials/main-and-partial")
 public HtmxResponse getMainAndPartial(Model model){
-    return new HtmxResponse()
-        .addTemplate(new ModelAndView("users :: list")
-        .addTemplate(new ModelAndView("users :: count", Map.of("userCount",5));
+    return HtmxResponse.builder()
+        .template(new ModelAndView("users :: list")
+        .template(new ModelAndView("users :: count", Map.of("userCount",5))
+        .build();
 }
 ```
 
