@@ -1,6 +1,6 @@
 [![Discord](https://img.shields.io/discord/725789699527933952)](https://htmx.org/discord)
-
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.github.wimdeblauwe/htmx-spring-boot-thymeleaf/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.github.wimdeblauwe/htmx-spring-boot-thymeleaf)
+[![javadoc](https://javadoc.io/badge2/io.github.wimdeblauwe/htmx-spring-boot/javadoc.svg)](https://javadoc.io/doc/io.github.wimdeblauwe/htmx-spring-boot)
 
 # Spring Boot and Thymeleaf library for htmx
 
