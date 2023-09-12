@@ -13,6 +13,14 @@ public final class HtmxRequest {
     private final String triggerName;
     private final String triggerId;
 
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    public static HtmxRequest empty() {
+        return new HtmxRequest(false, false, null, false, null, null, null, null);
+    }
+
     HtmxRequest(boolean htmxRequest, boolean boosted, String currentUrl, boolean historyRestoreRequest, String promptResponse, String target, String triggerName, String triggerId) {
         this.htmxRequest = htmxRequest;
         this.boosted = boosted;
@@ -98,7 +106,6 @@ public final class HtmxRequest {
 
     public static final class Builder {
 
-        private final boolean htmxRequest;
         private boolean boosted;
         private String currentUrl;
         private boolean historyRestoreRequest;
@@ -107,8 +114,7 @@ public final class HtmxRequest {
         private String triggerName;
         private String triggerId;
 
-        public Builder(boolean htmxRequest) {
-            this.htmxRequest = htmxRequest;
+        private Builder() {
         }
 
         /**
@@ -209,7 +215,7 @@ public final class HtmxRequest {
         }
 
         public HtmxRequest build() {
-            return new HtmxRequest(htmxRequest, boosted, currentUrl, historyRestoreRequest, promptResponse, target, triggerName, triggerId);
+            return new HtmxRequest(true, boosted, currentUrl, historyRestoreRequest, promptResponse, target, triggerName, triggerId);
         }
     }
 }

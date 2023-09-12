@@ -28,10 +28,10 @@ public class HtmxHandlerMethodArgumentResolver implements HandlerMethodArgumentR
     public static HtmxRequest createHtmxRequest(HttpServletRequest request) {
         String hxRequestHeader = request.getHeader(HX_REQUEST.getValue());
         if (hxRequestHeader == null) {
-            return new HtmxRequest.Builder(false).build();
+            return HtmxRequest.empty();
         }
 
-        HtmxRequest.Builder builder = new HtmxRequest.Builder(true);
+        HtmxRequest.Builder builder = HtmxRequest.builder();
         if (request.getHeader(HX_BOOSTED.getValue()) != null) {
             builder.boosted(true);
         }
