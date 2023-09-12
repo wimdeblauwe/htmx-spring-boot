@@ -205,8 +205,8 @@ final public class HtmxResponse {
         if (otherResponse.getHeaderRefresh()) {
             this.headerRefresh = true;
         }
-        if (otherResponse.getHeaderRedirect() != null) {
-            this.headerRedirect = otherResponse.getHeaderRedirect();
+        if (otherResponse.getHeaderRetarget() != null) {
+            this.headerRetarget = otherResponse.getHeaderRetarget();
         }
         if (otherResponse.getHeaderReswap() != null) {
             this.headerReswap = otherResponse.getHeaderReswap();

@@ -113,4 +113,31 @@ public class HtmxResponseTest {
                                  "response2 :: template 22");
 
     }
+
+    @Test
+    public void andShouldOverrideProperties() {
+        HtmxResponse response1 = new HtmxResponse()
+            .retarget("selector1")
+            .reswap(HxSwapType.INNER_HTML)
+            .browserRedirect("url1")
+            .browserRefresh(false)
+            .pushHistory("url1");
+
+        HtmxResponse response2 = new HtmxResponse()
+            .retarget("selector2")
+            .reswap(HxSwapType.OUTER_HTML)
+            .browserRedirect("url2")
+            .browserRefresh(true)
+            .pushHistory("url2");
+
+        response1.and(response2);
+
+        assertThat(response1).satisfies(response -> {
+            assertThat(response.getHeaderRetarget()).isEqualTo("selector2");
+            assertThat(response.getHeaderReswap()).isEqualTo(HxSwapType.OUTER_HTML.getValue());
+            assertThat(response.getHeaderRedirect()).isEqualTo("url2");
+            assertThat(response.getHeaderRefresh()).isEqualTo(true);
+            assertThat(response.getHeaderPushHistory()).isEqualTo("url2");
+        });
+    }
 }
