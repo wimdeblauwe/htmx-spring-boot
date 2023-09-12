@@ -3,6 +3,7 @@ package io.github.wimdeblauwe.htmx.spring.boot.mvc;
 import org.springframework.lang.Nullable;
 
 public final class HtmxRequest {
+
     private final boolean htmxRequest;
     private final boolean boosted;
     private final String currentUrl;
@@ -11,6 +12,14 @@ public final class HtmxRequest {
     private final String target;
     private final String triggerName;
     private final String triggerId;
+
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    public static HtmxRequest empty() {
+        return new HtmxRequest(false, false, null, false, null, null, null, null);
+    }
 
     HtmxRequest(boolean htmxRequest, boolean boosted, String currentUrl, boolean historyRestoreRequest, String promptResponse, String target, String triggerName, String triggerId) {
         this.htmxRequest = htmxRequest;
@@ -96,7 +105,7 @@ public final class HtmxRequest {
     }
 
     public static final class Builder {
-        private final boolean htmxRequest;
+
         private boolean boosted;
         private String currentUrl;
         private boolean historyRestoreRequest;
@@ -105,47 +114,108 @@ public final class HtmxRequest {
         private String triggerName;
         private String triggerId;
 
-        public Builder(boolean htmxRequest) {
-            this.htmxRequest = htmxRequest;
+        private Builder() {
         }
 
+        /**
+         * @deprecated use {@link #boosted(boolean)} instead. Will be removed in 4.0.
+         */
+        @Deprecated
         public Builder withBoosted(boolean boosted) {
+            return boosted(boosted);
+        }
+
+        public Builder boosted(boolean boosted) {
             this.boosted = boosted;
             return this;
         }
 
+        /**
+         * @deprecated use {@link #currentUrl(String)} instead. Will be removed in 4.0.
+         */
+        @Deprecated
         public Builder withCurrentUrl(String currentUrl) {
             this.currentUrl = currentUrl;
             return this;
         }
 
+        public Builder currentUrl(String currentUrl) {
+            this.currentUrl = currentUrl;
+            return this;
+        }
+
+        /**
+         * @deprecated use {@link #historyRestoreRequest(boolean)} instead. Will be removed in 4.0.
+         */
+        @Deprecated
         public Builder withHistoryRestoreRequest(boolean historyRestoreRequest) {
             this.historyRestoreRequest = historyRestoreRequest;
             return this;
         }
 
+        public Builder historyRestoreRequest(boolean historyRestoreRequest) {
+            this.historyRestoreRequest = historyRestoreRequest;
+            return this;
+        }
+
+        /**
+         * @deprecated use {@link #promptResponse(String)} instead. Will be removed in 4.0.
+         */
+        @Deprecated
         public Builder withPromptResponse(String promptResponse) {
             this.promptResponse = promptResponse;
             return this;
         }
 
+        public Builder promptResponse(String promptResponse) {
+            this.promptResponse = promptResponse;
+            return this;
+        }
+
+        /**
+         * @deprecated use {@link #target(String)} instead. Will be removed in 4.0.
+         */
+        @Deprecated
         public Builder withTarget(String target) {
             this.target = target;
             return this;
         }
 
+        public Builder target(String target) {
+            this.target = target;
+            return this;
+        }
+
+        /**
+         * @deprecated use {@link #triggerName(String)} instead. Will be removed in 4.0.
+         */
+        @Deprecated
         public Builder withTriggerName(String triggerName) {
             this.triggerName = triggerName;
             return this;
         }
 
+        public Builder triggerName(String triggerName) {
+            this.triggerName = triggerName;
+            return this;
+        }
+
+        /**
+         * @deprecated use {@link #triggerId(String)} instead. Will be removed in 4.0.
+         */
+        @Deprecated
         public Builder withTriggerId(String triggerId) {
             this.triggerId = triggerId;
             return this;
         }
 
+        public Builder triggerId(String triggerId) {
+            this.triggerId = triggerId;
+            return this;
+        }
+
         public HtmxRequest build() {
-            return new HtmxRequest(htmxRequest, boosted, currentUrl, historyRestoreRequest, promptResponse, target, triggerName, triggerId);
+            return new HtmxRequest(true, boosted, currentUrl, historyRestoreRequest, promptResponse, target, triggerName, triggerId);
         }
     }
 }
