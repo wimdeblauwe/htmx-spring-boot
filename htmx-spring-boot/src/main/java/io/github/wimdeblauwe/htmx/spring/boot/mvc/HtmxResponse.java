@@ -256,14 +256,14 @@ final public class HtmxResponse {
     }
 
     Map<String, String> getTriggersAfterSettle() {
-        if (this.triggers.isEmpty()) {
+        if (this.triggersAfterSettle.isEmpty()) {
             return Collections.emptyMap();
         }
         return new HashMap<>(this.triggersAfterSettle);
     }
 
     Map<String, String> getTriggersAfterSwap() {
-        if (this.triggers.isEmpty()) {
+        if (this.triggersAfterSwap.isEmpty()) {
             return Collections.emptyMap();
         }
         return new HashMap<>(this.triggersAfterSwap);
