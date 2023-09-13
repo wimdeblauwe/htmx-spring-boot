@@ -42,13 +42,30 @@ public class HtmxResponseTest {
     }
 
     @Test
-    public void addingTrigger() {
-        String myTrigger = "myEvent";
-        sut.addTrigger(myTrigger);
-        sut.addTrigger(myTrigger);
+    public void testAddingTriggers() {
+        HtmxResponse response = new HtmxResponse()
+                .addTrigger("event");
 
-        assertThat(sut.getTriggers()).hasSize(1);
-        assertThat(sut.getTriggers()).containsOnlyKeys(myTrigger);
+        assertThat(response.getTriggers())
+                .containsOnlyKeys("event");
+    }
+
+    @Test
+    public void testAddingTriggersAfterSwap() {
+        HtmxResponse response = new HtmxResponse()
+                .addTrigger("event", null, HxTriggerLifecycle.SWAP);
+
+        assertThat(response.getTriggersAfterSwap())
+                .containsKey("event");
+    }
+
+    @Test
+    public void testAddingTriggersAfterSettle() {
+        HtmxResponse response = new HtmxResponse()
+                .addTrigger("event", null, HxTriggerLifecycle.SETTLE);
+
+        assertThat(response.getTriggersAfterSettle())
+                .containsKey("event");
     }
 
     @Test
