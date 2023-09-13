@@ -42,7 +42,8 @@ import jakarta.servlet.http.HttpServletResponse;
  * @author Oliver Drotbohm
  */
 class HtmxViewHandlerInterceptor implements HandlerInterceptor {
-    private static final Logger LOG = LoggerFactory.getLogger(HtmxViewHandlerInterceptor.class);
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(HtmxViewHandlerInterceptor.class);
 
     private final ViewResolver views;
     private final ObjectFactory<LocaleResolver> locales;
@@ -129,14 +130,14 @@ class HtmxViewHandlerInterceptor implements HandlerInterceptor {
                 try {
                     response.setHeader(triggerHeader.getHeaderName(), objectMapper.writeValueAsString(triggers));
                 } catch (Exception e) {
-                    LOG.warn("Unable to set header {} to {}", triggerHeader.getHeaderName(), triggers, e);
+                    LOGGER.warn("Unable to set header {} to {}", triggerHeader.getHeaderName(), triggers, e);
                 }
             }
         } else {
             try {
                 response.setHeader(triggerHeader.getHeaderName(), objectMapper.writeValueAsString(triggers));
             } catch (Exception e) {
-                LOG.warn("Unable to set header {} to {}", triggerHeader.getHeaderName(), triggers, e);
+                LOGGER.warn("Unable to set header {} to {}", triggerHeader.getHeaderName(), triggers, e);
             }
         }
     }

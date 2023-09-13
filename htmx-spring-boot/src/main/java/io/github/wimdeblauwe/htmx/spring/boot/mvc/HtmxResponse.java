@@ -24,7 +24,7 @@ import org.springframework.web.servlet.View;
  */
 public final class HtmxResponse {
 
-    private static final Logger LOG = LoggerFactory.getLogger(HtmxResponse.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(HtmxResponse.class);
 
     private final Set<ModelAndView> views;
     private final Map<String, String> triggers;
@@ -239,7 +239,7 @@ public final class HtmxResponse {
     public HtmxResponse and(HtmxResponse otherResponse){
         otherResponse.views.forEach(otherTemplate -> {
             if(this.views.stream().anyMatch(mav -> same(otherTemplate, mav))) {
-                LOG.info("Duplicate template '{}' found while merging HtmxResponse", otherTemplate);
+                LOGGER.warn("Duplicate template '{}' found while merging HtmxResponse", otherTemplate);
             } else {
                 views.add(otherTemplate);
             }
@@ -287,10 +287,10 @@ public final class HtmxResponse {
     @Deprecated
     private void mergeMapAndLog(HxTriggerLifecycle receive, Map<String, String> triggers, Map<String, String> otherTriggers) {
         otherTriggers.forEach((key, value) -> {
-            if (LOG.isInfoEnabled()) {
+            if (LOGGER.isWarnEnabled()) {
                 if (triggers.containsKey(key)) {
                     String matchingTrigger = triggers.get(key);
-                    LOG.info("Duplicate {} entry: event '{}' details '{}' will be overwritten by with '{}'", receive.getHeaderName(), key, matchingTrigger, value);
+                    LOGGER.warn("Duplicate {} entry: event '{}' details '{}' will be overwritten by with '{}'", receive.getHeaderName(), key, matchingTrigger, value);
                 }
             }
             triggers.put(key, value);
@@ -578,10 +578,10 @@ public final class HtmxResponse {
 
         private void mergeTrigger(HxTriggerLifecycle receive, Map<String, String> triggers, Map<String, String> otherTriggers) {
             otherTriggers.forEach((key, value) -> {
-                if (LOG.isInfoEnabled()) {
+                if (LOGGER.isWarnEnabled()) {
                     if (triggers.containsKey(key)) {
                         String matchingTrigger = triggers.get(key);
-                        LOG.info("Duplicate {} entry: event '{}' details '{}' will be overwritten by with '{}'", receive.getHeaderName(), key, matchingTrigger, value);
+                        LOGGER.warn("Duplicate {} entry: event '{}' details '{}' will be overwritten by with '{}'", receive.getHeaderName(), key, matchingTrigger, value);
                     }
                 }
                 triggers.put(key, value);
