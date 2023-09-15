@@ -115,9 +115,10 @@ If you want to do the same, but in a more flexible way, you can use `HtmxRespons
 @HxRequest
 @GetMapping("/users")
 public HtmxResponse hxUpdateUser(){
-    return new HtmxResponse()
-        .addTrigger("userUpdated") // the event 'userUpdated' will be triggered by htmx
-        .addTemplate("partial");
+    return HtmxResponse.builder()
+        .trigger("userUpdated") // the event 'userUpdated' will be triggered by htmx
+        .view("partial")
+        .build();
 }
 ```
 
@@ -132,9 +133,10 @@ as the return type of a controller method, where you can add multiple templates.
 @GetMapping("/partials/main-and-partial")
 public HtmxResponse getMainAndPartial(Model model){
     model.addAttribute("userCount", 5);
-    return new HtmxResponse()
-        .addTemplate("users-list")
-        .addTemplate("users-count");
+    return HtmxResponse.builder()
+        .view("users-list")
+        .view("users-count")
+        .build();
 }
 ```
 
@@ -145,9 +147,10 @@ to do that, or from `ModelAndView` instances (resolved or unresolved). For examp
 @HxRequest
 @GetMapping("/partials/main-and-partial")
 public HtmxResponse getMainAndPartial(Model model){
-    return new HtmxResponse()
-        .addTemplate(new ModelAndView("users-list")
-        .addTemplate(new ModelAndView("users-count", Map.of("userCount",5));
+    return HtmxResponse.builder()
+        .view(new ModelAndView("users-list")
+        .view(new ModelAndView("users-count", Map.of("userCount",5))
+        .build();
 }
 ```
 
@@ -195,9 +198,10 @@ fragment `count` (th:fragment="count") from the template `users`.
 @GetMapping("/partials/main-and-partial")
 public HtmxResponse getMainAndPartial(Model model){
     model.addAttribute("userCount", 5);
-    return new HtmxResponse()
-        .addTemplate("users :: list")
-        .addTemplate("users :: count");
+    return HtmxResponse.builder()
+        .view("users :: list")
+        .view("users :: count")
+        .build();
 }
 ```
 
