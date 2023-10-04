@@ -45,29 +45,45 @@ Provides a [Thymeleaf](https://www.thymeleaf.org/) dialect to easily work with h
 
 The included Spring Boot Auto-configuration will enable the htmx integrations.
 
-### Request Headers
+### Mapping controller methods to htmx requests
 
-_See [Request Headers Reference](https://htmx.org/reference/#request_headers) for the related htmx documentation._
+Controller methods can be annotated with
+[HxRequest](https://javadoc.io/doc/io.github.wimdeblauwe/htmx-spring-boot/latest/io/github/wimdeblauwe/htmx/spring/boot/mvc/HxRequest.html)
+to be selected only if it is a htmx-based request (e.g. `hx-get`).
+This annotation allows composition if you want to combine them.
+For example, you can combine annotations to create a custom `@HxGetMapping`.
 
-Methods can be annotated with `@HxRequest` to be selected only if it is an htmx-based request (e.g. `hx-get`).
-
+The following method is called only if the request was made by htmx.
 ```java
-// Called when the request was made with htmx
 @HxRequest
 @GetMapping("/users")
 public String htmxRequest(){
     return "partial";
 }
-
-// Called when a normal request was made
-@GetMapping("/users")
-public String normalRequest(){
-    return "users";
-}
 ```
 
-These annotations allow for composition if you wish to combine them,
-so you could combine annotations to make a custom `@HxGetMapping`.
+In addition, if you want to restrict the invocation of a controller method to a 
+specific triggering element, you can set [HxRequest#value](https://javadoc.io/static/io.github.wimdeblauwe/htmx-spring-boot/3.0.0/io/github/wimdeblauwe/htmx/spring/boot/mvc/HxRequest.html#value())
+to the ID or name of the element. If you want to be explicit use [HxRequest#triggerId](https://javadoc.io/static/io.github.wimdeblauwe/htmx-spring-boot/3.0.0/io/github/wimdeblauwe/htmx/spring/boot/mvc/HxRequest.html#triggerId())
+or [HxRequest#triggerName](https://javadoc.io/static/io.github.wimdeblauwe/htmx-spring-boot/3.0.0/io/github/wimdeblauwe/htmx/spring/boot/mvc/HxRequest.html#triggerName())
+
+```java
+@HxRequest("my-element")
+@GetMapping("/users")
+public String htmxRequest(){
+    return "partial";
+}
+```
+If you want to restrict the invocation of a controller method to having a specific target element defined,
+use [HxRequest#target](https://javadoc.io/static/io.github.wimdeblauwe/htmx-spring-boot/3.0.0/io/github/wimdeblauwe/htmx/spring/boot/mvc/HxRequest.html#target())
+
+```java
+@HxRequest(target = "my-target")
+@GetMapping("/users")
+public String htmxRequest(){
+    return "partial";
+}
+```
 
 #### Using HtmxRequest to access HTTP request headers sent by htmx
 
