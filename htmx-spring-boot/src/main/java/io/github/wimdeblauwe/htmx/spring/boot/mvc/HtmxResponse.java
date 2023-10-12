@@ -30,7 +30,7 @@ public final class HtmxResponse {
     private boolean refresh;
     private String redirect;
     private String pushUrl;
-    private HxSwapType reswap;
+    private HtmxReswap reswap;
 
     /**
      * Return a builder to build a {@link HtmxResponse}.
@@ -52,7 +52,7 @@ public final class HtmxResponse {
         this.triggersAfterSwap = new LinkedHashSet<>();
     }
 
-    HtmxResponse(Set<ModelAndView> views, Set<HtmxTrigger> triggers, Set<HtmxTrigger> triggersAfterSettle, Set<HtmxTrigger> triggersAfterSwap, String retarget, boolean refresh, String redirect, String pushUrl, HxSwapType reswap) {
+    HtmxResponse(Set<ModelAndView> views, Set<HtmxTrigger> triggers, Set<HtmxTrigger> triggersAfterSettle, Set<HtmxTrigger> triggersAfterSwap, String retarget, boolean refresh, String redirect, String pushUrl, HtmxReswap reswap) {
         this.views = views;
         this.triggers = triggers;
         this.triggersAfterSettle = triggersAfterSettle;
@@ -221,7 +221,7 @@ public final class HtmxResponse {
     @Deprecated
     public HtmxResponse reswap(HxSwapType swapType) {
         Assert.notNull(swapType, "swapType should not be null");
-        this.reswap = swapType;
+        this.reswap = new HtmxReswap(swapType);
         return this;
     }
 
@@ -256,7 +256,7 @@ public final class HtmxResponse {
             this.retarget = otherResponse.getRetarget();
         }
         if (otherResponse.getReswap() != null) {
-            this.reswap = otherResponse.getReswap();
+            this.reswap = otherResponse.reswap;
         }
 
         return this;
@@ -299,7 +299,7 @@ public final class HtmxResponse {
      */
     @Deprecated
     public String getHeaderReswap() {
-        return reswap.getValue();
+        return reswap != null ? reswap.getType().getValue() : null;
     }
 
     /**
@@ -318,7 +318,7 @@ public final class HtmxResponse {
         return redirect;
     }
 
-    public HxSwapType getReswap() {
+    public HtmxReswap getReswap() {
         return reswap;
     }
 
@@ -379,7 +379,7 @@ public final class HtmxResponse {
         private String pushUrl;
         private String redirect;
         private boolean refresh;
-        private HxSwapType reswap;
+        private HtmxReswap reswap;
         private String retarget;
 
         /**
@@ -465,10 +465,24 @@ public final class HtmxResponse {
          *
          * @param swapType the swap style
          * @return the builder
+         * @deprecated use {@link #reswap(HtmxReswap)} instead. Will be removed in 4.0.
          */
+        @Deprecated
         public Builder reswap(HxSwapType swapType) {
             Assert.notNull(swapType, "swapType should not be null");
-            this.reswap = swapType;
+            this.reswap = new HtmxReswap(swapType);
+            return this;
+        }
+
+        /**
+         * Set a new swap to specify how the response will be swapped.
+         *
+         * @param reswap the reswap options.
+         * @return the builder
+         */
+        public Builder reswap(HtmxReswap reswap) {
+            Assert.notNull(reswap, "reswap should not be null");
+            this.reswap = reswap;
             return this;
         }
 
