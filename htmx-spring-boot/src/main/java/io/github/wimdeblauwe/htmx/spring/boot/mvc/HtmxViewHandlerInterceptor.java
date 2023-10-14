@@ -105,6 +105,13 @@ class HtmxViewHandlerInterceptor implements HandlerInterceptor {
         addHxTriggerHeaders(response, HtmxResponseHeader.HX_TRIGGER_AFTER_SETTLE, htmxResponse.getTriggersAfterSettleInternal());
         addHxTriggerHeaders(response, HtmxResponseHeader.HX_TRIGGER_AFTER_SWAP, htmxResponse.getTriggersAfterSwapInternal());
 
+        if (htmxResponse.getLocation() != null) {
+            if (htmxResponse.getLocation().hasContextData()) {
+                setHeaderJsonValue(response, HtmxResponseHeader.HX_LOCATION.getValue(), htmxResponse.getLocation());
+            } else {
+                response.setHeader(HtmxResponseHeader.HX_LOCATION.getValue(), htmxResponse.getLocation().getPath());
+            }
+        }
         if (htmxResponse.getPushUrl() != null) {
             response.setHeader(HtmxResponseHeader.HX_PUSH_URL.getValue(), htmxResponse.getPushUrl());
         }
@@ -176,4 +183,5 @@ class HtmxViewHandlerInterceptor implements HandlerInterceptor {
             throw new IllegalArgumentException("Unable to set header " + name + " to " + value, e);
         }
     }
+
 }
