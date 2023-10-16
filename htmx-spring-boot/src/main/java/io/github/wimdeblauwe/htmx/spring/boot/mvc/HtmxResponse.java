@@ -25,6 +25,7 @@ public final class HtmxResponse {
     private final Set<HtmxTrigger> triggers;
     private final Set<HtmxTrigger> triggersAfterSettle;
     private final Set<HtmxTrigger> triggersAfterSwap;
+    private final String replaceUrl;
     // TODO should also be final after switching to builder pattern
     private String retarget;
     private boolean refresh;
@@ -51,11 +52,12 @@ public final class HtmxResponse {
         this.triggers = new LinkedHashSet<>();
         this.triggersAfterSettle = new LinkedHashSet<>();
         this.triggersAfterSwap = new LinkedHashSet<>();
+        this.replaceUrl = null;
     }
 
     HtmxResponse(Set<ModelAndView> views, Set<HtmxTrigger> triggers, Set<HtmxTrigger> triggersAfterSettle,
                  Set<HtmxTrigger> triggersAfterSwap, String retarget, boolean refresh, String redirect,
-                 String pushUrl, HtmxReswap reswap, HtmxLocation location) {
+                 String pushUrl, String replaceUrl, HtmxReswap reswap, HtmxLocation location) {
         this.views = views;
         this.triggers = triggers;
         this.triggersAfterSettle = triggersAfterSettle;
@@ -64,6 +66,7 @@ public final class HtmxResponse {
         this.refresh = refresh;
         this.redirect = redirect;
         this.pushUrl = pushUrl;
+        this.replaceUrl = replaceUrl;
         this.reswap = reswap;
         this.location = location;
     }
@@ -326,6 +329,10 @@ public final class HtmxResponse {
         return redirect;
     }
 
+    public String getReplaceUrl() {
+        return replaceUrl;
+    }
+
     public HtmxReswap getReswap() {
         return reswap;
     }
@@ -388,6 +395,7 @@ public final class HtmxResponse {
         private String pushUrl;
         private String redirect;
         private boolean refresh;
+        private String replaceUrl;
         private HtmxReswap reswap;
         private String retarget;
 
@@ -440,6 +448,7 @@ public final class HtmxResponse {
                     refresh,
                     redirect,
                     pushUrl,
+                    replaceUrl,
                     reswap,
                     location);
         }
@@ -469,15 +478,32 @@ public final class HtmxResponse {
         }
 
         /**
-         * Pushes a new url into the history stack
+         * Prevents the browser history stack from being updated.
          *
-         * @param url the URL or {@literal false} which prevents the browser history from being updated.
          * @return the builder
          * @see <a href="https://htmx.org/headers/hx-push/">HX-Push Response Header</a> documentation
+         * @see <a href="https://htmx.org/headers/hx-replace-url/">HX-Replace-Url Response Header</a>
+         */
+        public Builder preventHistoryUpdate() {
+            this.pushUrl = "false";
+            this.replaceUrl = null;
+            return this;
+        }
+
+        /**
+         * Pushes a new URL into the history stack of the browser.
+         * <p>
+         * If you want to prevent the history stack from being updated, use {@link #preventHistoryUpdate()}.
+         *
+         * @param url the URL to push into the history stack. The URL can be any URL in the same origin as the current URL.
+         * @return the builder
+         * @see <a href="https://htmx.org/headers/hx-push/">HX-Push Response Header</a> documentation
+         * @see <a href="https://developer.mozilla.org/en-US/docs/Web/API/History/replaceState">history.pushState()</a>
          */
         public Builder pushUrl(String url) {
             Assert.hasText(url, "url should not be blank");
             this.pushUrl = url;
+            this.replaceUrl = null;
             return this;
         }
 
@@ -500,6 +526,22 @@ public final class HtmxResponse {
          */
         public Builder refresh() {
             this.refresh = true;
+            return this;
+        }
+
+        /**
+         * Allows you to replace the most recent entry, i.e. the current URL, in the browser history stack.
+         * <p>
+         * If you want to prevent the history stack from being updated, use {@link #preventHistoryUpdate()}.
+         *
+         * @param url the URL to replace in the history stack. The URL can be any URL in the same origin as the current URL.
+         * @return the builder
+         * @see <a href="https://htmx.org/headers/hx-replace-url/">HX-Replace-Url Response Header</a>
+         * @see <a href="https://developer.mozilla.org/en-US/docs/Web/API/History/replaceState">history.replaceState()</a>
+         */
+        public Builder replaceUrl(String url) {
+            this.replaceUrl = url;
+            this.pushUrl = null;
             return this;
         }
 

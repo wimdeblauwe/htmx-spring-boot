@@ -112,6 +112,9 @@ class HtmxViewHandlerInterceptor implements HandlerInterceptor {
                 response.setHeader(HtmxResponseHeader.HX_LOCATION.getValue(), htmxResponse.getLocation().getPath());
             }
         }
+        if (htmxResponse.getReplaceUrl() != null) {
+            response.setHeader(HtmxResponseHeader.HX_REPLACE_URL.getValue(), htmxResponse.getReplaceUrl());
+        }
         if (htmxResponse.getPushUrl() != null) {
             response.setHeader(HtmxResponseHeader.HX_PUSH_URL.getValue(), htmxResponse.getPushUrl());
         }
