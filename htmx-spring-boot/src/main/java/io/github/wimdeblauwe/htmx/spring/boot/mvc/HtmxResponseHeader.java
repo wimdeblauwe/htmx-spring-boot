@@ -55,7 +55,7 @@ public enum HtmxResponseHeader {
      */
     HX_TRIGGER("HX-Trigger"),
     /**
-     * Can be used to trigger client side events after the <a href="https://htmx.org/docs/#request-operations></a>settling step</a>.
+     * Can be used to trigger client side events after the <a href="https://htmx.org/docs/#request-operations">settling step</a>.
      *
      * @see <a href="https://htmx.org/headers/hx-trigger/">HX-Trigger-After-Settle</a>
      */

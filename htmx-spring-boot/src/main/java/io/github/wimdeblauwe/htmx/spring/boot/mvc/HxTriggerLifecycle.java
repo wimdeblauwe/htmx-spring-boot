@@ -13,7 +13,7 @@ public enum HxTriggerLifecycle {
      */
     RECEIVE("HX-Trigger"),
     /**
-     * Trigger events after the <a href="https://htmx.org/docs/#request-operations></a>settling step</a>.
+     * Trigger events after the <a href="https://htmx.org/docs/#request-operations">settling step</a>.
      *
      * @see <a href="https://htmx.org/headers/hx-trigger/">HX-Trigger-After-Settle</a>
      */

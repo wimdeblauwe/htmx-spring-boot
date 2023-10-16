@@ -5,7 +5,7 @@ import org.springframework.lang.Nullable;
 /**
  * This class can be used as a controller method argument to access
  * the <a href="https://htmx.org/reference/#request_headers">htmx Request Headers</a>.
- * <p/>
+ *
  * <pre>
  * {@code
  * @GetMapping("/users")
