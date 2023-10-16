@@ -546,20 +546,6 @@ public final class HtmxResponse {
         }
 
         /**
-         * Set a new swap to specify how the response will be swapped
-         *
-         * @param swapType the swap style
-         * @return the builder
-         * @deprecated use {@link #reswap(HtmxReswap)} instead. Will be removed in 4.0.
-         */
-        @Deprecated
-        public Builder reswap(HxSwapType swapType) {
-            Assert.notNull(swapType, "swapType should not be null");
-            this.reswap = new HtmxReswap(swapType);
-            return this;
-        }
-
-        /**
          * Set a new swap to specify how the response will be swapped.
          *
          * @param reswap the reswap options.
