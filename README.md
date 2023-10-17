@@ -63,9 +63,9 @@ public String htmxRequest(){
 ```
 
 In addition, if you want to restrict the invocation of a controller method to a 
-specific triggering element, you can set [HxRequest#value](https://javadoc.io/static/io.github.wimdeblauwe/htmx-spring-boot/3.0.0/io/github/wimdeblauwe/htmx/spring/boot/mvc/HxRequest.html#value())
-to the ID or name of the element. If you want to be explicit use [HxRequest#triggerId](https://javadoc.io/static/io.github.wimdeblauwe/htmx-spring-boot/3.0.0/io/github/wimdeblauwe/htmx/spring/boot/mvc/HxRequest.html#triggerId())
-or [HxRequest#triggerName](https://javadoc.io/static/io.github.wimdeblauwe/htmx-spring-boot/3.0.0/io/github/wimdeblauwe/htmx/spring/boot/mvc/HxRequest.html#triggerName())
+specific triggering element, you can set [HxRequest#value](https://javadoc.io/doc/io.github.wimdeblauwe/htmx-spring-boot/latest/io/github/wimdeblauwe/htmx/spring/boot/mvc/HxRequest.html#value())
+to the ID or name of the element. If you want to be explicit use [HxRequest#triggerId](https://javadoc.io/doc/io.github.wimdeblauwe/htmx-spring-boot/latest/io/github/wimdeblauwe/htmx/spring/boot/mvc/HxRequest.html#triggerId())
+or [HxRequest#triggerName](https://javadoc.io/doc/io.github.wimdeblauwe/htmx-spring-boot/latest/io/github/wimdeblauwe/htmx/spring/boot/mvc/HxRequest.html#triggerName())
 
 ```java
 @HxRequest("my-element")
@@ -75,7 +75,7 @@ public String htmxRequest(){
 }
 ```
 If you want to restrict the invocation of a controller method to having a specific target element defined,
-use [HxRequest#target](https://javadoc.io/static/io.github.wimdeblauwe/htmx-spring-boot/3.0.0/io/github/wimdeblauwe/htmx/spring/boot/mvc/HxRequest.html#target())
+use [HxRequest#target](https://javadoc.io/doc/io.github.wimdeblauwe/htmx-spring-boot/latest/io/github/wimdeblauwe/htmx/spring/boot/mvc/HxRequest.html#target())
 
 ```java
 @HxRequest(target = "my-target")
