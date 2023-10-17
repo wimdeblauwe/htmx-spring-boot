@@ -427,6 +427,9 @@ public final class HtmxResponse {
             mergeTriggers(this.triggersAfterSettle, otherResponse.triggersAfterSettle);
             mergeTriggers(this.triggersAfterSwap, otherResponse.triggersAfterSwap);
 
+            if (otherResponse.location != null) {
+                this.location = otherResponse.location;
+            }
             if (otherResponse.pushUrl != null) {
                 this.pushUrl = otherResponse.pushUrl;
             }
@@ -436,11 +439,17 @@ public final class HtmxResponse {
             if (otherResponse.refresh) {
                 this.refresh = true;
             }
-            if (otherResponse.retarget != null) {
-                this.retarget = otherResponse.retarget;
+            if (otherResponse.replaceUrl != null) {
+                this.replaceUrl = otherResponse.replaceUrl;
             }
             if (otherResponse.reswap != null) {
                 this.reswap = otherResponse.reswap;
+            }
+            if (otherResponse.retarget != null) {
+                this.retarget = otherResponse.retarget;
+            }
+            if (otherResponse.reselect != null) {
+                this.reselect = otherResponse.reselect;
             }
 
             return this;
