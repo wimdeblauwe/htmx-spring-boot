@@ -34,6 +34,7 @@ import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.ViewResolver;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.springframework.web.util.ContentCachingResponseWrapper;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -97,10 +98,10 @@ class HtmxViewHandlerInterceptor implements HandlerInterceptor {
 
         modelAndView.setView(toView(htmxResponse));
 
-        addHxHeaders(htmxResponse, response);
+        addHxHeaders(htmxResponse, request, response);
     }
 
-    private void addHxHeaders(HtmxResponse htmxResponse, HttpServletResponse response) {
+    private void addHxHeaders(HtmxResponse htmxResponse, HttpServletRequest request, HttpServletResponse response) {
         addHxTriggerHeaders(response, HtmxResponseHeader.HX_TRIGGER, htmxResponse.getTriggersInternal());
         addHxTriggerHeaders(response, HtmxResponseHeader.HX_TRIGGER_AFTER_SETTLE, htmxResponse.getTriggersAfterSettleInternal());
         addHxTriggerHeaders(response, HtmxResponseHeader.HX_TRIGGER_AFTER_SWAP, htmxResponse.getTriggersAfterSwapInternal());
@@ -113,10 +114,20 @@ class HtmxViewHandlerInterceptor implements HandlerInterceptor {
             }
         }
         if (htmxResponse.getReplaceUrl() != null) {
-            response.setHeader(HtmxResponseHeader.HX_REPLACE_URL.getValue(), htmxResponse.getReplaceUrl());
+            String url = htmxResponse.getReplaceUrl();
+            if (url.isEmpty()) {
+                // use current request URL including query params
+                url = ServletUriComponentsBuilder.fromRequest(request).toUriString();
+            }
+            response.setHeader(HtmxResponseHeader.HX_REPLACE_URL.getValue(), url);
         }
         if (htmxResponse.getPushUrl() != null) {
-            response.setHeader(HtmxResponseHeader.HX_PUSH_URL.getValue(), htmxResponse.getPushUrl());
+            String url = htmxResponse.getPushUrl();
+            if (url.isEmpty()) {
+                // use current request URL including query params
+                url = ServletUriComponentsBuilder.fromRequest(request).toUriString();
+            }
+            response.setHeader(HtmxResponseHeader.HX_PUSH_URL.getValue(), url);
         }
         if (htmxResponse.getRedirect() != null) {
             response.setHeader(HtmxResponseHeader.HX_REDIRECT.getValue(), htmxResponse.getRedirect());

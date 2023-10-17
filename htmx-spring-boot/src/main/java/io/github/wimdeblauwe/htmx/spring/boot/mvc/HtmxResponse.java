@@ -500,6 +500,20 @@ public final class HtmxResponse {
         }
 
         /**
+         * Pushes the current request URL including query parameters into the history stack of the browser.
+         * If you want to supply your own URL, use {@link #pushUrl(String)} instead.
+         *
+         * @return the builder
+         * @see <a href="https://htmx.org/headers/hx-push/">HX-Push Response Header</a> documentation
+         * @see <a href="https://developer.mozilla.org/en-US/docs/Web/API/History/replaceState">history.pushState()</a>
+         */
+        public Builder pushUrl() {
+            this.pushUrl = "";
+            this.replaceUrl = null;
+            return this;
+        }
+
+        /**
          * Pushes a new URL into the history stack of the browser.
          * <p>
          * If you want to prevent the history stack from being updated, use {@link #preventHistoryUpdate()}.
@@ -535,6 +549,20 @@ public final class HtmxResponse {
          */
         public Builder refresh() {
             this.refresh = true;
+            return this;
+        }
+
+        /**
+         * Replace the most recent entry, i.e. the current URL, in the browser history stack with the current request
+         * URL including query parameters. If you want to supply your own URL, use {@link #replaceUrl(String)} instead.
+         *
+         * @return the builder
+         * @see <a href="https://htmx.org/headers/hx-replace-url/">HX-Replace-Url Response Header</a>
+         * @see <a href="https://developer.mozilla.org/en-US/docs/Web/API/History/replaceState">history.replaceState()</a>
+         */
+        public Builder replaceUrl() {
+            this.replaceUrl = "";
+            this.pushUrl = null;
             return this;
         }
 

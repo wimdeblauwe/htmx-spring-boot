@@ -37,6 +37,11 @@ public class HtmxViewHandlerInterceptorController {
         return HtmxResponse.builder().pushUrl("/path").build();
     }
 
+    @GetMapping("/hx-push-current-url")
+    public HtmxResponse hxPushUrlReturningCurrentUrl() {
+        return HtmxResponse.builder().pushUrl().build();
+    }
+
     @GetMapping("/hx-redirect")
     public HtmxResponse hxRedirect() {
         return HtmxResponse.builder().redirect("/path").build();
@@ -50,6 +55,11 @@ public class HtmxViewHandlerInterceptorController {
     @GetMapping("/hx-replace-url")
     public HtmxResponse hxReplaceUrl() {
         return HtmxResponse.builder().replaceUrl("/path").build();
+    }
+
+    @GetMapping("/hx-replace-current-url")
+    public HtmxResponse hxReplaceUrlReturningCurrentUrl() {
+        return HtmxResponse.builder().replaceUrl().build();
     }
 
     @GetMapping("/hx-reselect")

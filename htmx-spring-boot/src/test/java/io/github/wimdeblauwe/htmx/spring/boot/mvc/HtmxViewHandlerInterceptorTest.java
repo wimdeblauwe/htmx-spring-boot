@@ -7,6 +7,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static org.hamcrest.Matchers.endsWith;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -40,6 +41,15 @@ public class HtmxViewHandlerInterceptorTest {
     }
 
     @Test
+    public void testHxPushUrlReturningCurrentUrl() throws Exception {
+        String url = "/hvhi/hx-push-current-url?p1=x&p2=y";
+
+        mockMvc.perform(get(url))
+               .andExpect(status().isOk())
+               .andExpect(header().string("HX-Push-Url", endsWith(url)));
+    }
+
+    @Test
     public void testHxRedirect() throws Exception {
         mockMvc.perform(get("/hvhi/hx-redirect"))
                .andExpect(status().isOk())
@@ -58,6 +68,15 @@ public class HtmxViewHandlerInterceptorTest {
         mockMvc.perform(get("/hvhi/hx-replace-url"))
                .andExpect(status().isOk())
                .andExpect(header().string("HX-Replace-Url", "/path"));
+    }
+
+    @Test
+    public void testHxReplaceUrlReturningCurrentUrl() throws Exception {
+        String url = "/hvhi/hx-replace-current-url?p1=x&p2=y";
+
+        mockMvc.perform(get(url))
+               .andExpect(status().isOk())
+               .andExpect(header().string("HX-Replace-Url", endsWith(url)));
     }
 
     @Test
