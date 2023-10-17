@@ -33,6 +33,27 @@ public class HtmxViewHandlerInterceptorTest {
     }
 
     @Test
+    public void testHxPushUrl() throws Exception {
+        mockMvc.perform(get("/hvhi/hx-push-url"))
+               .andExpect(status().isOk())
+               .andExpect(header().string("HX-Push-Url", "/path"));
+    }
+
+    @Test
+    public void testHxRedirect() throws Exception {
+        mockMvc.perform(get("/hvhi/hx-redirect"))
+               .andExpect(status().isOk())
+               .andExpect(header().string("HX-Redirect", "/path"));
+    }
+
+    @Test
+    public void testHxRefresh() throws Exception {
+        mockMvc.perform(get("/hvhi/hx-refresh"))
+               .andExpect(status().isOk())
+               .andExpect(header().string("HX-Refresh", "true"));
+    }
+
+    @Test
     public void testHxReplaceUrl() throws Exception {
         mockMvc.perform(get("/hvhi/hx-replace-url"))
                .andExpect(status().isOk())
@@ -51,6 +72,13 @@ public class HtmxViewHandlerInterceptorTest {
         mockMvc.perform(get("/hvhi/hx-reswap"))
                .andExpect(status().isOk())
                .andExpect(header().string("HX-Reswap", "outerHTML transition:true focus-scroll:true swap:100ms settle:300ms scroll:#target:bottom show:#target:top"));
+    }
+
+    @Test
+    public void testHxRetarget() throws Exception {
+        mockMvc.perform(get("/hvhi/hx-retarget"))
+               .andExpect(status().isOk())
+               .andExpect(header().string("HX-Retarget", "#target"));
     }
 
     @Test
@@ -93,6 +121,14 @@ public class HtmxViewHandlerInterceptorTest {
         mockMvc.perform(get("/hvhi/hx-trigger-without-details"))
                .andExpect(status().isOk())
                .andExpect(header().string("HX-Trigger", "event1,event2"));
+    }
+
+    @Test
+    public void testPreventHistoryUpdate() throws Exception {
+        mockMvc.perform(get("/hvhi/prevent-history-update"))
+               .andExpect(status().isOk())
+               .andExpect(header().string("HX-Push-Url", "false"))
+               .andExpect(header().doesNotExist("HX-Replace-Url"));
     }
 
 }

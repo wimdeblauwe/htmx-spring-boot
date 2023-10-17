@@ -1,9 +1,5 @@
 package io.github.wimdeblauwe.htmx.spring.boot.mvc;
 
-import java.time.Duration;
-import java.util.Map;
-import java.util.TreeMap;
-
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,6 +32,21 @@ public class HtmxViewHandlerInterceptorController {
         return HtmxResponse.builder().location("/path").build();
     }
 
+    @GetMapping("/hx-push-url")
+    public HtmxResponse hxPushUrl() {
+        return HtmxResponse.builder().pushUrl("/path").build();
+    }
+
+    @GetMapping("/hx-redirect")
+    public HtmxResponse hxRedirect() {
+        return HtmxResponse.builder().redirect("/path").build();
+    }
+
+    @GetMapping("/hx-refresh")
+    public HtmxResponse hxRefresh() {
+        return HtmxResponse.builder().refresh().build();
+    }
+
     @GetMapping("/hx-replace-url")
     public HtmxResponse hxReplaceUrl() {
         return HtmxResponse.builder().replaceUrl("/path").build();
@@ -59,6 +70,11 @@ public class HtmxViewHandlerInterceptorController {
                                .focusScroll(true);
 
         return HtmxResponse.builder().reswap(reswap).build();
+    }
+
+    @GetMapping("/hx-retarget")
+    public HtmxResponse hxRetarget() {
+        return HtmxResponse.builder().retarget("#target").build();
     }
 
     @GetMapping("/hx-trigger-after-settle-with-details")
@@ -107,6 +123,11 @@ public class HtmxViewHandlerInterceptorController {
                            .trigger("event1")
                            .trigger("event2")
                            .build();
+    }
+
+    @GetMapping("/prevent-history-update")
+    public HtmxResponse preventHistoryUpdate() {
+        return HtmxResponse.builder().preventHistoryUpdate().build();
     }
 
 }
