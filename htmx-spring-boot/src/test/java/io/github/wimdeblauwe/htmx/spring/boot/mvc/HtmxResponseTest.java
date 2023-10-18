@@ -144,26 +144,32 @@ public class HtmxResponseTest {
     @Test
     public void testAddingResponseToExistingOneShouldOverrideProperties() {
         var response1 = HtmxResponse.builder()
-                                    .retarget("selector1")
-                                    .reswap(HtmxReswap.innerHtml())
+                                    .location("location1")
+                                    .pushUrl("url1")
                                     .redirect("url1")
-                                    .pushUrl("url1");
+                                    .replaceUrl("url1")
+                                    .reswap(HtmxReswap.innerHtml())
+                                    .retarget("selector1");
 
         var response2 = HtmxResponse.builder()
-                                    .retarget("selector2")
-                                    .reswap(HtmxReswap.outerHtml())
+                                    .location("location2")
+                                    .pushUrl("url2")
                                     .redirect("url2")
-                                    .refresh()
-                                    .pushUrl("url2");
+                                    .replaceUrl("url2")
+                                    .reswap(HtmxReswap.outerHtml())
+                                    .retarget("selector2")
+                                    .refresh();
 
         response1.and(response2.build());
 
         assertThat(response1.build()).satisfies(response -> {
-            assertThat(response.getRetarget()).isEqualTo("selector2");
-            assertThat(response.getReswap()).isEqualTo(HtmxReswap.outerHtml());
+            assertThat(response.getLocation()).isEqualTo(new HtmxLocation("location2"));
+            assertThat(response.getPushUrl()).isEqualTo(null);
             assertThat(response.getRedirect()).isEqualTo("url2");
+            assertThat(response.getReplaceUrl()).isEqualTo("url2");
+            assertThat(response.getReswap()).isEqualTo(HtmxReswap.outerHtml());
+            assertThat(response.getRetarget()).isEqualTo("selector2");
             assertThat(response.isRefresh()).isEqualTo(true);
-            assertThat(response.getPushUrl()).isEqualTo("url2");
         });
     }
 
