@@ -25,7 +25,7 @@ public class HxRefreshHeaderAuthenticationEntryPoint implements AuthenticationEn
 
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
-        response.addHeader("HX-Refresh", "true");
+        response.setHeader("HX-Refresh", "true");
         forbiddenEntryPoint.commence(request, response, authException);
     }
 }
