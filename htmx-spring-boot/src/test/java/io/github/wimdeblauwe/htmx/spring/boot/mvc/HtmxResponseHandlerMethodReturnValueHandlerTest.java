@@ -12,9 +12,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(HtmxViewHandlerInterceptorController.class)
+@WebMvcTest(HtmxResponseHandlerMethodReturnValueHandlerController.class)
 @WithMockUser
-public class HtmxViewHandlerInterceptorTest {
+public class HtmxResponseHandlerMethodReturnValueHandlerTest {
 
     @Autowired
     private MockMvc mockMvc;

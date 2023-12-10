@@ -12,7 +12,7 @@ import java.util.TreeMap;
 
 @Controller
 @RequestMapping("/hvhi")
-public class HtmxViewHandlerInterceptorController {
+public class HtmxResponseHandlerMethodReturnValueHandlerController {
 
     @GetMapping("/hx-location-with-context-data")
     public HtmxResponse hxLocationWithContextData() {

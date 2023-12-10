@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.boot.autoconfigure.web.servlet.WebMvcRegistrations;
-import org.springframework.context.annotation.Bean;
 import org.springframework.util.Assert;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.HandlerMethodReturnValueHandler;
@@ -45,7 +44,6 @@ public class HtmxMvcAutoConfiguration implements WebMvcRegistrations, WebMvcConf
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(new HtmxHandlerInterceptor());
-        registry.addInterceptor(new HtmxViewHandlerInterceptor(htmxResponseHelper()));
     }
 
     @Override
@@ -55,16 +53,6 @@ public class HtmxMvcAutoConfiguration implements WebMvcRegistrations, WebMvcConf
 
     @Override
     public void addReturnValueHandlers(List<HandlerMethodReturnValueHandler> handlers) {
-        handlers.add(htmxResponseHandlerMethodReturnValueHandler(htmxResponseHelper()));
-    }
-
-    @Bean
-    public HtmxResponseHelper htmxResponseHelper() {
-        return new HtmxResponseHelper(resolver.getObject(), locales, objectMapper);
-    }
-
-    @Bean
-    public HtmxResponseHandlerMethodReturnValueHandler htmxResponseHandlerMethodReturnValueHandler(HtmxResponseHelper helper) {
-        return new HtmxResponseHandlerMethodReturnValueHandler(helper);
+        handlers.add(new HtmxResponseHandlerMethodReturnValueHandler(resolver.getObject(), locales, objectMapper));
     }
 }
