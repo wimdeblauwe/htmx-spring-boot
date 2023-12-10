@@ -7,6 +7,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -131,4 +132,15 @@ public class HtmxViewHandlerInterceptorTest {
                .andExpect(header().doesNotExist("HX-Replace-Url"));
     }
 
+    @Test
+    public void testException() throws Exception {
+        String html = mockMvc.perform(get("/hvhi/exception"))
+                             .andExpect(status().isOk())
+                             .andExpect(header().string("HX-Reswap", "none"))
+                             .andReturn().getResponse().getContentAsString();
+        assertThat(html).contains("""
+                                          <span hx-swap-oob="true">
+                                              <span>Fake exception</span>
+                                          </span>""");
+    }
 }

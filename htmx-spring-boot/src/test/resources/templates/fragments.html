@@ -18,4 +18,8 @@
         <span th:text="*{name}">Item name</span>
 </span>
 
+<span th:fragment="error-message" hx-swap-oob="true">
+    <span th:text="${message}"></span>
+</span>
+
 </html>

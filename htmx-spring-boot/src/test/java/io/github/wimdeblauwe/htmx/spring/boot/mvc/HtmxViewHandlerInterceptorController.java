@@ -1,8 +1,10 @@
 package io.github.wimdeblauwe.htmx.spring.boot.mvc;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.time.Duration;
 import java.util.Map;
@@ -130,4 +132,16 @@ public class HtmxViewHandlerInterceptorController {
         return HtmxResponse.builder().preventHistoryUpdate().build();
     }
 
+    @GetMapping("/exception")
+    public void throwException() {
+        throw new RuntimeException("Fake exception");
+    }
+
+    @ExceptionHandler(Exception.class)
+    public HtmxResponse handleError(Exception ex) {
+        return HtmxResponse.builder()
+                           .reswap(HtmxReswap.none())
+                           .view(new ModelAndView("fragments :: error-message", Map.of("message", ex.getMessage())))
+                           .build();
+    }
 }
