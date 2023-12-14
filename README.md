@@ -172,6 +172,27 @@ public HtmxResponse getMainAndPartial(Model model){
 
 Using `ModelAndView` means that each fragment can have its own model (which is merged with the controller model before rendering).
 
+### Error handlers
+
+It is possible to use `HtmxResponse` as a return type from error handlers.
+This makes it quite easy to declare a global error handler that will show a message somewhere whenever there is an error
+by declaring a global error handler like this:
+
+```java
+
+@ExceptionHandler(Exception.class)
+public HtmxResponse handleError(Exception ex) {
+    return HtmxResponse.builder()
+                       .reswap(HtmxReswap.none())
+                       .view(new ModelAndView("fragments :: error-message", Map.of("message", ex.getMessage())))
+                       .build();
+}
+```
+
+This will override the normal swapping behaviour of any htmx request that has an exception to avoid swapping to occur.
+If the `error-message` fragment is declared as an Out Of Band Swap and your page layout has an empty div to "receive"
+that piece of HTML, then only that will be placed on the screen.
+
 ### Spring Security
 
 The library has an `HxRefreshHeaderAuthenticationEntryPoint` that you can use to have htmx force a full page browser
