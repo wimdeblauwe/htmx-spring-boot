@@ -73,7 +73,7 @@
                 <configuration>
                     <rules>
                         <requireJavaVersion>
-                            <version>[${java.version}, 18)</version>
+                            <version>[${java.version}, 22)</version>
                         </requireJavaVersion>
                     </rules>
                 </configuration>
