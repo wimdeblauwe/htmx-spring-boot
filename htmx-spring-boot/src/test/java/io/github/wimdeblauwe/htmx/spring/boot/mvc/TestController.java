@@ -58,4 +58,10 @@ public class TestController {
         return "";
     }
 
+    @GetMapping("/hx-vary")
+    @ResponseBody
+    public String hxVary() {
+        return "";
+    }
+
 }

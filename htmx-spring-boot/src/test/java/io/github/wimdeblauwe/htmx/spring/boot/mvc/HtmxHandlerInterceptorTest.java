@@ -9,6 +9,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.hamcrest.collection.IsIterableContainingInRelativeOrder.containsInRelativeOrder;
+import static org.hamcrest.Matchers.not;
 
 @WebMvcTest(TestController.class)
 @WithMockUser
@@ -57,6 +59,20 @@ class HtmxHandlerInterceptorTest {
         mockMvc.perform(get("/hx-trigger-alias-for"))
                .andExpect(status().isOk())
                .andExpect(header().string("HX-Trigger", "updateTrigger"));
+    }
+
+    @Test
+    public void testVary() throws Exception {
+        mockMvc.perform(get("/hx-vary").header("HX-Request", "true"))
+               .andExpect(status().isOk())
+               .andExpect(header().stringValues("Vary", containsInRelativeOrder("HX-Request")));
+    }
+
+    @Test
+    public void testVaryNoHxRequest() throws Exception {
+        mockMvc.perform(get("/hx-vary"))
+               .andExpect(status().isOk())
+               .andExpect(header().stringValues("Vary", not(containsInRelativeOrder("HX-Request"))));
     }
 
     @Test

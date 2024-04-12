@@ -8,6 +8,7 @@ import static io.github.wimdeblauwe.htmx.spring.boot.mvc.HtmxResponseHeader.HX_T
 import java.lang.reflect.Method;
 
 import org.springframework.core.annotation.AnnotatedElementUtils;
+import org.springframework.http.HttpHeaders;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 
@@ -23,9 +24,16 @@ public class HtmxHandlerInterceptor implements HandlerInterceptor {
             Method method = ((HandlerMethod) handler).getMethod();
             setHxTrigger(response, method);
             setHxRefresh(response, method);
+            setVary(request, response);
         }
 
         return true;
+    }
+
+    private void setVary(HttpServletRequest request, HttpServletResponse response) {
+        if (request.getHeader(HtmxRequestHeader.HX_REQUEST.getValue()) != null) {
+            response.addHeader(HttpHeaders.VARY, HtmxRequestHeader.HX_REQUEST.getValue());
+        }
     }
 
     private void setHxTrigger(HttpServletResponse response, Method method) {
