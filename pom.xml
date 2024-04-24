@@ -148,16 +148,6 @@
             -->
         </plugins>
     </build>
-    <!-- Should be removed once spring-asciidoctor-backends is in Maven Central -->
-    <!--
-    <pluginRepositories>
-        <pluginRepository>
-            <id>spring-milestone</id>
-            <name>Spring Milestone Repository</name>
-            <url>https://repo.spring.io/milestone</url>
-        </pluginRepository>
-    </pluginRepositories>
-    -->
     <profiles>
         <profile>
             <id>release</id>
