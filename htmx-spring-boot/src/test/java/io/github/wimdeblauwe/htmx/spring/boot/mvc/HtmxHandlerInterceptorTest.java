@@ -81,4 +81,61 @@ class HtmxHandlerInterceptorTest {
                .andExpect(status().isOk())
                .andExpect(header().string("HX-Refresh", "true"));
     }
+
+    @Test
+    public void testHxLocationWithContextData() throws Exception {
+        mockMvc.perform(get("/hx-location-with-context-data"))
+               .andExpect(status().isOk())
+               .andExpect(header().string("HX-Location", "{\"path\":\"/path\",\"source\":\"source\",\"event\":\"event\",\"handler\":\"handler\",\"target\":\"target\",\"swap\":\"swap\"}"));
+    }
+
+    @Test
+    public void testHxLocationWithoutContextData() throws Exception {
+        mockMvc.perform(get("/hx-location-without-context-data"))
+               .andExpect(status().isOk())
+               .andExpect(header().string("HX-Location", "/path"));
+    }
+
+    @Test
+    public void testHxPushUrl() throws Exception {
+        mockMvc.perform(get("/hx-push-url"))
+               .andExpect(status().isOk())
+               .andExpect(header().string("HX-Push-Url", "/path"));
+    }
+
+    @Test
+    public void testHxRedirect() throws Exception {
+        mockMvc.perform(get("/hx-redirect"))
+               .andExpect(status().isOk())
+               .andExpect(header().string("HX-Redirect", "/path"));
+    }
+
+    @Test
+    public void testHxReplaceUrl() throws Exception {
+        mockMvc.perform(get("/hx-replace-url"))
+               .andExpect(status().isOk())
+               .andExpect(header().string("HX-Replace-Url", "/path"));
+    }
+
+    @Test
+    public void testHxReswap() throws Exception {
+        mockMvc.perform(get("/hx-reswap"))
+               .andExpect(status().isOk())
+               .andExpect(header().string("HX-Reswap", "innerHTML swap:300ms"));
+    }
+
+    @Test
+    public void testHxRetarget() throws Exception {
+        mockMvc.perform(get("/hx-retarget"))
+               .andExpect(status().isOk())
+               .andExpect(header().string("HX-Retarget", "#target"));
+    }
+
+    @Test
+    public void testHxReselect() throws Exception {
+        mockMvc.perform(get("/hx-reselect"))
+               .andExpect(status().isOk())
+               .andExpect(header().string("HX-Reselect", "#target"));
+    }
+
 }

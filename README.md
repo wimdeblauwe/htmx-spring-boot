@@ -113,10 +113,24 @@ The following annotations are currently supported:
 
 >**Note** Please refer to the related Javadoc to learn more about the available options.
 
+There are two ways to set htmx response headers on controller methods.
+The first is to use annotations, e.g. `@HxTrigger`, and the second is to use the class [HtmxResponse](https://javadoc.io/doc/io.github.wimdeblauwe/htmx-spring-boot/latest/io/github/wimdeblauwe/htmx/spring/boot/mvc/HtmxResponse.html) as the return type of the controller method.
+
+Here you can find a list of all available annotations:
+* [@HxLocation](https://javadoc.io/doc/io.github.wimdeblauwe/htmx-spring-boot/latest/io/github/wimdeblauwe/htmx/spring/boot/mvc/HxLocation.html)
+* [@HxPushUrl](https://javadoc.io/doc/io.github.wimdeblauwe/htmx-spring-boot/latest/io/github/wimdeblauwe/htmx/spring/boot/mvc/HxPushUrl.html)
+* [@HxRedirect](https://javadoc.io/doc/io.github.wimdeblauwe/htmx-spring-boot/latest/io/github/wimdeblauwe/htmx/spring/boot/mvc/HxRedirect.html)
+* [@HxRefresh](https://javadoc.io/doc/io.github.wimdeblauwe/htmx-spring-boot/latest/io/github/wimdeblauwe/htmx/spring/boot/mvc/HxRefresh.html)
+* [@HxReplaceUrl](https://javadoc.io/doc/io.github.wimdeblauwe/htmx-spring-boot/latest/io/github/wimdeblauwe/htmx/spring/boot/mvc/HxReplaceUrl.html)
+* [@HxReselect](https://javadoc.io/doc/io.github.wimdeblauwe/htmx-spring-boot/latest/io/github/wimdeblauwe/htmx/spring/boot/mvc/HxReselect.html)
+* [@HxReswap](https://javadoc.io/doc/io.github.wimdeblauwe/htmx-spring-boot/latest/io/github/wimdeblauwe/htmx/spring/boot/mvc/HxReswap.html)
+* [@HxRetarget](https://javadoc.io/doc/io.github.wimdeblauwe/htmx-spring-boot/latest/io/github/wimdeblauwe/htmx/spring/boot/mvc/HxRetarget.html)
+* [@HxTrigger](https://javadoc.io/doc/io.github.wimdeblauwe/htmx-spring-boot/latest/io/github/wimdeblauwe/htmx/spring/boot/mvc/HxTrigger.html)
+
+>**Note** Please check the corresponding Javadoc to learn about the available options.
+
 #### Examples
-
-If you want htmx to trigger an event after the response is processed, you can use the annotation `@HxTrigger` which sets the necessary response header [HX-Trigger](https://htmx.org/headers/hx-trigger/).
-
+If you want htmx to trigger an event by setting the response header [HX-Trigger](https://htmx.org/headers/hx-trigger/), you can use the annotation `@HxTrigger`.
 ```java
 @HxRequest
 @HxTrigger("userUpdated") // the event 'userUpdated' will be triggered by htmx

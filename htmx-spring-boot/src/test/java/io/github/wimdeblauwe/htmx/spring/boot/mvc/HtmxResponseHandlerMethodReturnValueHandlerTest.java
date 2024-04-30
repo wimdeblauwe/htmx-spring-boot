@@ -138,7 +138,7 @@ public class HtmxResponseHandlerMethodReturnValueHandlerTest {
                              .andExpect(status().isOk())
                              .andExpect(header().string("HX-Reswap", "none"))
                              .andReturn().getResponse().getContentAsString();
-        assertThat(html).contains("""
+        assertThat(html).containsIgnoringWhitespaces("""
                                           <span hx-swap-oob="true">
                                               <span>Fake exception</span>
                                           </span>""");
