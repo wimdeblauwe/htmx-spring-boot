@@ -28,6 +28,7 @@ public class HtmxHandlerInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request,
                              HttpServletResponse response,
                              Object handler) {
+
         if (handler instanceof HandlerMethod) {
             Method method = ((HandlerMethod) handler).getMethod();
             setHxLocation(response, method);
@@ -38,6 +39,8 @@ public class HtmxHandlerInterceptor implements HandlerInterceptor {
             setHxRetarget(response, method);
             setHxReselect(response, method);
             setHxTrigger(response, method);
+            setHxTriggerAfterSettle(response, method);
+            setHxTriggerAfterSwap(response, method);
             setHxRefresh(response, method);
             setVary(request, response);
         }
@@ -108,7 +111,21 @@ public class HtmxHandlerInterceptor implements HandlerInterceptor {
     private void setHxTrigger(HttpServletResponse response, Method method) {
         HxTrigger methodAnnotation = AnnotatedElementUtils.findMergedAnnotation(method, HxTrigger.class);
         if (methodAnnotation != null) {
-            response.setHeader(getHeaderName(methodAnnotation.lifecycle()), methodAnnotation.value());
+            setHeader(response, getHeaderName(methodAnnotation.lifecycle()), methodAnnotation.value());
+        }
+    }
+
+    private void setHxTriggerAfterSettle(HttpServletResponse response, Method method) {
+        HxTriggerAfterSettle methodAnnotation = AnnotatedElementUtils.findMergedAnnotation(method, HxTriggerAfterSettle.class);
+        if (methodAnnotation != null) {
+            setHeader(response, HtmxResponseHeader.HX_TRIGGER_AFTER_SETTLE.getValue(), methodAnnotation.value());
+        }
+    }
+
+    private void setHxTriggerAfterSwap(HttpServletResponse response, Method method) {
+        HxTriggerAfterSwap methodAnnotation = AnnotatedElementUtils.findMergedAnnotation(method, HxTriggerAfterSwap.class);
+        if (methodAnnotation != null) {
+            setHeader(response, HtmxResponseHeader.HX_TRIGGER_AFTER_SWAP.getValue(), methodAnnotation.value());
         }
     }
 
@@ -138,6 +155,10 @@ public class HtmxHandlerInterceptor implements HandlerInterceptor {
         } catch (JsonProcessingException e) {
             throw new IllegalArgumentException("Unable to set header " + name + " to " + value, e);
         }
+    }
+
+    private void setHeader(HttpServletResponse response, String name, String[] values) {
+        response.setHeader(name, String.join(",", values));
     }
 
     private HtmxLocation convertToLocation(HxLocation annotation) {

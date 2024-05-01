@@ -22,17 +22,61 @@ public class TestController {
         return "";
     }
 
+    @GetMapping("/with-trigger-multiple-events")
+    @HxTrigger({ "event1", "event2" })
+    @ResponseBody
+    public String methodWithHxTriggerAndMultipleEvents() {
+        return "";
+    }
+
     @GetMapping("/with-trigger-settle")
     @HxTrigger(value = "eventTriggered", lifecycle = HxTriggerLifecycle.SETTLE)
     @ResponseBody
-    public String methodWithHxTriggerAfterSettle() {
+    public String methodWithHxTriggerAndLifecycleSettle() {
         return "";
     }
 
     @GetMapping("/with-trigger-swap")
     @HxTrigger(value = "eventTriggered", lifecycle = HxTriggerLifecycle.SWAP)
     @ResponseBody
+    public String methodWithHxTriggerAndLifecycleSwap() {
+        return "";
+    }
+
+    @GetMapping("/with-trigger-after-settle")
+    @HxTriggerAfterSettle("eventTriggered")
+    @ResponseBody
+    public String methodWithHxTriggerAfterSettle() {
+        return "";
+    }
+
+    @GetMapping("/with-trigger-after-settle-multiple-events")
+    @HxTriggerAfterSettle({ "event1", "event2" })
+    @ResponseBody
+    public String methodWithHxTriggerAfterSettleAndMultipleEvents() {
+        return "";
+    }
+
+    @GetMapping("/with-trigger-after-swap")
+    @HxTriggerAfterSwap("eventTriggered")
+    @ResponseBody
     public String methodWithHxTriggerAfterSwap() {
+        return "";
+    }
+
+    @GetMapping("/with-trigger-after-swap-multiple-events")
+    @HxTriggerAfterSwap({ "event1", "event2" })
+    @ResponseBody
+    public String methodWithHxTriggerAfterSwapAndMultipleEvents() {
+        return "";
+    }
+
+    @GetMapping("/with-triggers")
+    @HxTrigger({ "event1", "event2" })
+    @HxTriggerAfterSettle({ "event1", "event2" })
+    @HxTriggerAfterSwap({ "event1", "event2" })
+    @ResponseBody
+    public String methodWithHxTriggers() {
         return "";
     }
 

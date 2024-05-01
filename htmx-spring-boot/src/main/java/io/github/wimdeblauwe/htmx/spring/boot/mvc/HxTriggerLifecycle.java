@@ -4,7 +4,9 @@ package io.github.wimdeblauwe.htmx.spring.boot.mvc;
  * Represents the HX-Trigger Response Headers.
  *
  * @see <a href="https://htmx.org/headers/hx-trigger/">HX-Trigger Response Headers</a>
+ * @deprecated use annotation {@link HxTriggerAfterSettle} or {@link HxTriggerAfterSwap} instead.
  */
+@Deprecated
 public enum HxTriggerLifecycle {
     /**
      * Trigger events as soon as the response is received.

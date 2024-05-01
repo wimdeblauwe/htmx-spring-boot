@@ -27,6 +27,13 @@ class HtmxHandlerInterceptorTest {
     }
 
     @Test
+    public void testHeaderIsSetOnResponseWithMultipleEventsIfHxTriggerIsPresent() throws Exception {
+        mockMvc.perform(get("/with-trigger-multiple-events"))
+               .andExpect(status().isOk())
+               .andExpect(header().string("HX-Trigger", "event1,event2"));
+    }
+
+    @Test
     public void testAfterSettleHeaderIsSetOnResponseIfHxTriggerIsPresent() throws Exception {
         mockMvc.perform(get("/with-trigger-settle"))
                .andExpect(status().isOk())
@@ -38,6 +45,43 @@ class HtmxHandlerInterceptorTest {
         mockMvc.perform(get("/with-trigger-swap"))
                .andExpect(status().isOk())
                .andExpect(header().string("HX-Trigger-After-Swap", "eventTriggered"));
+    }
+
+    @Test
+    public void testAfterSettleHeaderIsSetOnResponseIfHxTriggerAfterSettleIsPresent() throws Exception {
+        mockMvc.perform(get("/with-trigger-after-settle"))
+               .andExpect(status().isOk())
+               .andExpect(header().string("HX-Trigger-After-Settle", "eventTriggered"));
+    }
+
+    @Test
+    public void testAfterSettleHeaderIsSetOnResponseWithMultipleEventsIfHxTriggerAfterSettleIsPresent() throws Exception {
+        mockMvc.perform(get("/with-trigger-after-settle-multiple-events"))
+               .andExpect(status().isOk())
+               .andExpect(header().string("HX-Trigger-After-Settle", "event1,event2"));
+    }
+
+    @Test
+    public void testAfterSwapHeaderIsSetOnResponseIfHxTriggerAfterSwapIsPresent() throws Exception {
+        mockMvc.perform(get("/with-trigger-after-swap"))
+               .andExpect(status().isOk())
+               .andExpect(header().string("HX-Trigger-After-Swap", "eventTriggered"));
+    }
+
+    @Test
+    public void testAfterSwapHeaderIsSetOnResponseWithMultipleEventsIfHxTriggerAfterSwapIsPresent() throws Exception {
+        mockMvc.perform(get("/with-trigger-after-swap-multiple-events"))
+               .andExpect(status().isOk())
+               .andExpect(header().string("HX-Trigger-After-Swap", "event1,event2"));
+    }
+
+    @Test
+    public void testHeadersAreSetOnResponseIfHxTriggersArePresent() throws Exception {
+        mockMvc.perform(get("/with-triggers"))
+               .andExpect(status().isOk())
+               .andExpect(header().string("HX-Trigger", "event1,event2"))
+               .andExpect(header().string("HX-Trigger-After-Settle", "event1,event2"))
+               .andExpect(header().string("HX-Trigger-After-Swap", "event1,event2"));
     }
 
     @Test
