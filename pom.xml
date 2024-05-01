@@ -117,35 +117,6 @@
                     </execution>
                 </executions>
             </plugin>
-            <!--
-            <plugin>
-                <groupId>org.asciidoctor</groupId>
-                <artifactId>asciidoctor-maven-plugin</artifactId>
-                <version>${asciidoctor-maven-plugin.version}</version>
-                <executions>
-                    <execution>
-                        <id>generate-html-documentation</id>
-                        <phase>prepare-package</phase>
-                        <goals>
-                            <goal>process-asciidoc</goal>
-                        </goals>
-                        <configuration>
-                            <backend>spring-html</backend>
-                            <attributes>
-                                <project-version>${project.version}</project-version>
-                            </attributes>
-                        </configuration>
-                    </execution>
-                </executions>
-                <dependencies>
-                    <dependency>
-                        <groupId>io.spring.asciidoctor.backends</groupId>
-                        <artifactId>spring-asciidoctor-backends</artifactId>
-                        <version>${spring-asciidoctor-backends.version}</version>
-                    </dependency>
-                </dependencies>
-            </plugin>
-            -->
         </plugins>
     </build>
     <profiles>
