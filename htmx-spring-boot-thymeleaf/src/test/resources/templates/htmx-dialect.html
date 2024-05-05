@@ -10,6 +10,7 @@
 <!--/*@thymesVar id="trueVariable" type="java.lang.Boolean"*/-->
 <!--/*@thymesVar id="falseVariable" type="java.lang.Boolean"*/-->
 <!--/*@thymesVar id="listVariable" type="java.util.List"*/-->
+<!-- @formatter:off -->
 <div id="hx-get-div" hx:get="${trueVariable}?'/foo':'/bar'"></div>
 <div id="hx-post-div" hx:post="${trueVariable}?'/foo':'/bar'"></div>
 <div id="hx-put-div" hx:put="${trueVariable}?'/foo':'/bar'"></div>
@@ -21,10 +22,12 @@
 <div id="hx-vals-div-boolean" hx:vals="${ {someBooleanProperty: trueVariable} }"></div>
 <div id="hx-vals-div-string" hx:vals="${ {someStringProperty: stringVariable} }"></div>
 <div id="hx-vals-div-number" hx:vals="${ {someNumberProperty: numberVariable} }"></div>
+<div id="hx-vals-div-multiple" hx:vals="${ {someBooleanProperty: trueVariable, someNumberProperty: numberVariable} }"></div>
 <div id="hx-swap-div-with-empty-string" hx:swap="${falseVariable}?'afterend':''"></div>
 <div id="hx-swap-div-with-null" hx:swap="${falseVariable}?'afterend':null"></div>
 <div id="hx-swap-div-with-th-with" th:with="sum = ${1+1}" hx:swap="${sum.equals(2)}?'afterend':null"></div>
 <div id="hx-target-div-with-th-each" th:each="number : ${listVariable}" hx:target="${number}"></div>
 <div id="hx-validate-div" hx:validate="${trueVariable}"></div>
+<!-- @formatter:on -->
 </body>
 </html>
