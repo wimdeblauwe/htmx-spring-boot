@@ -22,17 +22,61 @@ public class TestController {
         return "";
     }
 
+    @GetMapping("/with-trigger-multiple-events")
+    @HxTrigger({ "event1", "event2" })
+    @ResponseBody
+    public String methodWithHxTriggerAndMultipleEvents() {
+        return "";
+    }
+
     @GetMapping("/with-trigger-settle")
     @HxTrigger(value = "eventTriggered", lifecycle = HxTriggerLifecycle.SETTLE)
     @ResponseBody
-    public String methodWithHxTriggerAfterSettle() {
+    public String methodWithHxTriggerAndLifecycleSettle() {
         return "";
     }
 
     @GetMapping("/with-trigger-swap")
     @HxTrigger(value = "eventTriggered", lifecycle = HxTriggerLifecycle.SWAP)
     @ResponseBody
+    public String methodWithHxTriggerAndLifecycleSwap() {
+        return "";
+    }
+
+    @GetMapping("/with-trigger-after-settle")
+    @HxTriggerAfterSettle("eventTriggered")
+    @ResponseBody
+    public String methodWithHxTriggerAfterSettle() {
+        return "";
+    }
+
+    @GetMapping("/with-trigger-after-settle-multiple-events")
+    @HxTriggerAfterSettle({ "event1", "event2" })
+    @ResponseBody
+    public String methodWithHxTriggerAfterSettleAndMultipleEvents() {
+        return "";
+    }
+
+    @GetMapping("/with-trigger-after-swap")
+    @HxTriggerAfterSwap("eventTriggered")
+    @ResponseBody
     public String methodWithHxTriggerAfterSwap() {
+        return "";
+    }
+
+    @GetMapping("/with-trigger-after-swap-multiple-events")
+    @HxTriggerAfterSwap({ "event1", "event2" })
+    @ResponseBody
+    public String methodWithHxTriggerAfterSwapAndMultipleEvents() {
+        return "";
+    }
+
+    @GetMapping("/with-triggers")
+    @HxTrigger({ "event1", "event2" })
+    @HxTriggerAfterSettle({ "event1", "event2" })
+    @HxTriggerAfterSwap({ "event1", "event2" })
+    @ResponseBody
+    public String methodWithHxTriggers() {
         return "";
     }
 
@@ -50,7 +94,6 @@ public class TestController {
         return "";
     }
 
-
     @GetMapping("/hx-refresh")
     @HxRefresh
     @ResponseBody
@@ -61,6 +104,62 @@ public class TestController {
     @GetMapping("/hx-vary")
     @ResponseBody
     public String hxVary() {
+        return "";
+    }
+
+    @GetMapping("/hx-location-without-context-data")
+    @HxLocation("/path")
+    @ResponseBody
+    public String hxLocationWithoutContextData() {
+        return "";
+    }
+
+    @GetMapping("/hx-location-with-context-data")
+    @HxLocation(path = "/path", source = "source", event = "event", handler = "handler", target = "target", swap = "swap")
+    @ResponseBody
+    public String hxLocationWithContextData() {
+        return "";
+    }
+
+    @GetMapping("/hx-push-url")
+    @HxPushUrl("/path")
+    @ResponseBody
+    public String hxPushUrl() {
+        return "";
+    }
+
+    @GetMapping("/hx-redirect")
+    @HxRedirect("/path")
+    @ResponseBody
+    public String hxRedirect() {
+        return "";
+    }
+
+    @GetMapping("/hx-replace-url")
+    @HxReplaceUrl("/path")
+    @ResponseBody
+    public String hxReplaceUrl() {
+        return "";
+    }
+
+    @GetMapping("/hx-reswap")
+    @HxReswap(value = HxSwapType.INNER_HTML, swap = 300)
+    @ResponseBody
+    public String hxReswap() {
+        return "";
+    }
+
+    @GetMapping("/hx-retarget")
+    @HxRetarget("#target")
+    @ResponseBody
+    public String hxRetarget() {
+        return "";
+    }
+
+    @GetMapping("/hx-reselect")
+    @HxReselect("#target")
+    @ResponseBody
+    public String hxReselect() {
         return "";
     }
 

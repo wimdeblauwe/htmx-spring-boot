@@ -6,7 +6,9 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Annotation to trigger client side events as soon as the response is received on the target element.
+ * Annotation to trigger client side events after the 
+ * <a href="https://htmx.org/docs/#request-operations">swap step</a>
+ * on the target element.
  * <br>
  * You can trigger a single event or as many uniquely named events as you would like.
  *
@@ -14,16 +16,13 @@ import java.lang.annotation.Target;
  */
 @Target({ElementType.TYPE, ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface HxTrigger {
+public @interface HxTriggerAfterSwap {
 
     /**
-     * The events to trigger as soon as the response is received on the target element.
+     * The events to trigger after the 
+     * <a href="https://htmx.org/docs/#request-operations">swap step</a>
+     * on the target element.
      */
     String[] value();
 
-    /**
-     * @deprecated use annotation {@link HxTriggerAfterSettle} or {@link HxTriggerAfterSwap} instead.
-     */
-    @Deprecated
-    HxTriggerLifecycle lifecycle() default HxTriggerLifecycle.RECEIVE;
 }
