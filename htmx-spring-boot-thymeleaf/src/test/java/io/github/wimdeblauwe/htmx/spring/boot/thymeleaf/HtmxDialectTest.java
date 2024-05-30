@@ -127,7 +127,8 @@ class HtmxDialectTest {
         assertThat(html)
                 .containsPattern("hx-vals-div-boolean.*hx-vals=\"\\{&quot;someBooleanProperty&quot;:true}\"")
                 .containsPattern("hx-vals-div-string.*hx-vals=\"\\{&quot;someStringProperty&quot;:&quot;someString&quot;}\"")
-                .containsPattern("hx-vals-div-number.*hx-vals=\"\\{&quot;someNumberProperty&quot;:12345}\"");
+                .containsPattern("hx-vals-div-number.*hx-vals=\"\\{&quot;someNumberProperty&quot;:12345}\"")
+                .containsPattern("hx-vals-div-multiple.*hx-vals=\"\\{&quot;someBooleanProperty&quot;:true,&quot;someNumberProperty&quot;:12345}\"");
     }
 
     @Test

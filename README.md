@@ -303,6 +303,13 @@ will render as:
 
 (Given `user.id` has the value `1234`)
 
+You can use multiple values like this:
+
+```html
+
+<div hx:vals="${ {id: user.id, groupId: group.id } }"></div>
+```
+
 ## Articles
 
 Links to articles and blog posts about this library:
