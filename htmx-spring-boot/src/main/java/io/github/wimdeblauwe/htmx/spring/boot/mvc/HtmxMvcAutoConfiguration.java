@@ -1,6 +1,7 @@
 package io.github.wimdeblauwe.htmx.spring.boot.mvc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.json.JsonMapper;
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
@@ -26,14 +27,13 @@ public class HtmxMvcAutoConfiguration implements WebMvcRegistrations, WebMvcConf
     private final ObjectMapper objectMapper;
 
     HtmxMvcAutoConfiguration(@Qualifier("viewResolver") ObjectFactory<ViewResolver> resolver,
-                             ObjectFactory<LocaleResolver> locales,
-                             ObjectMapper objectMapper) {
+                             ObjectFactory<LocaleResolver> locales) {
         Assert.notNull(resolver, "ViewResolver must not be null!");
         Assert.notNull(locales, "LocaleResolver must not be null!");
 
         this.resolver = resolver;
         this.locales = locales;
-        this.objectMapper = objectMapper;
+        this.objectMapper = JsonMapper.builder().build();
     }
 
     @Override
