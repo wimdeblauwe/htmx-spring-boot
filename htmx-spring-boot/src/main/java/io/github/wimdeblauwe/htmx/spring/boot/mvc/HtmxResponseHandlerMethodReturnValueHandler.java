@@ -50,7 +50,7 @@ public class HtmxResponseHandlerMethodReturnValueHandler implements HandlerMetho
         addHxHeaders(htmxResponse, webRequest.getNativeResponse(HttpServletResponse.class));
     }
 
-    private View toView(HtmxResponse htmxResponse) {
+    View toView(HtmxResponse htmxResponse) {
 
         Assert.notNull(htmxResponse, "HtmxResponse must not be null!");
 
@@ -74,7 +74,7 @@ public class HtmxResponseHandlerMethodReturnValueHandler implements HandlerMetho
         };
     }
 
-    private void addHxHeaders(HtmxResponse htmxResponse, HttpServletResponse response) {
+    void addHxHeaders(HtmxResponse htmxResponse, HttpServletResponse response) {
         addHxTriggerHeaders(response, HtmxResponseHeader.HX_TRIGGER, htmxResponse.getTriggersInternal());
         addHxTriggerHeaders(response, HtmxResponseHeader.HX_TRIGGER_AFTER_SETTLE, htmxResponse.getTriggersAfterSettleInternal());
         addHxTriggerHeaders(response, HtmxResponseHeader.HX_TRIGGER_AFTER_SWAP, htmxResponse.getTriggersAfterSwapInternal());
