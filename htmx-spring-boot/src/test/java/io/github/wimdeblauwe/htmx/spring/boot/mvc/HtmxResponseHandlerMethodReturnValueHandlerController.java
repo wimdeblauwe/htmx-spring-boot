@@ -137,6 +137,14 @@ public class HtmxResponseHandlerMethodReturnValueHandlerController {
         throw new RuntimeException("Fake exception");
     }
 
+    @GetMapping("/argument")
+    public String argument(HtmxResponse.Builder htmxResponse) {
+        htmxResponse.trigger("event1");
+        return "argument";
+    }
+
+
+
     @ExceptionHandler(Exception.class)
     public HtmxResponse handleError(Exception ex) {
         return HtmxResponse.builder()

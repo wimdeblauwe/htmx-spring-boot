@@ -15,13 +15,41 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.View;
 
 public class HtmxHandlerInterceptor implements HandlerInterceptor {
 
     private final ObjectMapper objectMapper;
+    private final HtmxResponseHandlerMethodReturnValueHandler htmxResponseHandlerMethodReturnValueHandler;
 
-    public HtmxHandlerInterceptor(ObjectMapper objectMapper) {
+    public HtmxHandlerInterceptor(ObjectMapper objectMapper, HtmxResponseHandlerMethodReturnValueHandler htmxResponseHandlerMethodReturnValueHandler) {
         this.objectMapper = objectMapper;
+        this.htmxResponseHandlerMethodReturnValueHandler = htmxResponseHandlerMethodReturnValueHandler;
+    }
+
+    @Override
+    public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
+        if(modelAndView != null) {
+            modelAndView.getModel().values().forEach(
+                    value ->{
+                        if(value instanceof HtmxResponse) {
+                            buildAndRender((HtmxResponse) value, modelAndView, request, response);
+                        } else if (value instanceof HtmxResponse.Builder) {
+                            buildAndRender(((HtmxResponse.Builder) value).build(), modelAndView, request, response);
+                        }
+                    });
+        }
+    }
+
+    private void buildAndRender(HtmxResponse htmxResponse, ModelAndView mav, HttpServletRequest request, HttpServletResponse response) {
+        View v = htmxResponseHandlerMethodReturnValueHandler.toView(htmxResponse);
+        try {
+            v.render(mav.getModel(), request, response);
+            htmxResponseHandlerMethodReturnValueHandler.addHxHeaders(htmxResponse, response);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override

@@ -181,6 +181,35 @@ public HtmxResponse getMainAndPartial(Model model){
 
 Using `ModelAndView` means that each fragment can have its own model (which is merged with the controller model before rendering).
 
+### HtmxResponse.Builder as an argument
+
+An `HtmxReponse.Builder` can be injected as a controller method. This creates the parameter and adds it to the model, 
+allowing it to be used without requiring it be the method return value. This is useful when the return value is needed for
+the template.
+
+This allows for the following usage:
+
+```java
+@GetMapping("/endpoint")
+public String endpoint(HtmxResponse.Builder htmxResponse, Model model) {
+    htmxResponse.trigger("event1");
+    model.addAttribute("aField", "aValue");
+    return "endpointTemplate";
+}
+```
+
+For example the [JTE templating library](https://jte.gg/) supports statically typed templates and can be used like so:
+
+```java
+@GetMapping("/endpoint")
+public JteModel endpoint(HtmxResponse.Builder htmxResponse) {
+    htmxResponse.trigger("event1");
+    String aField = "aValue";
+    return templates.endpointTemplate(aField);
+}
+```
+
+
 ### Error handlers
 
 It is possible to use `HtmxResponse` as a return type from error handlers.

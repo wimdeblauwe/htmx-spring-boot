@@ -143,4 +143,11 @@ public class HtmxResponseHandlerMethodReturnValueHandlerTest {
                                               <span>Fake exception</span>
                                           </span>""");
     }
+
+    @Test
+    public void testHxTriggerArgument() throws Exception {
+        mockMvc.perform(get("/hvhi/argument"))
+               .andExpect(status().isOk())
+               .andExpect(header().string("HX-Trigger", "event1"));
+    }
 }
