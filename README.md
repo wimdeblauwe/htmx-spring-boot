@@ -198,7 +198,7 @@ public String endpoint(HtmxResponse.Builder htmxResponse, Model model) {
 }
 ```
 
-For example the JTE templating library supports statically typed templates and can be used like so:
+For example the [JTE templating library](https://jte.gg/) supports statically typed templates and can be used like so:
 
 ```java
 @GetMapping("/endpoint")
