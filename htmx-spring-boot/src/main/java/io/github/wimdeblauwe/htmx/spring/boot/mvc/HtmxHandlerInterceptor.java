@@ -5,6 +5,8 @@ import static io.github.wimdeblauwe.htmx.spring.boot.mvc.HtmxResponseHeader.*;
 import java.lang.reflect.Method;
 import java.time.Duration;
 
+import java.util.Objects;
+
 import org.springframework.core.annotation.AnnotatedElementUtils;
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.method.HandlerMethod;
@@ -60,7 +62,7 @@ public class HtmxHandlerInterceptor implements HandlerInterceptor {
         if (handler instanceof HandlerMethod) {
             Method method = ((HandlerMethod) handler).getMethod();
             setHxLocation(response, method);
-            setHxPushUrl(response, method);
+            setHxPushUrl(request, response, method);
             setHxRedirect(response, method);
             setHxReplaceUrl(response, method);
             setHxReswap(response, method);
@@ -94,10 +96,19 @@ public class HtmxHandlerInterceptor implements HandlerInterceptor {
         }
     }
 
-    private void setHxPushUrl(HttpServletResponse response, Method method) {
+    private void setHxPushUrl(HttpServletRequest request, HttpServletResponse response, Method method) {
         HxPushUrl methodAnnotation = AnnotatedElementUtils.findMergedAnnotation(method, HxPushUrl.class);
         if (methodAnnotation != null) {
-            setHeader(response, HX_PUSH_URL, methodAnnotation.value());
+            if(!Objects.equals(methodAnnotation.value(), HtmxValue.TRUE)){
+                setHeader(response, HX_PUSH_URL, methodAnnotation.value());
+            }
+            String path = request.getRequestURI();
+            String queryString = request.getQueryString();
+
+            if (queryString != null && !queryString.isEmpty()) {
+                path += "?" + queryString;
+            }
+            setHeader(response, HX_PUSH_URL, path);
         }
     }
 

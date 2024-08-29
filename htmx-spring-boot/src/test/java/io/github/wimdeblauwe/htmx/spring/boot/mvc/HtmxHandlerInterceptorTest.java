@@ -141,10 +141,16 @@ class HtmxHandlerInterceptorTest {
     }
 
     @Test
-    public void testHxPushUrl() throws Exception {
-        mockMvc.perform(get("/hx-push-url"))
+    public void testHxPushUrlPath() throws Exception {
+        mockMvc.perform(get("/hx-push-url-path"))
                .andExpect(status().isOk())
                .andExpect(header().string("HX-Push-Url", "/path"));
+    }
+    @Test
+    public void testHxPushUrl() throws Exception {
+        mockMvc.perform(get("/hx-push-url?test=hello"))
+               .andExpect(status().isOk())
+               .andExpect(header().string("HX-Push-Url", "/hx-push-url?test=hello"));
     }
 
     @Test

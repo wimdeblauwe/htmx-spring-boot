@@ -121,8 +121,15 @@ public class TestController {
         return "";
     }
 
-    @GetMapping("/hx-push-url")
+    @GetMapping("/hx-push-url-path")
     @HxPushUrl("/path")
+    @ResponseBody
+    public String hxPushUrlPath() {
+        return "";
+    }
+
+    @GetMapping("/hx-push-url")
+    @HxPushUrl
     @ResponseBody
     public String hxPushUrl() {
         return "";
