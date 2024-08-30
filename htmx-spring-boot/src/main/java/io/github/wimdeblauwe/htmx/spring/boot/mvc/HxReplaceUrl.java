@@ -27,6 +27,6 @@ public @interface HxReplaceUrl {
     /**
      * The value for the {@code HX-Replace-Url} response header.
      */
-    String value();
+    String value() default HtmxValue.TRUE;
 
 }

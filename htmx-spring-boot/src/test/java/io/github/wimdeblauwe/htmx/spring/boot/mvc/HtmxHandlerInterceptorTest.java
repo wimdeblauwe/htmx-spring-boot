@@ -154,6 +154,13 @@ class HtmxHandlerInterceptorTest {
     }
 
     @Test
+    public void testHxPushUrlFalse() throws Exception {
+        mockMvc.perform(get("/hx-push-url-false?test=hello"))
+               .andExpect(status().isOk())
+               .andExpect(header().string("HX-Push-Url", "false"));
+    }
+
+    @Test
     public void testHxRedirect() throws Exception {
         mockMvc.perform(get("/hx-redirect"))
                .andExpect(status().isOk())
@@ -161,10 +168,24 @@ class HtmxHandlerInterceptorTest {
     }
 
     @Test
-    public void testHxReplaceUrl() throws Exception {
-        mockMvc.perform(get("/hx-replace-url"))
+    public void testHxReplaceUrlPath() throws Exception {
+        mockMvc.perform(get("/hx-replace-url-path"))
                .andExpect(status().isOk())
                .andExpect(header().string("HX-Replace-Url", "/path"));
+    }
+
+    @Test
+    public void testHxReplaceUrl() throws Exception {
+        mockMvc.perform(get("/hx-replace-url?test=hello&test2=hello2"))
+               .andExpect(status().isOk())
+               .andExpect(header().string("HX-Replace-Url", "/hx-replace-url?test=hello&test2=hello2"));
+    }
+
+    @Test
+    public void testHxReplaceUrlFalse() throws Exception {
+        mockMvc.perform(get("/hx-replace-url-false?test=hello"))
+               .andExpect(status().isOk())
+               .andExpect(header().string("HX-Replace-Url", "false"));
     }
 
     @Test

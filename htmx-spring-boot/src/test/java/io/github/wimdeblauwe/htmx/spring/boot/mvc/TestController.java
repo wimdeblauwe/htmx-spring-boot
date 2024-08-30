@@ -135,6 +135,13 @@ public class TestController {
         return "";
     }
 
+    @GetMapping("/hx-push-url-false")
+    @HxPushUrl(HtmxValue.FALSE)
+    @ResponseBody
+    public String hxPushUrlFalse() {
+        return "";
+    }
+
     @GetMapping("/hx-redirect")
     @HxRedirect("/path")
     @ResponseBody
@@ -142,10 +149,22 @@ public class TestController {
         return "";
     }
 
-    @GetMapping("/hx-replace-url")
+    @GetMapping("/hx-replace-url-path")
     @HxReplaceUrl("/path")
     @ResponseBody
+    public String hxReplaceUrlPath() {
+        return "";
+    }
+    @GetMapping("/hx-replace-url")
+    @HxReplaceUrl
+    @ResponseBody
     public String hxReplaceUrl() {
+        return "";
+    }
+    @GetMapping("/hx-replace-url-false")
+    @HxReplaceUrl(HtmxValue.FALSE)
+    @ResponseBody
+    public String hxReplaceUrlFalse() {
         return "";
     }
 
