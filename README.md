@@ -351,7 +351,7 @@ Links to articles and blog posts about this library:
 
 | Library version                                                                       | Spring Boot | Minimum Java version |
 |---------------------------------------------------------------------------------------|-------------|----------------------|
-| [3.5.0](https://github.com/wimdeblauwe/htmx-spring-boot/releases/tag/3.5.0)           | 3.2.x       | 17                   |
+| [3.5.1](https://github.com/wimdeblauwe/htmx-spring-boot/releases/tag/3.5.1)           | 3.2.x       | 17                   |
 | [3.4.1](https://github.com/wimdeblauwe/htmx-spring-boot/releases/tag/3.4.1)           | 3.2.x       | 17                   |
 | [3.3.0](https://github.com/wimdeblauwe/htmx-spring-boot/releases/tag/3.3.0)           | 3.1.x       | 17                   |
 | [3.2.0](https://github.com/wimdeblauwe/htmx-spring-boot/releases/tag/3.2.0)           | 3.1.x       | 17                   |
