@@ -1,22 +1,21 @@
 package io.github.wimdeblauwe.htmx.spring.boot.mvc;
 
-import static io.github.wimdeblauwe.htmx.spring.boot.mvc.HtmxResponseHeader.*;
-
-import java.lang.reflect.Method;
-import java.time.Duration;
-
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.core.annotation.AnnotatedElementUtils;
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
-
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.View;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
+import java.lang.reflect.Method;
+import java.time.Duration;
+
+import static io.github.wimdeblauwe.htmx.spring.boot.mvc.HtmxResponseHeader.*;
 
 public class HtmxHandlerInterceptor implements HandlerInterceptor {
 
@@ -30,10 +29,10 @@ public class HtmxHandlerInterceptor implements HandlerInterceptor {
 
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
-        if(modelAndView != null) {
+        if (modelAndView != null) {
             modelAndView.getModel().values().forEach(
-                    value ->{
-                        if(value instanceof HtmxResponse) {
+                    value -> {
+                        if (value instanceof HtmxResponse) {
                             buildAndRender((HtmxResponse) value, modelAndView, request, response);
                         } else if (value instanceof HtmxResponse.Builder) {
                             buildAndRender(((HtmxResponse.Builder) value).build(), modelAndView, request, response);
@@ -60,9 +59,9 @@ public class HtmxHandlerInterceptor implements HandlerInterceptor {
         if (handler instanceof HandlerMethod) {
             Method method = ((HandlerMethod) handler).getMethod();
             setHxLocation(response, method);
-            setHxPushUrl(response, method);
+            setHxPushUrl(request, response, method);
             setHxRedirect(response, method);
-            setHxReplaceUrl(response, method);
+            setHxReplaceUrl(request, response, method);
             setHxReswap(response, method);
             setHxRetarget(response, method);
             setHxReselect(response, method);
@@ -94,10 +93,14 @@ public class HtmxHandlerInterceptor implements HandlerInterceptor {
         }
     }
 
-    private void setHxPushUrl(HttpServletResponse response, Method method) {
+    private void setHxPushUrl(HttpServletRequest request, HttpServletResponse response, Method method) {
         HxPushUrl methodAnnotation = AnnotatedElementUtils.findMergedAnnotation(method, HxPushUrl.class);
         if (methodAnnotation != null) {
-            setHeader(response, HX_PUSH_URL, methodAnnotation.value());
+            if (HtmxValue.TRUE.equals(methodAnnotation.value())) {
+                setHeader(response, HX_PUSH_URL, getRequestUrl(request));
+            } else {
+                setHeader(response, HX_PUSH_URL, methodAnnotation.value());
+            }
         }
     }
 
@@ -108,10 +111,14 @@ public class HtmxHandlerInterceptor implements HandlerInterceptor {
         }
     }
 
-    private void setHxReplaceUrl(HttpServletResponse response, Method method) {
+    private void setHxReplaceUrl(HttpServletRequest request, HttpServletResponse response, Method method) {
         HxReplaceUrl methodAnnotation = AnnotatedElementUtils.findMergedAnnotation(method, HxReplaceUrl.class);
         if (methodAnnotation != null) {
-            setHeader(response, HX_REPLACE_URL, methodAnnotation.value());
+            if (HtmxValue.TRUE.equals(methodAnnotation.value())) {
+                setHeader(response, HX_REPLACE_URL, getRequestUrl(request));
+            } else {
+                setHeader(response, HX_REPLACE_URL, methodAnnotation.value());
+            }
         }
     }
 
@@ -252,5 +259,16 @@ public class HtmxHandlerInterceptor implements HandlerInterceptor {
             default -> throw new IllegalStateException("Unexpected value: " + position);
         };
     }
+
+    private String getRequestUrl(HttpServletRequest request) {
+        String path = request.getRequestURI();
+        String queryString = request.getQueryString();
+
+        if (queryString != null && !queryString.isEmpty()) {
+            path += "?" + queryString;
+        }
+        return path;
+    }
+
 
 }
