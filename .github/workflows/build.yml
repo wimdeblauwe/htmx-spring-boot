@@ -10,6 +10,8 @@ on:
 jobs:
   build:
     name: "Build with ${{ matrix.java }}"
+    name: "${{java}}"
+    
     strategy:
       matrix:
         java: [ 17, 21 ]
