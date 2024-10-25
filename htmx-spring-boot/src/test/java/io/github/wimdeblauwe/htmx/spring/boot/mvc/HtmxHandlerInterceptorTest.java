@@ -134,10 +134,24 @@ class HtmxHandlerInterceptorTest {
     }
 
     @Test
-    public void testHxLocationWithoutContextData() throws Exception {
-        mockMvc.perform(get("/hx-location-without-context-data"))
+    public void testHxLocationWithContextDataPathShouldPrependContextPath() throws Exception {
+        mockMvc.perform(get("/test/hx-location-with-context-data").contextPath("/test"))
                .andExpect(status().isOk())
-               .andExpect(header().string("HX-Location", "/path"));
+               .andExpect(header().string("HX-Location", "{\"path\":\"/test/path\",\"source\":\"source\",\"event\":\"event\",\"handler\":\"handler\",\"target\":\"target\",\"swap\":\"swap\"}"));
+    }
+
+    @Test
+    public void testHxLocationWithoutContextData() throws Exception {
+        mockMvc.perform(get("/test/hx-location-without-context-data").contextPath("/test"))
+               .andExpect(status().isOk())
+               .andExpect(header().string("HX-Location", "/test/path"));
+    }
+
+    @Test
+    public void testHxLocationWithoutContextDataShouldPrependContextPath() throws Exception {
+        mockMvc.perform(get("/test/hx-location-without-context-data").contextPath("/test"))
+               .andExpect(status().isOk())
+               .andExpect(header().string("HX-Location", "/test/path"));
     }
 
     @Test
@@ -146,6 +160,7 @@ class HtmxHandlerInterceptorTest {
                .andExpect(status().isOk())
                .andExpect(header().string("HX-Push-Url", "/path"));
     }
+
     @Test
     public void testHxPushUrl() throws Exception {
         mockMvc.perform(get("/hx-push-url?test=hello"))
@@ -161,10 +176,24 @@ class HtmxHandlerInterceptorTest {
     }
 
     @Test
+    public void testHxPushUrlShouldPrependContextPath() throws Exception {
+        mockMvc.perform(get("/test/hx-push-url-path").contextPath("/test"))
+               .andExpect(status().isOk())
+               .andExpect(header().string("HX-Push-Url", "/test/path"));
+    }
+
+    @Test
     public void testHxRedirect() throws Exception {
         mockMvc.perform(get("/hx-redirect"))
                .andExpect(status().isOk())
                .andExpect(header().string("HX-Redirect", "/path"));
+    }
+
+    @Test
+    public void testHxRedirectShouldPrependContextPath() throws Exception {
+        mockMvc.perform(get("/test/hx-redirect").contextPath("/test"))
+               .andExpect(status().isOk())
+               .andExpect(header().string("HX-Redirect", "/test/path"));
     }
 
     @Test
@@ -186,6 +215,13 @@ class HtmxHandlerInterceptorTest {
         mockMvc.perform(get("/hx-replace-url-false?test=hello"))
                .andExpect(status().isOk())
                .andExpect(header().string("HX-Replace-Url", "false"));
+    }
+
+    @Test
+    public void testHxReplaceUrlShouldPrependContextPath() throws Exception {
+        mockMvc.perform(get("/test/hx-replace-url-path").contextPath("/test"))
+               .andExpect(status().isOk())
+               .andExpect(header().string("HX-Replace-Url", "/test/path"));
     }
 
     @Test

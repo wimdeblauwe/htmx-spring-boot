@@ -57,9 +57,9 @@ public class HtmxHandlerInterceptor implements HandlerInterceptor {
 
         if (handler instanceof HandlerMethod) {
             Method method = ((HandlerMethod) handler).getMethod();
-            setHxLocation(response, method);
+            setHxLocation(request, response, method);
             setHxPushUrl(request, response, method);
-            setHxRedirect(response, method);
+            setHxRedirect(request, response, method);
             setHxReplaceUrl(request, response, method);
             setHxReswap(response, method);
             setHxRetarget(response, method);
@@ -80,14 +80,15 @@ public class HtmxHandlerInterceptor implements HandlerInterceptor {
         }
     }
 
-    private void setHxLocation(HttpServletResponse response, Method method) {
+    private void setHxLocation(HttpServletRequest request, HttpServletResponse response, Method method) {
         HxLocation methodAnnotation = AnnotatedElementUtils.findMergedAnnotation(method, HxLocation.class);
         if (methodAnnotation != null) {
             var location = convertToLocation(methodAnnotation);
             if (location.hasContextData()) {
+                location.setPath(RequestContextUtils.createUrl(request, location.getPath(), methodAnnotation.contextRelative()));
                 setHeaderJsonValue(response, HtmxResponseHeader.HX_LOCATION, location);
             } else {
-                setHeader(response, HtmxResponseHeader.HX_LOCATION, location.getPath());
+                setHeader(response, HtmxResponseHeader.HX_LOCATION, RequestContextUtils.createUrl(request, location.getPath(), methodAnnotation.contextRelative()));
             }
         }
     }
@@ -98,15 +99,15 @@ public class HtmxHandlerInterceptor implements HandlerInterceptor {
             if (HtmxValue.TRUE.equals(methodAnnotation.value())) {
                 setHeader(response, HX_PUSH_URL, getRequestUrl(request));
             } else {
-                setHeader(response, HX_PUSH_URL, methodAnnotation.value());
+                setHeader(response, HX_PUSH_URL, RequestContextUtils.createUrl(request, methodAnnotation.value(), methodAnnotation.contextRelative()));
             }
         }
     }
 
-    private void setHxRedirect(HttpServletResponse response, Method method) {
+    private void setHxRedirect(HttpServletRequest request, HttpServletResponse response, Method method) {
         HxRedirect methodAnnotation = AnnotatedElementUtils.findMergedAnnotation(method, HxRedirect.class);
         if (methodAnnotation != null) {
-            setHeader(response, HX_REDIRECT, methodAnnotation.value());
+            setHeader(response, HX_REDIRECT, RequestContextUtils.createUrl(request, methodAnnotation.value(), methodAnnotation.contextRelative()));
         }
     }
 
@@ -116,7 +117,7 @@ public class HtmxHandlerInterceptor implements HandlerInterceptor {
             if (HtmxValue.TRUE.equals(methodAnnotation.value())) {
                 setHeader(response, HX_REPLACE_URL, getRequestUrl(request));
             } else {
-                setHeader(response, HX_REPLACE_URL, methodAnnotation.value());
+                setHeader(response, HX_REPLACE_URL, RequestContextUtils.createUrl(request, methodAnnotation.value(), methodAnnotation.contextRelative()));
             }
         }
     }
