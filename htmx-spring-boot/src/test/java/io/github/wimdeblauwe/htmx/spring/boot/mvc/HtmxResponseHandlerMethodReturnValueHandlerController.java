@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.Duration;
 import java.util.Map;
@@ -34,6 +35,12 @@ public class HtmxResponseHandlerMethodReturnValueHandlerController {
         return HtmxResponse.builder().location("/path").build();
     }
 
+    @GetMapping("/hx-location-with-flash-attributes")
+    public HtmxResponse hxLocationWithoutContextData(RedirectAttributes redirectAttributes) {
+        redirectAttributes.addFlashAttribute("flash", "test");
+        return HtmxResponse.builder().location("/path").build();
+    }
+
     @GetMapping("/hx-push-url")
     public HtmxResponse hxPushUrl() {
         return HtmxResponse.builder().pushUrl("/path").build();
@@ -41,6 +48,12 @@ public class HtmxResponseHandlerMethodReturnValueHandlerController {
 
     @GetMapping("/hx-redirect")
     public HtmxResponse hxRedirect() {
+        return HtmxResponse.builder().redirect("/path").build();
+    }
+
+    @GetMapping("/hx-redirect-with-flash-attributes")
+    public HtmxResponse hxRedirectWithFlashAttributes(RedirectAttributes redirectAttributes) {
+        redirectAttributes.addFlashAttribute("flash", "test");
         return HtmxResponse.builder().redirect("/path").build();
     }
 

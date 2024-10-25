@@ -9,8 +9,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(HtmxResponseHandlerMethodReturnValueHandlerController.class)
 @WithMockUser
@@ -34,6 +33,14 @@ public class HtmxResponseHandlerMethodReturnValueHandlerTest {
     }
 
     @Test
+    public void testHxLocationWithFlashAttributes() throws Exception {
+        mockMvc.perform(get("/hvhi/hx-location-with-flash-attributes"))
+               .andExpect(status().isOk())
+               .andExpect(header().string("HX-Location", "/path"))
+               .andExpect(flash().attribute("flash", "test"));
+    }
+
+    @Test
     public void testHxPushUrl() throws Exception {
         mockMvc.perform(get("/hvhi/hx-push-url"))
                .andExpect(status().isOk())
@@ -45,6 +52,14 @@ public class HtmxResponseHandlerMethodReturnValueHandlerTest {
         mockMvc.perform(get("/hvhi/hx-redirect"))
                .andExpect(status().isOk())
                .andExpect(header().string("HX-Redirect", "/path"));
+    }
+
+    @Test
+    public void testHxRedirectWithFlashAttributes() throws Exception {
+        mockMvc.perform(get("/hvhi/hx-redirect-with-flash-attributes"))
+               .andExpect(status().isOk())
+               .andExpect(header().string("HX-Redirect", "/path"))
+               .andExpect(flash().attribute("flash", "test"));
     }
 
     @Test
