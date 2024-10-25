@@ -45,6 +45,77 @@ public final class HtmxResponse {
     }
 
     /**
+     * Can be used to do a client-side redirect to a new location.
+     *
+     * @param url the URL. Can be a relative or an absolute url
+     * @return the builder
+     */
+    public static Builder redirect(String url) {
+        return new Builder().redirect(url);
+    }
+
+    /**
+     * If set to "true" the client side will do a full refresh of the page
+     *
+     * @return the builder
+     */
+    public static Builder refresh() {
+        return new Builder().refresh();
+    }
+
+    /**
+     * Append a view name to be resolved with {@code ViewResolver} implementations and used together with the implicit model.
+     *
+     * @param viewName the name of the view.
+     * @return the builder
+     */
+    public static Builder view(String viewName) {
+        return new Builder().view(viewName);
+    }
+
+    /**
+     * Append a {@link ModelAndView} instance to use for rendering.
+     *
+     * @param modelAndView the model and view
+     * @return the builder
+     */
+    public static Builder view(ModelAndView modelAndView) {
+        return new Builder().view(modelAndView);
+    }
+
+    /**
+     * Append a {@link View} instance to use for rendering together with the implicit model.
+     *
+     * @param view the view
+     * @return the builder
+     */
+    public static Builder view(View view) {
+        return new Builder().view(view);
+    }
+
+    /**
+     * Allows you to do a client-side redirect that does not do a full page reload.
+     *
+     * @param path the path
+     * @return the builder
+     * @see <a href="https://htmx.org/headers/hx-location/">HX-Location Response Header</a>
+     */
+    public Builder location(String path) {
+        return new Builder().location(path);
+    }
+
+    /**
+     * Allows you to do a client-side redirect that does not do a full page reload.
+     *
+     * @param location the location
+     * @return the builder
+     * @see <a href="https://htmx.org/headers/hx-location/">HX-Location Response Header</a>
+     */
+    public Builder location(HtmxLocation location) {
+        return new Builder().location(location);
+    }
+
+    /**
      * @deprecated use {@link #builder()} instead. Will be removed in 4.0.
      */
     @Deprecated
