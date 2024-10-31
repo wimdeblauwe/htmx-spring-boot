@@ -2,10 +2,14 @@ package io.github.wimdeblauwe.htmx.spring.boot.mvc;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.core.MethodParameter;
+import org.springframework.lang.Nullable;
+import org.springframework.ui.ModelMap;
 import org.springframework.util.Assert;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodReturnValueHandler;
 import org.springframework.web.method.support.ModelAndViewContainer;
@@ -13,11 +17,14 @@ import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.ViewResolver;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.servlet.support.RequestContextUtils;
 import org.springframework.web.util.ContentCachingResponseWrapper;
 
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class HtmxResponseHandlerMethodReturnValueHandler implements HandlerMethodReturnValueHandler {
@@ -47,7 +54,10 @@ public class HtmxResponseHandlerMethodReturnValueHandler implements HandlerMetho
         HtmxResponse htmxResponse = (HtmxResponse) returnValue;
         mavContainer.setView(toView(htmxResponse));
 
-        addHxHeaders(htmxResponse, webRequest.getNativeResponse(HttpServletResponse.class));
+        HttpServletRequest request = webRequest.getNativeRequest(HttpServletRequest.class);
+        HttpServletResponse response = webRequest.getNativeResponse(HttpServletResponse.class);
+
+        addHxHeaders(htmxResponse, request, response, mavContainer);
     }
 
     View toView(HtmxResponse htmxResponse) {
@@ -74,16 +84,20 @@ public class HtmxResponseHandlerMethodReturnValueHandler implements HandlerMetho
         };
     }
 
-    void addHxHeaders(HtmxResponse htmxResponse, HttpServletResponse response) {
+    void addHxHeaders(HtmxResponse htmxResponse, HttpServletRequest request, HttpServletResponse response, @Nullable ModelAndViewContainer mavContainer) {
         addHxTriggerHeaders(response, HtmxResponseHeader.HX_TRIGGER, htmxResponse.getTriggersInternal());
         addHxTriggerHeaders(response, HtmxResponseHeader.HX_TRIGGER_AFTER_SETTLE, htmxResponse.getTriggersAfterSettleInternal());
         addHxTriggerHeaders(response, HtmxResponseHeader.HX_TRIGGER_AFTER_SWAP, htmxResponse.getTriggersAfterSwapInternal());
 
         if (htmxResponse.getLocation() != null) {
-            if (htmxResponse.getLocation().hasContextData()) {
-                setHeaderJsonValue(response, HtmxResponseHeader.HX_LOCATION.getValue(), htmxResponse.getLocation());
+            HtmxLocation location = htmxResponse.getLocation();
+            if (mavContainer != null) {
+                saveFlashAttributes(mavContainer, request, response, location.getPath());
+            }
+            if (location.hasContextData()) {
+                setHeaderJsonValue(response, HtmxResponseHeader.HX_LOCATION.getValue(), location);
             } else {
-                response.setHeader(HtmxResponseHeader.HX_LOCATION.getValue(), htmxResponse.getLocation().getPath());
+                response.setHeader(HtmxResponseHeader.HX_LOCATION.getValue(), location.getPath());
             }
         }
         if (htmxResponse.getReplaceUrl() != null) {
@@ -93,6 +107,9 @@ public class HtmxResponseHandlerMethodReturnValueHandler implements HandlerMetho
             response.setHeader(HtmxResponseHeader.HX_PUSH_URL.getValue(), htmxResponse.getPushUrl());
         }
         if (htmxResponse.getRedirect() != null) {
+            if (mavContainer != null) {
+                saveFlashAttributes(mavContainer, request, response, htmxResponse.getRedirect());
+            }
             response.setHeader(HtmxResponseHeader.HX_REDIRECT.getValue(), htmxResponse.getRedirect());
         }
         if (htmxResponse.isRefresh()) {
@@ -139,4 +156,22 @@ public class HtmxResponseHandlerMethodReturnValueHandler implements HandlerMetho
             throw new IllegalArgumentException("Unable to set header " + name + " to " + value, e);
         }
     }
+
+    private void saveFlashAttributes(ModelAndViewContainer mavContainer, HttpServletRequest request, HttpServletResponse response, String location) {
+        mavContainer.setRedirectModelScenario(true);
+        ModelMap model = mavContainer.getModel();
+
+        if (model instanceof RedirectAttributes redirectAttributes) {
+            Map<String, ?> flashAttributes = redirectAttributes.getFlashAttributes();
+            if (!CollectionUtils.isEmpty(flashAttributes)) {
+                if (request != null) {
+                    RequestContextUtils.getOutputFlashMap(request).putAll(flashAttributes);
+                    if (response != null) {
+                        RequestContextUtils.saveOutputFlashMap(location, request, response);
+                    }
+                }
+            }
+        }
+    }
+
 }

@@ -10,7 +10,6 @@ import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.View;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.lang.reflect.Method;
 import java.time.Duration;
@@ -30,14 +29,13 @@ public class HtmxHandlerInterceptor implements HandlerInterceptor {
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
         if (modelAndView != null) {
-            modelAndView.getModel().values().forEach(
-                    value -> {
-                        if (value instanceof HtmxResponse) {
-                            buildAndRender((HtmxResponse) value, modelAndView, request, response);
-                        } else if (value instanceof HtmxResponse.Builder) {
-                            buildAndRender(((HtmxResponse.Builder) value).build(), modelAndView, request, response);
-                        }
-                    });
+            for (Object value : modelAndView.getModel().values()) {
+                if (value instanceof HtmxResponse res) {
+                    buildAndRender(res, modelAndView, request, response);
+                } else if (value instanceof HtmxResponse.Builder builder) {
+                    buildAndRender(builder.build(), modelAndView, request, response);
+                }
+            }
         }
     }
 
@@ -45,7 +43,8 @@ public class HtmxHandlerInterceptor implements HandlerInterceptor {
         View v = htmxResponseHandlerMethodReturnValueHandler.toView(htmxResponse);
         try {
             v.render(mav.getModel(), request, response);
-            htmxResponseHandlerMethodReturnValueHandler.addHxHeaders(htmxResponse, response);
+            // ModelAndViewContainer is not available here, so flash attributes won't work
+            htmxResponseHandlerMethodReturnValueHandler.addHxHeaders(htmxResponse, request, response, null);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
