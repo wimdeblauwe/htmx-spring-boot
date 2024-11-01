@@ -1,5 +1,8 @@
 package io.github.wimdeblauwe.htmx.spring.boot.mvc;
 
+import static io.github.wimdeblauwe.htmx.spring.boot.mvc.HtmxRequestHeader.*;
+
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.lang.Nullable;
 
 /**
@@ -31,12 +34,62 @@ public final class HtmxRequest {
     private final String triggerName;
     private final String triggerId;
 
+    /**
+     * Return a {@link Builder} to create a {@link HtmxRequest}.
+     *
+     * @return the builder
+     */
     public static Builder builder() {
         return new Builder();
     }
 
+    /**
+     * Create an empty {@link HtmxRequest}.
+     *
+     * @return the empty HtmxRequest
+     */
     public static HtmxRequest empty() {
         return new HtmxRequest(false, false, null, false, null, null, null, null);
+    }
+
+    /**
+     * Create a new {@link HtmxRequest} from the given {@link HttpServletRequest}.
+     *
+     * @param request the request to create the HtmxRequest from
+     * @return the HtmxRequest
+     * @since 3.6.0
+     */
+    public static HtmxRequest fromRequest(HttpServletRequest request) {
+
+        String hxRequestHeader = request.getHeader(HX_REQUEST.getValue());
+        if (hxRequestHeader == null) {
+            return empty();
+        }
+
+        HtmxRequest.Builder builder = builder();
+        if (request.getHeader(HX_BOOSTED.getValue()) != null) {
+            builder.boosted(true);
+        }
+        if (request.getHeader(HX_CURRENT_URL.getValue()) != null) {
+            builder.currentUrl(request.getHeader(HX_CURRENT_URL.getValue()));
+        }
+        if (request.getHeader(HX_HISTORY_RESTORE_REQUEST.getValue()) != null) {
+            builder.historyRestoreRequest(true);
+        }
+        if (request.getHeader(HX_PROMPT.getValue()) != null) {
+            builder.promptResponse(request.getHeader(HX_PROMPT.getValue()));
+        }
+        if (request.getHeader(HX_TARGET.getValue()) != null) {
+            builder.target(request.getHeader(HX_TARGET.getValue()));
+        }
+        if (request.getHeader(HX_TRIGGER_NAME.getValue()) != null) {
+            builder.triggerName(request.getHeader(HX_TRIGGER_NAME.getValue()));
+        }
+        if (request.getHeader(HX_TRIGGER.getValue()) != null) {
+            builder.triggerId(request.getHeader(HX_TRIGGER.getValue()));
+        }
+
+        return builder.build();
     }
 
     HtmxRequest(boolean htmxRequest, boolean boosted, String currentUrl, boolean historyRestoreRequest, String promptResponse, String target, String triggerName, String triggerId) {

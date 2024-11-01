@@ -1,6 +1,6 @@
 package io.github.wimdeblauwe.htmx.spring.boot.thymeleaf;
 
-import io.github.wimdeblauwe.htmx.spring.boot.mvc.HtmxHandlerMethodArgumentResolver;
+import io.github.wimdeblauwe.htmx.spring.boot.mvc.HtmxRequest;
 import jakarta.servlet.http.HttpServletRequest;
 import org.thymeleaf.context.IExpressionContext;
 import org.thymeleaf.context.IWebContext;
@@ -34,8 +34,10 @@ public class HtmxExpressionObjectFactory implements IExpressionObjectFactory {
     public Object buildObject(final IExpressionContext context, final String expressionObjectName) {
         if (HTMX_REQUEST_EXPRESSION_OBJECT_NAME.equals(expressionObjectName) && context instanceof IWebContext webContext) {
             IWebExchange exchange = webContext.getExchange();
-            IServletWebRequest request = (IServletWebRequest) exchange.getRequest();
-            return HtmxHandlerMethodArgumentResolver.createHtmxRequest((HttpServletRequest) request.getNativeRequestObject());
+            IServletWebRequest webRequest = (IServletWebRequest) exchange.getRequest();
+            HttpServletRequest request = (HttpServletRequest) webRequest.getNativeRequestObject();
+
+            return HtmxRequest.fromRequest(request);
         }
 
         return null;
