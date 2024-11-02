@@ -21,14 +21,13 @@ public final class HtmxResponse {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(HtmxResponse.class);
 
-    private final Set<ModelAndView> views;
-    private final Set<HtmxTrigger> triggers;
-    private final Set<HtmxTrigger> triggersAfterSettle;
-    private final Set<HtmxTrigger> triggersAfterSwap;
-    private final String replaceUrl;
-    private final String reselect;
-    private final boolean contextRelative;
-    // TODO should also be final after switching to builder pattern
+    private Set<ModelAndView> views = new LinkedHashSet<>();
+    private Set<HtmxTrigger> triggers = new LinkedHashSet<>();
+    private Set<HtmxTrigger> triggersAfterSettle = new LinkedHashSet<>();
+    private Set<HtmxTrigger> triggersAfterSwap = new LinkedHashSet<>();
+    private String replaceUrl;
+    private String reselect;
+    private boolean contextRelative = true;
     private String retarget;
     private boolean refresh;
     private String redirect;
@@ -46,35 +45,187 @@ public final class HtmxResponse {
     }
 
     /**
-     * @deprecated use {@link #builder()} instead. Will be removed in 4.0.
+     * Create a new HtmxResponse.
      */
-    @Deprecated
     public HtmxResponse() {
-        this.views = new LinkedHashSet<>();
-        this.triggers = new LinkedHashSet<>();
-        this.triggersAfterSettle = new LinkedHashSet<>();
-        this.triggersAfterSwap = new LinkedHashSet<>();
-        this.replaceUrl = null;
-        this.reselect = null;
-        this.contextRelative = true;
     }
 
-    HtmxResponse(Set<ModelAndView> views, Set<HtmxTrigger> triggers, Set<HtmxTrigger> triggersAfterSettle,
-                 Set<HtmxTrigger> triggersAfterSwap, String retarget, boolean refresh, String redirect,
-                 String pushUrl, String replaceUrl, String reselect, HtmxReswap reswap, HtmxLocation location, boolean contextRelative) {
-        this.views = views;
-        this.triggers = triggers;
-        this.triggersAfterSettle = triggersAfterSettle;
-        this.triggersAfterSwap = triggersAfterSwap;
-        this.retarget = retarget;
-        this.refresh = refresh;
-        this.redirect = redirect;
-        this.pushUrl = pushUrl;
-        this.replaceUrl = replaceUrl;
-        this.reselect = reselect;
-        this.reswap = reswap;
-        this.location = location;
+    /**
+     * Adds an event that will be triggered once the response is received.
+     * <p>Multiple trigger were automatically be merged into the same header.
+     *
+     * @param eventName the event name
+     * @see <a href="https://htmx.org/headers/hx-trigger/">HX-Trigger Response Headers</a>
+     * @deprecated Return value is changed to void in 4.0.
+     */
+    @Deprecated
+    public HtmxResponse addTrigger(String eventName) {
+        Assert.hasText(eventName, "eventName should not be blank");
+        triggers.add(new HtmxTrigger(eventName, null));
+        return this;
+    }
+
+    /**
+     * Adds an event that will be triggered once the response is received.
+     * <p>Multiple trigger were automatically be merged into the same header.
+     *
+     * @param eventName   the event name
+     * @param eventDetail details along with the event
+     * @see <a href="https://htmx.org/headers/hx-trigger/">HX-Trigger Response Headers</a>
+     * @since 3.6.0
+     */
+    public void addTrigger(String eventName, Object eventDetail) {
+        Assert.hasText(eventName, "eventName should not be blank");
+        triggers.add(new HtmxTrigger(eventName, eventDetail));
+    }
+
+    /**
+     * Adds an event that will be triggered after the <a href="https://htmx.org/docs/#request-operations">settling step</a>.
+     * <p>Multiple triggers were automatically be merged into the same header.
+     *
+     * @param eventName the event name
+     * @see <a href="https://htmx.org/headers/hx-trigger/">HX-Trigger Response Headers</a>
+     * @since 3.6.0
+     */
+    public void addTriggerAfterSettle(String eventName) {
+        Assert.hasText(eventName, "eventName should not be blank");
+        triggersAfterSettle.add(new HtmxTrigger(eventName, null));
+    }
+
+    /**
+     * Adds an event that will be triggered after the <a href="https://htmx.org/docs/#request-operations">settling step</a>.
+     * <p>Multiple triggers were automatically be merged into the same header.
+     *
+     * @param eventName   the event name
+     * @param eventDetail details along with the event
+     * @see <a href="https://htmx.org/headers/hx-trigger/">HX-Trigger Response Headers</a>
+     * @since 3.6.0
+     */
+    public void addTriggerAfterSettle(String eventName, Object eventDetail) {
+        Assert.hasText(eventName, "eventName should not be blank");
+        triggersAfterSettle.add(new HtmxTrigger(eventName, eventDetail));
+    }
+
+    /**
+     * Adds an event that will be triggered after the <a href="https://htmx.org/docs/#request-operations">swap step</a>.
+     * <p>Multiple triggers were automatically be merged into the same header.
+     *
+     * @param eventName the event name
+     * @see <a href="https://htmx.org/headers/hx-trigger/">HX-Trigger Response Headers</a>
+     * @since 3.6.0
+     */
+    public void addTriggerAfterSwap(String eventName) {
+        Assert.hasText(eventName, "eventName should not be blank");
+        triggersAfterSwap.add(new HtmxTrigger(eventName, null));
+    }
+
+    /**
+     * Adds an event that will be triggered after the <a href="https://htmx.org/docs/#request-operations">swap step</a>.
+     * <p>Multiple triggers were automatically be merged into the same header.
+     *
+     * @param eventName   the event name
+     * @param eventDetail details along with the event
+     * @return the builder
+     * @see <a href="https://htmx.org/headers/hx-trigger/">HX-Trigger Response Headers</a>
+     * @since 3.6.0
+     */
+    public void addTriggerAfterSwap(String eventName, Object eventDetail) {
+        Assert.hasText(eventName, "eventName should not be blank");
+        triggersAfterSwap.add(new HtmxTrigger(eventName, eventDetail));
+    }
+
+    /**
+     * Prevents the browser history stack from being updated.
+     *
+     * @see <a href="https://htmx.org/headers/hx-push-url/">HX-Push-Url Response Header</a> documentation
+     * @see <a href="https://htmx.org/headers/hx-replace-url/">HX-Replace-Url Response Header</a>
+     * @since 3.6.0
+     */
+    public void preventHistoryUpdate() {
+        this.pushUrl = "false";
+        this.replaceUrl = null;
+    }
+
+    /**
+     * Set whether URLs used in the htmx response that starts with a slash ("/") should be interpreted as
+     * relative to the current ServletContext, i.e. as relative to the web application root.
+     * Default is "true": A URL that starts with a slash will be interpreted as relative to
+     * the web application root, i.e. the context path will be prepended to the URL.
+     *
+     * @param contextRelative whether to interpret URLs in the htmx response as relative to the current ServletContext
+     * @return the builder
+     */
+    public void setContextRelative(boolean contextRelative) {
         this.contextRelative = contextRelative;
+    }
+
+    /**
+     * Pushes a new URL into the history stack of the browser.
+     * <p>
+     * If you want to prevent the history stack from being updated, use {@link #preventHistoryUpdate()}.
+     *
+     * @param url the URL to push into the history stack. The URL can be any URL in the same origin as the current URL.
+     * @see <a href="https://htmx.org/headers/hx-push/">HX-Push Response Header</a> documentation
+     * @see <a href="https://developer.mozilla.org/en-US/docs/Web/API/History/replaceState">history.pushState()</a>
+     * @since 3.6.0
+     */
+    public void setPushUrl(String url) {
+        Assert.hasText(url, "url should not be blank");
+        this.pushUrl = url;
+        this.replaceUrl = null;
+    }
+
+    /**
+     * Allows you to replace the most recent entry, i.e. the current URL, in the browser history stack.
+     * <p>
+     * If you want to prevent the history stack from being updated, use {@link #preventHistoryUpdate()}.
+     *
+     * @param url the URL to replace in the history stack. The URL can be any URL in the same origin as the current URL.
+     * @see <a href="https://htmx.org/headers/hx-replace-url/">HX-Replace-Url Response Header</a>
+     * @see <a href="https://developer.mozilla.org/en-US/docs/Web/API/History/replaceState">history.replaceState()</a>
+     * @since 3.6.0
+     */
+    public void setReplaceUrl(String url) {
+        this.replaceUrl = url;
+        this.pushUrl = null;
+    }
+
+    /**
+     * Set a CSS selector that allows you to choose which part of the response is used to be swapped in.
+     * Overrides an existing <a href="https://htmx.org/attributes/hx-select/">hx-select</a> on the triggering element.
+     *
+     * @param cssSelector the CSS selector
+     * @see <a href="https://htmx.org/reference/#response_headers">HX-Reselect</a>
+     * @since 3.6.0
+     */
+    public void setReselect(String cssSelector) {
+        Assert.hasText(cssSelector, "cssSelector should not be blank");
+        this.reselect = cssSelector;
+    }
+
+    /**
+     * Allows you to specify how the response will be swapped.
+     * See <a href="https://htmx.org/attributes/hx-swap/">hx-swap</a> for possible values.
+     *
+     * @param reswap the reswap options.
+     * @see <a href="https://htmx.org/reference/#response_headers">HX-Reswap</a>
+     * @since 3.6.0
+     */
+    public void setReswap(HtmxReswap reswap) {
+        Assert.notNull(reswap, "reswap should not be null");
+        this.reswap = reswap;
+    }
+
+    /**
+     * Set a CSS selector that updates the target of the content update to a different element on the page
+     *
+     * @param cssSelector the CSS selector
+     * @see <a href="https://htmx.org/reference/#response_headers">HX-Retarget</a>
+     * @since 3.6.0
+     */
+    public void setRetarget(String cssSelector) {
+        Assert.hasText(cssSelector, "cssSelector should not be blank");
+        this.retarget = cssSelector;
     }
 
     /**
@@ -121,20 +272,6 @@ public final class HtmxResponse {
         Assert.notNull(template, "template should not be null");
         views.add(template);
         return this;
-    }
-
-    /**
-     * Set a HX-Trigger header. Multiple trigger were automatically be merged into the same header.
-     *
-     * @param eventName must not be {@literal null} or empty.
-     * @return same HtmxResponse for chaining
-     * @see <a href="https://htmx.org/headers/hx-trigger/">HX-Trigger Response Headers</a>
-     * @deprecated use {@link Builder#trigger(String)} instead.  Will be removed in 4.0.
-     */
-    @Deprecated
-    public HtmxResponse addTrigger(String eventName) {
-        Assert.hasText(eventName, "eventName should not be blank");
-        return addTrigger(eventName, null, HxTriggerLifecycle.RECEIVE);
     }
 
     /**
@@ -464,20 +601,22 @@ public final class HtmxResponse {
         }
 
         public HtmxResponse build() {
-            return new HtmxResponse(
-                    views,
-                    triggers,
-                    triggersAfterSettle,
-                    triggersAfterSwap,
-                    retarget,
-                    refresh,
-                    redirect,
-                    pushUrl,
-                    replaceUrl,
-                    reselect,
-                    reswap,
-                    location,
-                    contextRelative);
+            var htmxResponse = new HtmxResponse();
+            htmxResponse.views = views;
+            htmxResponse.triggers = triggers;
+            htmxResponse.triggersAfterSettle = triggersAfterSettle;
+            htmxResponse.triggersAfterSwap = triggersAfterSwap;
+            htmxResponse.retarget = retarget;
+            htmxResponse.refresh = refresh;
+            htmxResponse.redirect = redirect;
+            htmxResponse.pushUrl = pushUrl;
+            htmxResponse.replaceUrl = replaceUrl;
+            htmxResponse.reselect = reselect;
+            htmxResponse.reswap = reswap;
+            htmxResponse.location = location;
+            htmxResponse.contextRelative = contextRelative;
+
+            return htmxResponse;
         }
 
         /**

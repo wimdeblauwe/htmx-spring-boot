@@ -13,6 +13,7 @@ import org.springframework.web.servlet.View;
 
 import java.lang.reflect.Method;
 import java.time.Duration;
+import java.util.Map;
 
 import static io.github.wimdeblauwe.htmx.spring.boot.mvc.HtmxResponseHeader.*;
 
@@ -28,21 +29,18 @@ public class HtmxHandlerInterceptor implements HandlerInterceptor {
 
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
-        if (modelAndView != null) {
-            for (Object value : modelAndView.getModel().values()) {
-                if (value instanceof HtmxResponse res) {
-                    buildAndRender(res, modelAndView, request, response);
-                } else if (value instanceof HtmxResponse.Builder builder) {
-                    buildAndRender(builder.build(), modelAndView, request, response);
-                }
-            }
+
+        HtmxResponse htmxResponse = RequestContextUtils.getHtmxResponse(request);
+        if (htmxResponse != null) {
+            buildAndRender(htmxResponse, modelAndView, request, response);
         }
     }
 
     private void buildAndRender(HtmxResponse htmxResponse, ModelAndView mav, HttpServletRequest request, HttpServletResponse response) {
         View v = htmxResponseHandlerMethodReturnValueHandler.toView(htmxResponse);
         try {
-            v.render(mav.getModel(), request, response);
+            Map<String, Object> model = mav != null ? mav.getModel() : Map.of();
+            v.render(model, request, response);
             // ModelAndViewContainer is not available here, so flash attributes won't work
             htmxResponseHandlerMethodReturnValueHandler.addHxHeaders(htmxResponse, request, response, null);
         } catch (Exception e) {
@@ -269,6 +267,5 @@ public class HtmxHandlerInterceptor implements HandlerInterceptor {
         }
         return path;
     }
-
 
 }
