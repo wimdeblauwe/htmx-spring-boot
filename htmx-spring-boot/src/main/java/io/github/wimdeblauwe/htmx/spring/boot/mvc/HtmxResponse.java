@@ -9,8 +9,16 @@ import org.springframework.web.servlet.View;
 import java.util.*;
 
 /**
- * Used as a controller method return type to specify htmx-related response headers
- * and returning multiple template partials in a single response.
+ * A holder for htmx-related response headers that can be used as method argument in controllers.
+ * 
+ * <p>Example usage in an {@code @Controller}:
+ * <pre class="code">
+ * &#064;GetMapping(value = "/user")
+ * public String view(@RequestParam Long id, HtmxResponse htmxResponse) {
+ *   htmxResponse.addTrigger("user-viewed");
+ *   return "/user/view";
+ * }
+ * </pre>
  *
  * @author Oliver Drotbohm
  * @author Clint Checketts
@@ -39,7 +47,11 @@ public final class HtmxResponse {
      * Return a builder to build a {@link HtmxResponse}.
      *
      * @return the builder
+     * @deprecated use {@link HtmxResponse} as handler method argument and {@link HtmxView},
+     * {@link HtmxRedirectView} or {@link HtmxLocationRedirectView} as handler method return
+     * type instead.  Will be removed in 4.0.
      */
+    @Deprecated
     public static Builder builder() {
         return new Builder();
     }
@@ -460,6 +472,10 @@ public final class HtmxResponse {
         return Collections.unmodifiableCollection(views);
     }
 
+    /**
+     * @deprecated Replaced by {@link HtmxLocationRedirectView}. Will be removed in 4.0.
+     */
+    @Deprecated
     public HtmxLocation getLocation() {
         return location;
     }
@@ -468,6 +484,10 @@ public final class HtmxResponse {
         return pushUrl;
     }
 
+    /**
+     * @deprecated Replaced by {@link HtmxRedirectView}. Will be removed in 4.0.
+     */
+    @Deprecated
     public String getRedirect() {
         return redirect;
     }
@@ -512,10 +532,18 @@ public final class HtmxResponse {
         return Collections.unmodifiableCollection(this.triggersAfterSwap);
     }
 
+    /**
+     * @deprecated Replaced by {@link HtmxView}. Will be removed in 4.0.
+     */
+    @Deprecated
     public Collection<ModelAndView> getViews() {
         return Collections.unmodifiableCollection(views);
     }
 
+    /**
+     * @deprecated Replaced by {@link HtmxRefreshView}. Will be removed in 4.0.
+     */
+    @Deprecated
     public boolean isRefresh() {
         return refresh;
     }
@@ -536,6 +564,12 @@ public final class HtmxResponse {
         return Collections.unmodifiableMap(map);
     }
 
+    /**
+     * @deprecated use {@link HtmxResponse} as handler method argument
+     * and {@link HtmxView}, {@link HtmxRedirectView} or {@link HtmxLocationRedirectView}
+     * as handler method return type instead.  Will be removed in 4.0.
+     */
+    @Deprecated
     public static final class Builder {
 
         private Set<ModelAndView> views = new LinkedHashSet<>();
@@ -600,6 +634,12 @@ public final class HtmxResponse {
             return this;
         }
 
+        /**
+         * @deprecated use {@link HtmxResponse} as handler method argument
+         * and {@link HtmxView}, {@link HtmxRedirectView} or {@link HtmxLocationRedirectView}
+         * as handler method return type instead.  Will be removed in 4.0.
+         */
+        @Deprecated
         public HtmxResponse build() {
             var htmxResponse = new HtmxResponse();
             htmxResponse.views = views;

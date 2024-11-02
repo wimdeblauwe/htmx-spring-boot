@@ -1,11 +1,10 @@
 package io.github.wimdeblauwe.htmx.spring.boot.mvc;
 
-import java.util.Map;
-import java.util.Objects;
-
+import com.fasterxml.jackson.annotation.JsonInclude;
 import org.springframework.util.CollectionUtils;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
+import java.util.Map;
+import java.util.Objects;
 
 /**
  * Represents the HX-Location response header value.
@@ -122,4 +121,5 @@ public class HtmxLocation {
     public void setValues(Map<String, Object> values) {
         this.values = values;
     }
+
 }

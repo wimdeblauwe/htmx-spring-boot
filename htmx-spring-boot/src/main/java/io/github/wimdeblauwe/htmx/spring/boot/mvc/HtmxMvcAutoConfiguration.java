@@ -22,17 +22,18 @@ import java.util.List;
 @ConditionalOnWebApplication
 public class HtmxMvcAutoConfiguration implements WebMvcRegistrations, WebMvcConfigurer {
 
-    private final ObjectFactory<ViewResolver> resolver;
-    private final ObjectFactory<LocaleResolver> locales;
+    private final ObjectFactory<ViewResolver> viewResolverObjectFactory;
+    private final ObjectFactory<LocaleResolver> localeResolverObjectFactory;
     private final ObjectMapper objectMapper;
 
-    HtmxMvcAutoConfiguration(@Qualifier("viewResolver") ObjectFactory<ViewResolver> resolver,
-                             ObjectFactory<LocaleResolver> locales) {
-        Assert.notNull(resolver, "ViewResolver must not be null!");
-        Assert.notNull(locales, "LocaleResolver must not be null!");
+    HtmxMvcAutoConfiguration(@Qualifier("viewResolver") ObjectFactory<ViewResolver> viewResolverObjectFactory,
+                             ObjectFactory<LocaleResolver> localeResolverObjectFactory) {
 
-        this.resolver = resolver;
-        this.locales = locales;
+        Assert.notNull(viewResolverObjectFactory, "viewResolverObjectFactory must not be null!");
+        Assert.notNull(localeResolverObjectFactory, "localeResolverObjectFactory must not be null!");
+
+        this.viewResolverObjectFactory = viewResolverObjectFactory;
+        this.localeResolverObjectFactory = localeResolverObjectFactory;
         this.objectMapper = JsonMapper.builder().build();
     }
 
@@ -43,7 +44,7 @@ public class HtmxMvcAutoConfiguration implements WebMvcRegistrations, WebMvcConf
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(new HtmxHandlerInterceptor(objectMapper, createHtmxReponseHandler()));
+        registry.addInterceptor(new HtmxHandlerInterceptor(objectMapper));
     }
 
     @Override
@@ -54,10 +55,8 @@ public class HtmxMvcAutoConfiguration implements WebMvcRegistrations, WebMvcConf
 
     @Override
     public void addReturnValueHandlers(List<HandlerMethodReturnValueHandler> handlers) {
-        handlers.add(createHtmxReponseHandler());
+        handlers.add(new HtmxResponseHandlerMethodReturnValueHandler(viewResolverObjectFactory.getObject(), localeResolverObjectFactory, objectMapper));
+        handlers.add(new HtmxViewMethodReturnValueHandler(viewResolverObjectFactory.getObject(), localeResolverObjectFactory.getObject()));
     }
 
-    private HtmxResponseHandlerMethodReturnValueHandler createHtmxReponseHandler() {
-        return new HtmxResponseHandlerMethodReturnValueHandler(resolver.getObject(), locales, objectMapper);
-    }
 }
