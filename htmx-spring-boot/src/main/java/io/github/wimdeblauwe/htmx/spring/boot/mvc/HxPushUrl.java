@@ -27,5 +27,9 @@ public @interface HxPushUrl {
      * The value for the {@code HX-Push-Url} response header.
      */
     String value() default HtmxValue.TRUE;
+    /**
+     * If the URL should be interpreted as context relative if it starts with a slash ("/").
+     */
+    boolean contextRelative() default true;
 
 }

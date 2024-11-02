@@ -18,5 +18,9 @@ public @interface HxRedirect {
      * The URL to use to do a client-side redirect to a new location.
      */
     String value();
+    /**
+     * If the URL should be interpreted as context relative if it starts with a slash ("/").
+     */
+    boolean contextRelative() default true;
 
 }

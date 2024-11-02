@@ -1,12 +1,12 @@
 package io.github.wimdeblauwe.htmx.spring.boot.mvc;
 
-import java.util.*;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.Assert;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.View;
+
+import java.util.*;
 
 /**
  * Used as a controller method return type to specify htmx-related response headers
@@ -27,6 +27,7 @@ public final class HtmxResponse {
     private final Set<HtmxTrigger> triggersAfterSwap;
     private final String replaceUrl;
     private final String reselect;
+    private final boolean contextRelative;
     // TODO should also be final after switching to builder pattern
     private String retarget;
     private boolean refresh;
@@ -55,11 +56,12 @@ public final class HtmxResponse {
         this.triggersAfterSwap = new LinkedHashSet<>();
         this.replaceUrl = null;
         this.reselect = null;
+        this.contextRelative = true;
     }
 
     HtmxResponse(Set<ModelAndView> views, Set<HtmxTrigger> triggers, Set<HtmxTrigger> triggersAfterSettle,
                  Set<HtmxTrigger> triggersAfterSwap, String retarget, boolean refresh, String redirect,
-                 String pushUrl, String replaceUrl, String reselect, HtmxReswap reswap, HtmxLocation location) {
+                 String pushUrl, String replaceUrl, String reselect, HtmxReswap reswap, HtmxLocation location, boolean contextRelative) {
         this.views = views;
         this.triggers = triggers;
         this.triggersAfterSettle = triggersAfterSettle;
@@ -72,6 +74,7 @@ public final class HtmxResponse {
         this.reselect = reselect;
         this.reswap = reswap;
         this.location = location;
+        this.contextRelative = contextRelative;
     }
 
     /**
@@ -380,6 +383,10 @@ public final class HtmxResponse {
         return refresh;
     }
 
+    public boolean isContextRelative() {
+        return contextRelative;
+    }
+
     /**
      * @deprecated will be removed in 4.0.
      */
@@ -406,6 +413,7 @@ public final class HtmxResponse {
         private HtmxReswap reswap;
         private String retarget;
         private String reselect;
+        private boolean contextRelative = true;
 
         /**
          * Merges another {@link HtmxResponse} into this builder.
@@ -468,7 +476,22 @@ public final class HtmxResponse {
                     replaceUrl,
                     reselect,
                     reswap,
-                    location);
+                    location,
+                    contextRelative);
+        }
+
+        /**
+         * Set whether URLs used in the htmx response that starts with a slash ("/") should be interpreted as
+         * relative to the current ServletContext, i.e. as relative to the web application root.
+         * Default is "true": A URL that starts with a slash will be interpreted as relative to
+         * the web application root, i.e. the context path will be prepended to the URL.
+         *
+         * @param contextRelative whether to interpret URLs in the htmx response as relative to the current ServletContext
+         * @return the builder
+         */
+        public Builder contextRelative(boolean contextRelative) {
+            this.contextRelative = contextRelative;
+            return this;
         }
 
         /**
@@ -728,8 +751,8 @@ public final class HtmxResponse {
             for (HtmxTrigger otherTrigger : otherTriggers) {
                 if (LOGGER.isWarnEnabled()) {
                     Optional<HtmxTrigger> otrigger = triggers.stream()
-                        .filter(t -> t.getEventName().equals(otherTrigger.getEventName()))
-                        .findFirst();
+                                                             .filter(t -> t.getEventName().equals(otherTrigger.getEventName()))
+                                                             .findFirst();
 
                     if (otrigger.isPresent()) {
                         LOGGER.warn("Duplicate trigger event '{}' found. Details '{}' will be overwritten by with '{}'", otherTrigger.getEventName(), otrigger.get().getEventDetail(), otherTrigger.getEventDetail());

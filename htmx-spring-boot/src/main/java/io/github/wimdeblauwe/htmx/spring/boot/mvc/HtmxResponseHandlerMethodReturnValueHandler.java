@@ -18,7 +18,6 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import org.springframework.web.servlet.support.RequestContextUtils;
 import org.springframework.web.util.ContentCachingResponseWrapper;
 
 import java.util.Collection;
@@ -95,22 +94,23 @@ public class HtmxResponseHandlerMethodReturnValueHandler implements HandlerMetho
                 saveFlashAttributes(mavContainer, request, response, location.getPath());
             }
             if (location.hasContextData()) {
+                location.setPath(RequestContextUtils.createUrl(request, location.getPath(), htmxResponse.isContextRelative()));
                 setHeaderJsonValue(response, HtmxResponseHeader.HX_LOCATION.getValue(), location);
             } else {
-                response.setHeader(HtmxResponseHeader.HX_LOCATION.getValue(), location.getPath());
+                response.setHeader(HtmxResponseHeader.HX_LOCATION.getValue(), RequestContextUtils.createUrl(request, location.getPath(), htmxResponse.isContextRelative()));
             }
         }
         if (htmxResponse.getReplaceUrl() != null) {
-            response.setHeader(HtmxResponseHeader.HX_REPLACE_URL.getValue(), htmxResponse.getReplaceUrl());
+            response.setHeader(HtmxResponseHeader.HX_REPLACE_URL.getValue(), RequestContextUtils.createUrl(request, htmxResponse.getReplaceUrl(), htmxResponse.isContextRelative()));
         }
         if (htmxResponse.getPushUrl() != null) {
-            response.setHeader(HtmxResponseHeader.HX_PUSH_URL.getValue(), htmxResponse.getPushUrl());
+            response.setHeader(HtmxResponseHeader.HX_PUSH_URL.getValue(), RequestContextUtils.createUrl(request, htmxResponse.getPushUrl(), htmxResponse.isContextRelative()));
         }
         if (htmxResponse.getRedirect() != null) {
             if (mavContainer != null) {
                 saveFlashAttributes(mavContainer, request, response, htmxResponse.getRedirect());
             }
-            response.setHeader(HtmxResponseHeader.HX_REDIRECT.getValue(), htmxResponse.getRedirect());
+            response.setHeader(HtmxResponseHeader.HX_REDIRECT.getValue(), RequestContextUtils.createUrl(request, htmxResponse.getRedirect(), htmxResponse.isContextRelative()));
         }
         if (htmxResponse.isRefresh()) {
             response.setHeader(HtmxResponseHeader.HX_REFRESH.getValue(), "true");
@@ -165,9 +165,9 @@ public class HtmxResponseHandlerMethodReturnValueHandler implements HandlerMetho
             Map<String, ?> flashAttributes = redirectAttributes.getFlashAttributes();
             if (!CollectionUtils.isEmpty(flashAttributes)) {
                 if (request != null) {
-                    RequestContextUtils.getOutputFlashMap(request).putAll(flashAttributes);
+                    org.springframework.web.servlet.support.RequestContextUtils.getOutputFlashMap(request).putAll(flashAttributes);
                     if (response != null) {
-                        RequestContextUtils.saveOutputFlashMap(location, request, response);
+                        org.springframework.web.servlet.support.RequestContextUtils.saveOutputFlashMap(location, request, response);
                     }
                 }
             }

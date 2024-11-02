@@ -51,5 +51,9 @@ public @interface HxLocation {
      * How the response will be swapped in relative to the target
      */
     String swap() default "";
+    /**
+     * If the path should be interpreted as context relative if it starts with a slash ("/").
+     */
+    boolean contextRelative() default true;
 
 }
