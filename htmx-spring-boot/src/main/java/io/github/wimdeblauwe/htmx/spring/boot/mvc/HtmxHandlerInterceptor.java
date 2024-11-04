@@ -37,10 +37,7 @@ public class HtmxHandlerInterceptor implements HandlerInterceptor {
     }
 
     private void buildAndRender(HtmxResponse htmxResponse, ModelAndView mav, HttpServletRequest request, HttpServletResponse response) {
-        View v = htmxResponseHandlerMethodReturnValueHandler.toView(htmxResponse);
         try {
-            Map<String, Object> model = mav != null ? mav.getModel() : Map.of();
-            v.render(model, request, response);
             // ModelAndViewContainer is not available here, so flash attributes won't work
             htmxResponseHandlerMethodReturnValueHandler.addHxHeaders(htmxResponse, request, response, null);
         } catch (Exception e) {
