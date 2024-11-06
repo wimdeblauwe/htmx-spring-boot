@@ -56,6 +56,7 @@
     <modules>
         <module>htmx-spring-boot</module>
         <module>htmx-spring-boot-thymeleaf</module>
+        <module>htmx-spring-boot-jte</module>
     </modules>
 
     <build>
@@ -73,7 +74,7 @@
                 <configuration>
                     <rules>
                         <requireJavaVersion>
-                            <version>[${java.version}, 22)</version>
+                            <version>[${java.version}, 23)</version>
                         </requireJavaVersion>
                     </rules>
                 </configuration>
@@ -143,7 +144,7 @@
                         <configuration>
                             <rules>
                                 <requireJavaVersion>
-                                    <version>[${java.version}, 18)</version>
+                                    <version>[${java.version}, 23)</version>
                                 </requireJavaVersion>
                             </rules>
                         </configuration>
