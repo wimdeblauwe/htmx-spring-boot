@@ -117,11 +117,17 @@ except for some control flow response headers such as [HX-Redirect](https://htmx
 * [HtmxLocationRedirectView](https://javadoc.io/doc/io.github.wimdeblauwe/htmx-spring-boot/latest/io/github/wimdeblauwe/htmx/spring/boot/mvc/HtmxLocationRedirectView.html) - sets the [HX-Location](https://htmx.org/headers/hx-location/) header to do a client-side redirect without reloading the whole page.
 * [HtmxRefreshView](https://javadoc.io/doc/io.github.wimdeblauwe/htmx-spring-boot/latest/io/github/wimdeblauwe/htmx/spring/boot/mvc/HtmxRefreshView.html) - sets the [HX-Refresh](https://htmx.org/headers/hx-refresh/) header to do a client-side refresh of the current page.
 
+##### Special view name prefixes
+For these views, there is also a special view name handling if you prefer to return a view name instead of a view instance.
+
+* Redirect URLs can be specified via `htmx:redirect:`, e.g. `htmx:redirect:/path`, which causes htmx to perform a redirect to the specified URL.
+* Location redirect URLs can be specified via `htmx:location:`, e.g. `htmx:location:/path`, which causes htmx to perform a client-side redirect without reloading the entire page.
+* A refresh of the current page can be specified using `htmx:refresh`.
 
 ```java
 @HxRequest
 @PostMapping("/user/{id}")
-public Object user(@PathVariable Long id, @ModelAttribute @Valid UserForm form, 
+public String user(@PathVariable Long id, @ModelAttribute @Valid UserForm form, 
                  BindingResult bindingResult, RedirectAttributes redirectAttributes,
                  HtmxResponse htmxResponse) {
 
@@ -133,7 +139,7 @@ public Object user(@PathVariable Long id, @ModelAttribute @Valid UserForm form,
     redirectAttributes.addFlashAttribute("successMessage", "User has been successfully updated.");
     htmxResponse.addTrigger("user-updated");
     
-    return new HtmxRedirectView("/user/list");
+    return "htmx:redirect:/user/list";
 }
 ```
 

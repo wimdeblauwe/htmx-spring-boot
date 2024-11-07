@@ -59,6 +59,22 @@ public class HtmxHandlerMethodTest {
     }
 
     @Test
+    public void testLocationRedirectViewNamePrefix() throws Exception {
+
+        mockMvc.perform(get("/location-redirect-view-name-prefix").headers(htmxRequest()))
+               .andExpect(status().isOk())
+               .andExpect(header().string("HX-Location", "/path"));
+    }
+
+    @Test
+    public void testLocationRedirectViewNamePrefixContextRelative() throws Exception {
+
+        mockMvc.perform(get("/contextpath/location-redirect-view-name-prefix").contextPath("/contextpath").headers(htmxRequest()))
+               .andExpect(status().isOk())
+               .andExpect(header().string("HX-Location", "/contextpath/path"));
+    }
+
+    @Test
     public void testLocationRedirectWithContextData() throws Exception {
 
         mockMvc.perform(get("/location-redirect-with-context-data").headers(htmxRequest()))
@@ -117,6 +133,22 @@ public class HtmxHandlerMethodTest {
     }
 
     @Test
+    public void testRedirectViewNamePrefix() throws Exception {
+
+        mockMvc.perform(get("/redirect-view-name-prefix").headers(htmxRequest()))
+               .andExpect(status().isOk())
+               .andExpect(header().string("HX-Redirect", "/test"));
+    }
+
+    @Test
+    public void testRedirectViewNamePrefixContextRelative() throws Exception {
+
+        mockMvc.perform(get("/contextpath/redirect-view-name-prefix").contextPath("/contextpath").headers(htmxRequest()))
+               .andExpect(status().isOk())
+               .andExpect(header().string("HX-Redirect", "/contextpath/test"));
+    }
+
+    @Test
     public void testRedirectWithContextPath() throws Exception {
 
         mockMvc.perform(get("/contextpath/redirect-context-relative").headers(htmxRequest()).contextPath("/contextpath"))
@@ -137,6 +169,14 @@ public class HtmxHandlerMethodTest {
     public void testRefresh() throws Exception {
 
         mockMvc.perform(get("/refresh").headers(htmxRequest()))
+               .andExpect(status().isOk())
+               .andExpect(header().string("HX-Refresh", HtmxValue.TRUE));
+    }
+
+    @Test
+    public void testRefreshViewName() throws Exception {
+
+        mockMvc.perform(get("/refresh-view-name").headers(htmxRequest()))
                .andExpect(status().isOk())
                .andExpect(header().string("HX-Refresh", HtmxValue.TRUE));
     }
@@ -171,6 +211,12 @@ public class HtmxHandlerMethodTest {
         public HtmxLocationRedirectView locationRedirectExposingModelAttributes(RedirectAttributes redirectAttributes) {
             redirectAttributes.addAttribute("attr", "value");
             return new HtmxLocationRedirectView("/path");
+        }
+
+        @HxRequest
+        @GetMapping("/location-redirect-view-name-prefix")
+        public String locationRedirectViewNamePrefix() {
+            return "htmx:location:/path";
         }
 
         @HxRequest
@@ -260,6 +306,12 @@ public class HtmxHandlerMethodTest {
         }
 
         @HxRequest
+        @GetMapping("/redirect-view-name-prefix")
+        public String redirectViewNamePrefix() {
+            return "htmx:redirect:/test";
+        }
+
+        @HxRequest
         @GetMapping("/redirect-flash-attributes")
         public HtmxRedirectView redirectWithFlashAttributes(RedirectAttributes redirectAttributes) {
 
@@ -271,6 +323,12 @@ public class HtmxHandlerMethodTest {
         @GetMapping("/refresh")
         public HtmxRefreshView refresh() {
             return new HtmxRefreshView();
+        }
+
+        @HxRequest
+        @GetMapping("/refresh-view-name")
+        public String refreshViewName() {
+            return "htmx:refresh";
         }
 
         @HxRequest
