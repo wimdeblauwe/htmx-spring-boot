@@ -7,6 +7,20 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 public class HtmxRequestMappingHandlerMappingTestController {
 
+    @HxRequest
+    @GetMapping("/hx-request")
+    @ResponseBody
+    public String hxRequest() {
+        return "hx-request";
+    }
+
+    @HxRequest(boosted = false)
+    @GetMapping("/hx-request-ignore-boosted")
+    @ResponseBody
+    public String hxRequestIgnoreBoosted() {
+        return "boosted-ignored";
+    }
+
     @HxRequest(target = "bar")
     @GetMapping("/hx-request-target")
     @ResponseBody
