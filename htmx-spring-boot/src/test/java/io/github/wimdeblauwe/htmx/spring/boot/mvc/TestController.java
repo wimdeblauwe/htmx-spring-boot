@@ -115,7 +115,7 @@ public class TestController {
     }
 
     @GetMapping("/hx-location-with-context-data")
-    @HxLocation(path = "/path", source = "source", event = "event", handler = "handler", target = "target", swap = "swap")
+    @HxLocation(path = "/path", source = "source", event = "event", handler = "handler", target = "target", swap = "swap", select = "select")
     @ResponseBody
     public String hxLocationWithContextData() {
         return "";

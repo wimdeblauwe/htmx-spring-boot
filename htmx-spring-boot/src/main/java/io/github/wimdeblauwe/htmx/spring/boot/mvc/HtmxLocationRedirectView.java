@@ -25,6 +25,7 @@ public class HtmxLocationRedirectView extends RedirectView {
     private String handler;
     private String target;
     private String swap;
+    private String select;
     private Map<String, Object> values;
     private Map<String, String> headers;
 
@@ -95,6 +96,15 @@ public class HtmxLocationRedirectView extends RedirectView {
     }
 
     /**
+     * A CSS selector to select the content you want swapped from a response.
+     *
+     * @param cssSelector a CSS selector
+     */
+    public void setSelect(String cssSelector) {
+        this.select = cssSelector;
+    }
+
+    /**
      * Set the source element of the request.
      *
      * @param source the source element
@@ -152,6 +162,7 @@ public class HtmxLocationRedirectView extends RedirectView {
         location.setHandler(handler);
         location.setTarget(target);
         location.setSwap(swap);
+        location.setSelect(select);
         location.setValues(values);
         location.setHeaders(headers);
 
