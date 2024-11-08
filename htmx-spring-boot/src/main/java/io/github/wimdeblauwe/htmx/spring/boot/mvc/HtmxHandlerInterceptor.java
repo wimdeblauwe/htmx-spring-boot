@@ -9,44 +9,65 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.View;
 
 import java.lang.reflect.Method;
 import java.time.Duration;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.stream.Collectors;
 
 import static io.github.wimdeblauwe.htmx.spring.boot.mvc.HtmxResponseHeader.*;
 
+/**
+ * HandlerInterceptor that adds htmx specific headers to the response.
+ */
 public class HtmxHandlerInterceptor implements HandlerInterceptor {
 
     private final ObjectMapper objectMapper;
-    private final HtmxResponseHandlerMethodReturnValueHandler htmxResponseHandlerMethodReturnValueHandler;
 
-    public HtmxHandlerInterceptor(ObjectMapper objectMapper, HtmxResponseHandlerMethodReturnValueHandler htmxResponseHandlerMethodReturnValueHandler) {
+    public HtmxHandlerInterceptor(ObjectMapper objectMapper) {
         this.objectMapper = objectMapper;
-        this.htmxResponseHandlerMethodReturnValueHandler = htmxResponseHandlerMethodReturnValueHandler;
     }
 
     @Override
-    public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
-        if (modelAndView != null) {
-            for (Object value : modelAndView.getModel().values()) {
-                if (value instanceof HtmxResponse res) {
-                    buildAndRender(res, modelAndView, request, response);
-                } else if (value instanceof HtmxResponse.Builder builder) {
-                    buildAndRender(builder.build(), modelAndView, request, response);
+    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
+
+        HtmxResponse htmxResponse = RequestContextUtils.getHtmxResponse(request);
+        if (htmxResponse != null) {
+            addHxTriggerHeaders(response, HtmxResponseHeader.HX_TRIGGER, htmxResponse.getTriggersInternal());
+            addHxTriggerHeaders(response, HtmxResponseHeader.HX_TRIGGER_AFTER_SETTLE, htmxResponse.getTriggersAfterSettleInternal());
+            addHxTriggerHeaders(response, HtmxResponseHeader.HX_TRIGGER_AFTER_SWAP, htmxResponse.getTriggersAfterSwapInternal());
+
+            if (htmxResponse.getLocation() != null) {
+                HtmxLocation location = htmxResponse.getLocation();
+                if (location.hasContextData()) {
+                    location.setPath(RequestContextUtils.createUrl(request, location.getPath(), htmxResponse.isContextRelative()));
+                    setHeaderJsonValue(response, HtmxResponseHeader.HX_LOCATION, location);
+                } else {
+                    response.setHeader(HtmxResponseHeader.HX_LOCATION.getValue(), RequestContextUtils.createUrl(request, location.getPath(), htmxResponse.isContextRelative()));
                 }
             }
-        }
-    }
-
-    private void buildAndRender(HtmxResponse htmxResponse, ModelAndView mav, HttpServletRequest request, HttpServletResponse response) {
-        View v = htmxResponseHandlerMethodReturnValueHandler.toView(htmxResponse);
-        try {
-            v.render(mav.getModel(), request, response);
-            // ModelAndViewContainer is not available here, so flash attributes won't work
-            htmxResponseHandlerMethodReturnValueHandler.addHxHeaders(htmxResponse, request, response, null);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+            if (htmxResponse.getReplaceUrl() != null) {
+                response.setHeader(HtmxResponseHeader.HX_REPLACE_URL.getValue(), RequestContextUtils.createUrl(request, htmxResponse.getReplaceUrl(), htmxResponse.isContextRelative()));
+            }
+            if (htmxResponse.getPushUrl() != null) {
+                response.setHeader(HtmxResponseHeader.HX_PUSH_URL.getValue(), RequestContextUtils.createUrl(request, htmxResponse.getPushUrl(), htmxResponse.isContextRelative()));
+            }
+            if (htmxResponse.getRedirect() != null) {
+                response.setHeader(HtmxResponseHeader.HX_REDIRECT.getValue(), RequestContextUtils.createUrl(request, htmxResponse.getRedirect(), htmxResponse.isContextRelative()));
+            }
+            if (htmxResponse.isRefresh()) {
+                response.setHeader(HtmxResponseHeader.HX_REFRESH.getValue(), "true");
+            }
+            if (htmxResponse.getRetarget() != null) {
+                response.setHeader(HtmxResponseHeader.HX_RETARGET.getValue(), htmxResponse.getRetarget());
+            }
+            if (htmxResponse.getReselect() != null) {
+                response.setHeader(HtmxResponseHeader.HX_RESELECT.getValue(), htmxResponse.getReselect());
+            }
+            if (htmxResponse.getReswap() != null) {
+                response.setHeader(HtmxResponseHeader.HX_RESWAP.getValue(), htmxResponse.getReswap().toHeaderValue());
+            }
         }
     }
 
@@ -270,5 +291,27 @@ public class HtmxHandlerInterceptor implements HandlerInterceptor {
         return path;
     }
 
+    private void addHxTriggerHeaders(HttpServletResponse response, HtmxResponseHeader headerName, Collection<HtmxTrigger> triggers) {
+        if (triggers.isEmpty()) {
+            return;
+        }
+
+        // separate event names by commas if no additional details are available
+        if (triggers.stream().allMatch(t -> t.getEventDetail() == null)) {
+            String value = triggers.stream()
+                                   .map(HtmxTrigger::getEventName)
+                                   .collect(Collectors.joining(","));
+
+            response.setHeader(headerName.getValue(), value);
+            return;
+        }
+
+        // multiple events with or without details
+        var triggerMap = new HashMap<String, Object>();
+        for (HtmxTrigger trigger : triggers) {
+            triggerMap.put(trigger.getEventName(), trigger.getEventDetail());
+        }
+        setHeaderJsonValue(response, headerName, triggerMap);
+    }
 
 }

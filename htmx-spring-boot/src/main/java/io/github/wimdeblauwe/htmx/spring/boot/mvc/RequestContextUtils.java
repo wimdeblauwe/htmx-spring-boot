@@ -2,7 +2,14 @@ package io.github.wimdeblauwe.htmx.spring.boot.mvc;
 
 import jakarta.servlet.http.HttpServletRequest;
 
+/**
+ * Utility class for working with the request context.
+ *
+ * @since 3.6.0
+ */
 final class RequestContextUtils {
+
+    public static final String HTMX_RESPONSE_CONTEXT_ATTRIBUTE = "htmxResponse";
 
     /**
      * Creates a URL by prepending the context path if {@code contextRelative}
@@ -18,6 +25,21 @@ final class RequestContextUtils {
             return getContextPath(request) + url;
         }
         return url;
+    }
+
+    static HtmxResponse getHtmxResponse(HttpServletRequest request) {
+
+        Object contextAttribute = request.getAttribute(HTMX_RESPONSE_CONTEXT_ATTRIBUTE);
+        if (contextAttribute instanceof HtmxResponse response) {
+            return response;
+        } else if (contextAttribute instanceof HtmxResponse.Builder builder) {
+            return builder.build();
+        }
+        return null;
+    }
+
+    static HtmxResponse.Builder getHtmxResponseBuilder(HttpServletRequest request) {
+        return (HtmxResponse.Builder) request.getAttribute(HTMX_RESPONSE_CONTEXT_ATTRIBUTE);
     }
 
     private static String getContextPath(HttpServletRequest request) {

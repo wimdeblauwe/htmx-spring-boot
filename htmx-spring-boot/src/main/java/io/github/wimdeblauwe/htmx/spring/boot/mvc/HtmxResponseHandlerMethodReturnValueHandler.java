@@ -26,6 +26,12 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+/**
+ * @deprecated Using {@link HtmxResponse} as handler method return value is deprecated,
+ * use {@link HtmxView}, {@link HtmxRedirectView} or {@link HtmxLocationRedirectView} instead.
+ * Will be removed in 4.0.0.
+ */
+@Deprecated
 public class HtmxResponseHandlerMethodReturnValueHandler implements HandlerMethodReturnValueHandler {
     private final ViewResolver views;
     private final ObjectFactory<LocaleResolver> locales;

@@ -4,11 +4,12 @@
 
 # Spring Boot and Thymeleaf library for htmx
 
-This project provides annotations, helper classes and a [Thymeleaf](https://www.thymeleaf.org/) dialect
-to make it easy to work with [htmx](https://htmx.org/)
-in a [Spring Boot](https://spring.io/projects/spring-boot) application.
+The project simplifies the integration of [htmx](https://htmx.org/) with [Spring Boot](https://spring.io/projects/spring-boot) / [Spring Web MVC](https://docs.spring.io/spring-framework/reference/web/webmvc.html) applications.
+It provides a set of views, annotations, and argument resolvers for controllers to easily handle htmx-related request and response headers.
+This ensures seamless interaction between the frontend and backend, especially for dynamic content updates via htmx.
 
-More information about htmx can be viewed on [their website](https://htmx.org/).
+Additionally, the project includes a custom [Thymeleaf](https://www.thymeleaf.org/) dialect to enable smooth rendering of htmx-specific attributes within Thymeleaf templates.
+With these tools, developers can quickly implement htmx-driven interactions, such as AJAX-based partial page updates, with minimal configuration.
 
 ## Maven configuration
 
@@ -45,7 +46,7 @@ Provides a [Thymeleaf](https://www.thymeleaf.org/) dialect to easily work with h
 
 The included Spring Boot Auto-configuration will enable the htmx integrations.
 
-### Mapping controller methods to htmx requests
+### Mapping Requests
 
 Controller methods can be annotated with
 [HxRequest](https://javadoc.io/doc/io.github.wimdeblauwe/htmx-spring-boot/latest/io/github/wimdeblauwe/htmx/spring/boot/mvc/HxRequest.html)
@@ -57,8 +58,8 @@ The following method is called only if the request was made by htmx.
 ```java
 @HxRequest
 @GetMapping("/users")
-public String htmxRequest(){
-    return "partial";
+public String users() {
+    return "view";
 }
 ```
 
@@ -70,8 +71,8 @@ or [HxRequest#triggerName](https://javadoc.io/doc/io.github.wimdeblauwe/htmx-spr
 ```java
 @HxRequest("my-element")
 @GetMapping("/users")
-public String htmxRequest(){
-    return "partial";
+public String users() {
+    return "view";
 }
 ```
 If you want to restrict the invocation of a controller method to having a specific target element defined,
@@ -80,34 +81,72 @@ use [HxRequest#target](https://javadoc.io/doc/io.github.wimdeblauwe/htmx-spring-
 ```java
 @HxRequest(target = "my-target")
 @GetMapping("/users")
-public String htmxRequest(){
-    return "partial";
+public String users() {
+    return "view";
 }
 ```
 
-#### Using HtmxRequest to access HTTP request headers sent by htmx
+### Request Headers
 
-The [HtmxRequest](https://javadoc.io/doc/io.github.wimdeblauwe/htmx-spring-boot/latest/io/github/wimdeblauwe/htmx/spring/boot/mvc/HtmxRequest.html) object can be used as controller method parameter to access the various [htmx Request Headers](https://htmx.org/reference/#request_headers).
+To access the various [htmx Request Headers](https://htmx.org/reference/#request_headers) in a controller method, you can use the class [HtmxRequest](https://javadoc.io/doc/io.github.wimdeblauwe/htmx-spring-boot/latest/io/github/wimdeblauwe/htmx/spring/boot/mvc/HtmxRequest.html)
+as a controller method argument.
 
 ```java
 @HxRequest
 @GetMapping("/users")
-public String htmxRequest(HtmxRequest htmxRequest) {
-    if(htmxRequest.isHistoryRestoreRequest()){
+public String users(HtmxRequest htmxRequest) {
+    if (htmxRequest.isHistoryRestoreRequest()) {
         // do something
     }
-    return "partial";
+    return "view";
 }
 ```
 
 ### Response Headers
 
-There are two ways to set [htmx Response Headers](https://htmx.org/reference/#response_headers) on controller methods.
-The first is to use annotations, e.g. `@HxTrigger`, and the second is to use the class [HtmxResponse](https://javadoc.io/doc/io.github.wimdeblauwe/htmx-spring-boot/latest/io/github/wimdeblauwe/htmx/spring/boot/mvc/HtmxResponse.html) as the return type of the controller method.
+There are two ways to set [htmx Response Headers](https://htmx.org/reference/#response_headers) in controller methods. The first is to use [HtmxResponse](https://javadoc.io/doc/io.github.wimdeblauwe/htmx-spring-boot/latest/io/github/wimdeblauwe/htmx/spring/boot/mvc/HtmxResponse.html)
+as controller method argument in combination with different Views e.g. [HtmxRedirectView](https://javadoc.io/doc/io.github.wimdeblauwe/htmx-spring-boot/latest/io/github/wimdeblauwe/htmx/spring/boot/mvc/HtmxRedirectView.html)
+as return value. The second is to use annotations, e.g. `@HxTrigger` to set the necessary response headers. The first method is more flexible and allows you to dynamically set the response headers based on the request.
 
-See [Response Headers Reference](https://htmx.org/reference/#response_headers) for the related htmx documentation.
+#### HtmxResponse and Views
 
-The following annotations are currently supported:
+Most of the [htmx Response Headers](https://htmx.org/reference/#response_headers) can be set by using [HtmxResponse](https://javadoc.io/doc/io.github.wimdeblauwe/htmx-spring-boot/latest/io/github/wimdeblauwe/htmx/spring/boot/mvc/HtmxResponse.html) as controller method argument,
+except for some control flow response headers such as [HX-Redirect](https://htmx.org/headers/hx-redirect/). For these response headers, you have to use a corresponding view as return value of the controller method.
+
+* [HtmxRedirectView](https://javadoc.io/doc/io.github.wimdeblauwe/htmx-spring-boot/latest/io/github/wimdeblauwe/htmx/spring/boot/mvc/HtmxRedirectView.html) - sets the [HX-Redirect](https://htmx.org/headers/hx-redirect/) header to do a client-side redirect.
+* [HtmxLocationRedirectView](https://javadoc.io/doc/io.github.wimdeblauwe/htmx-spring-boot/latest/io/github/wimdeblauwe/htmx/spring/boot/mvc/HtmxLocationRedirectView.html) - sets the [HX-Location](https://htmx.org/headers/hx-location/) header to do a client-side redirect without reloading the whole page.
+* [HtmxRefreshView](https://javadoc.io/doc/io.github.wimdeblauwe/htmx-spring-boot/latest/io/github/wimdeblauwe/htmx/spring/boot/mvc/HtmxRefreshView.html) - sets the [HX-Refresh](https://htmx.org/headers/hx-refresh/) header to do a client-side refresh of the current page.
+
+##### Special view name prefixes
+For these views, there is also a special view name handling if you prefer to return a view name instead of a view instance.
+
+* Redirect URLs can be specified via `htmx:redirect:`, e.g. `htmx:redirect:/path`, which causes htmx to perform a redirect to the specified URL.
+* Location redirect URLs can be specified via `htmx:location:`, e.g. `htmx:location:/path`, which causes htmx to perform a client-side redirect without reloading the entire page.
+* A refresh of the current page can be specified using `htmx:refresh`.
+
+```java
+@HxRequest
+@PostMapping("/user/{id}")
+public String user(@PathVariable Long id, @ModelAttribute @Valid UserForm form, 
+                 BindingResult bindingResult, RedirectAttributes redirectAttributes,
+                 HtmxResponse htmxResponse) {
+
+    if (bindingResult.hasErrors()) {
+        return "user/form";
+    }
+
+    // update user ...
+    redirectAttributes.addFlashAttribute("successMessage", "User has been successfully updated.");
+    htmxResponse.addTrigger("user-updated");
+    
+    return "htmx:redirect:/user/list";
+}
+```
+
+#### Annotations
+
+The following annotations can be used on controller methods to set the necessary response headers.
+
 * [@HxLocation](https://javadoc.io/doc/io.github.wimdeblauwe/htmx-spring-boot/latest/io/github/wimdeblauwe/htmx/spring/boot/mvc/HxLocation.html)
 * [@HxPushUrl](https://javadoc.io/doc/io.github.wimdeblauwe/htmx-spring-boot/latest/io/github/wimdeblauwe/htmx/spring/boot/mvc/HxPushUrl.html)
 * [@HxRedirect](https://javadoc.io/doc/io.github.wimdeblauwe/htmx-spring-boot/latest/io/github/wimdeblauwe/htmx/spring/boot/mvc/HxRedirect.html)
@@ -122,114 +161,68 @@ The following annotations are currently supported:
 
 >**Note** Please refer to the related Javadoc to learn more about the available options.
 
-#### Examples
-
 If you want htmx to trigger an event after the response is processed, you can use the annotation `@HxTrigger` which sets the necessary response header [HX-Trigger](https://htmx.org/headers/hx-trigger/).
 
 ```java
 @HxRequest
 @HxTrigger("userUpdated") // the event 'userUpdated' will be triggered by htmx
 @GetMapping("/users")
-public String hxUpdateUser(){
-    return "partial";
+public String users() {
+    return "view";
 }
 ```
 
-If you want to do the same, but in a more flexible way, you can use `HtmxResponse` as the return type in the controller method instead.
+### HTML Fragments
+
+In Spring MVC, view rendering typically involves specifying one view and one model. However, in htmx a common capability is to send multiple HTML fragments that
+htmx can use to update different parts of the page, which is called [Out Of Band Swaps](https://htmx.org/docs/#oob_swaps). For this, controller methods can return
+[HtmxView](https://javadoc.io/doc/io.github.wimdeblauwe/htmx-spring-boot/latest/io/github/wimdeblauwe/htmx/spring/boot/mvc/HtmxView.html)
+
 ```java
 @HxRequest
 @GetMapping("/users")
-public HtmxResponse hxUpdateUser(){
-    return HtmxResponse.builder()
-        .trigger("userUpdated") // the event 'userUpdated' will be triggered by htmx
-        .view("partial")
-        .build();
+public View users(Model model) {
+    model.addAttribute("users", userRepository.findAll());
+    model.addAttribute("count", userRepository.count());
+
+    var view = new HtmxView();
+    view.add("users/list");
+    view.add("users/count");
+    
+    return view;
 }
 ```
 
-### Out Of Band Swaps
-
-htmx supports updating multiple targets by returning multiple partials in a single response, which is called [Out Of Band Swaps](https://htmx.org/docs/#oob_swaps).
-For this purpose, use [HtmxResponse](https://javadoc.io/doc/io.github.wimdeblauwe/htmx-spring-boot/latest/io/github/wimdeblauwe/htmx/spring/boot/mvc/HtmxResponse.html)
-as the return type of a controller method, where you can add multiple templates.
+An `HtmxView` can be formed from view names, as above, or fully resolved `View` instances, if the controller knows how
+to do that, or from `ModelAndView` instances (resolved or unresolved). Each fragment can have its own model, which is merged with the controller model before rendering.
 
 ```java
 @HxRequest
-@GetMapping("/partials/main-and-partial")
-public HtmxResponse getMainAndPartial(Model model){
-    model.addAttribute("userCount", 5);
-    return HtmxResponse.builder()
-        .view("users-list")
-        .view("users-count")
-        .build();
-}
-```
+@GetMapping("/users")
+public View users(Model model) {
+    var view = new HtmxView();
+    view.add("users/list", Map.of("users", userRepository.findAll()));
+    view.add("users/count", Map.of("count", userRepository.count()));
 
-An `HtmxResponse` can be formed from view names, as above, or fully resolved `View` instances, if the controller knows how
-to do that, or from `ModelAndView` instances (resolved or unresolved). For example:
-
-```java
-@HxRequest
-@GetMapping("/partials/main-and-partial")
-public HtmxResponse getMainAndPartial(Model model){
-    return HtmxResponse.builder()
-        .view(new ModelAndView("users-list")
-        .view(new ModelAndView("users-count", Map.of("userCount",5))
-        .build();
-}
-```
-
-Using `ModelAndView` means that each fragment can have its own model (which is merged with the controller model before rendering).
-
-### HtmxResponse.Builder as an argument
-
-An `HtmxReponse.Builder` can be injected as a controller method. This creates the parameter and adds it to the model, 
-allowing it to be used without requiring it be the method return value. This is useful when the return value is needed for
-the template.
-
-This allows for the following usage:
-
-```java
-@GetMapping("/endpoint")
-public String endpoint(HtmxResponse.Builder htmxResponse, Model model) {
-    htmxResponse.trigger("event1");
-    model.addAttribute("aField", "aValue");
-    return "endpointTemplate";
-}
-```
-
-For example the [JTE templating library](https://jte.gg/) supports statically typed templates and can be used like so:
-
-```java
-@GetMapping("/endpoint")
-public JteModel endpoint(HtmxResponse.Builder htmxResponse) {
-    htmxResponse.trigger("event1");
-    String aField = "aValue";
-    return templates.endpointTemplate(aField);
+    return view;
 }
 ```
 
 
-### Error handlers
+### Exceptions
 
-It is possible to use `HtmxResponse` as a return type from error handlers.
-This makes it quite easy to declare a global error handler that will show a message somewhere whenever there is an error
-by declaring a global error handler like this:
+It is also possible to use `HtmxRequest` and `HtmxResponse` as method argument in handler methods annotated with `@ExceptionHandler`.
 
 ```java
 
 @ExceptionHandler(Exception.class)
-public HtmxResponse handleError(Exception ex) {
-    return HtmxResponse.builder()
-                       .reswap(HtmxReswap.none())
-                       .view(new ModelAndView("fragments :: error-message", Map.of("message", ex.getMessage())))
-                       .build();
+public String handleError(Exception ex, HtmxRequest htmxRequest, HtmxResponse htmxResponse) {
+    if (htmxRequest.isHtmxRequest()) {
+        htmxResponse.setRetarget("#error-message");
+    }
+    return "error";
 }
 ```
-
-This will override the normal swapping behaviour of any htmx request that has an exception to avoid swapping to occur.
-If the `error-message` fragment is declared as an Out Of Band Swap and your page layout has an empty div to "receive"
-that piece of HTML, then only that will be placed on the screen.
 
 ### Spring Security
 
@@ -243,20 +236,18 @@ To use it, add it to your security configuration like this:
 
 ```java
 @Bean
-public SecurityFilterChain filterChain(HttpSecurity http)throws Exception{
+public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
     // probably some other configurations here
-
     var entryPoint = new HxRefreshHeaderAuthenticationEntryPoint();
     var requestMatcher = new RequestHeaderRequestMatcher("HX-Request");
-    http.exceptionHandling(exception ->
-        exception.defaultAuthenticationEntryPointFor(entryPoint, requestMatcher));
+    http.exceptionHandling(configurer -> configurer.defaultAuthenticationEntryPointFor(entryPoint, requestMatcher));
     return http.build();
 }
 ```
 
 ### Thymeleaf
 
-#### Markup Selectors and Out Of Band Swaps
+#### Markup Selectors and HTML Fragments
 
 The Thymeleaf integration for Spring supports the specification of a [Markup Selector](https://www.thymeleaf.org/doc/tutorials/3.0/usingthymeleaf.html#appendix-c-markup-selector-syntax)
 for views. The Markup Selector will be used for selecting the section
@@ -270,13 +261,16 @@ fragment `count` (th:fragment="count") from the template `users`.
 
 ```java
 @HxRequest
-@GetMapping("/partials/main-and-partial")
-public HtmxResponse getMainAndPartial(Model model){
-    model.addAttribute("userCount", 5);
-    return HtmxResponse.builder()
-        .view("users :: list")
-        .view("users :: count")
-        .build();
+@GetMapping("/users")
+public View users(Model model) {
+    model.addAttribute("users", userRepository.findAll());
+    model.addAttribute("count", userRepository.count());
+
+    var view = new HtmxView();
+    view.add("users :: list");
+    view.add("users :: count");
+
+    return view;
 }
 ```
 
