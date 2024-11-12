@@ -13,6 +13,15 @@ import java.lang.annotation.Target;
 public @interface HxRequest {
 
     /**
+     * Whether the mapping applies also for requests that have been boosted.
+     * Defaults to {@code true}.
+     *
+     * @see <a href="https://htmx.org/reference/#request_headers">HX-Boosted</a>
+     * @since 3.6.0
+     */
+    boolean boosted() default true;
+
+    /**
      * Restricts the mapping to the {@code id} of a specific target element.
      *
      * @see <a href="https://htmx.org/reference/#request_headers">HX-Target</a>

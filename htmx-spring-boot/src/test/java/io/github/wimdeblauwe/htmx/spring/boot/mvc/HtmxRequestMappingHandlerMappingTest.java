@@ -1,14 +1,15 @@
 package io.github.wimdeblauwe.htmx.spring.boot.mvc;
 
-import static io.github.wimdeblauwe.htmx.spring.boot.mvc.HtmxRequestHeader.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
+
+import static io.github.wimdeblauwe.htmx.spring.boot.mvc.HtmxRequestHeader.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(HtmxRequestMappingHandlerMappingTestController.class)
 @WithMockUser
@@ -16,6 +17,30 @@ public class HtmxRequestMappingHandlerMappingTest {
 
     @Autowired
     private MockMvc mockMvc;
+
+    @Test
+    void testHxRequest() throws Exception {
+        mockMvc.perform(get("/hx-request")
+                                .header(HX_REQUEST.getValue(), "true"))
+               .andExpect(status().isOk())
+               .andExpect(content().string("hx-request"));
+    }
+
+    @Test
+    void testHxRequestShouldBeAppliedForNonBoostedRequest() throws Exception {
+        mockMvc.perform(get("/hx-request-ignore-boosted")
+                                .header(HX_REQUEST.getValue(), "true"))
+               .andExpect(status().isOk())
+               .andExpect(content().string("boosted-ignored"));
+    }
+
+    @Test
+    void testHxRequestShouldIgnoreBoostedRequest() throws Exception {
+        mockMvc.perform(get("/hx-request-ignore-boosted")
+                                .header(HX_REQUEST.getValue(), "true")
+                                .header(HX_BOOSTED.getValue(), "true"))
+               .andExpect(status().isNotFound());
+    }
 
     @Test
     void testHxRequestTargetBar() throws Exception {
