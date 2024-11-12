@@ -130,14 +130,14 @@ class HtmxHandlerInterceptorTest {
     public void testHxLocationWithContextData() throws Exception {
         mockMvc.perform(get("/hx-location-with-context-data"))
                .andExpect(status().isOk())
-               .andExpect(header().string("HX-Location", "{\"path\":\"/path\",\"source\":\"source\",\"event\":\"event\",\"handler\":\"handler\",\"target\":\"target\",\"swap\":\"swap\"}"));
+               .andExpect(header().string("HX-Location", "{\"path\":\"/path\",\"source\":\"source\",\"event\":\"event\",\"handler\":\"handler\",\"target\":\"target\",\"swap\":\"swap\",\"select\":\"select\"}"));
     }
 
     @Test
     public void testHxLocationWithContextDataPathShouldPrependContextPath() throws Exception {
         mockMvc.perform(get("/test/hx-location-with-context-data").contextPath("/test"))
                .andExpect(status().isOk())
-               .andExpect(header().string("HX-Location", "{\"path\":\"/test/path\",\"source\":\"source\",\"event\":\"event\",\"handler\":\"handler\",\"target\":\"target\",\"swap\":\"swap\"}"));
+               .andExpect(header().string("HX-Location", "{\"path\":\"/test/path\",\"source\":\"source\",\"event\":\"event\",\"handler\":\"handler\",\"target\":\"target\",\"swap\":\"swap\",\"select\":\"select\"}"));
     }
 
     @Test

@@ -24,6 +24,7 @@ public class HtmxResponseHandlerMethodReturnValueHandlerController {
         location.setHandler("handler");
         location.setTarget("target");
         location.setSwap("swap");
+        location.setSelect("select");
         location.setValues(new TreeMap<>(Map.of("value1", "v1", "value2", "v2")));
         location.setHeaders(new TreeMap<>(Map.of("header1", "v1", "header2", "v2")));
 

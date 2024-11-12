@@ -239,6 +239,9 @@ public class HtmxHandlerInterceptor implements HandlerInterceptor {
         if (!annotation.target().isEmpty()) {
             location.setSwap(annotation.swap());
         }
+        if (!annotation.select().isEmpty()) {
+            location.setSelect(annotation.select());
+        }
         return location;
     }
 

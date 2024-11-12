@@ -20,6 +20,7 @@ public class HtmxLocation {
     private String handler;
     private String target;
     private String swap;
+    private String select;
     private Map<String, Object> values;
     private Map<String, String> headers;
 
@@ -57,6 +58,10 @@ public class HtmxLocation {
 
     public String getPath() {
         return path;
+    }
+
+    public String getSelect() {
+        return select;
     }
 
     public String getSource() {
@@ -104,6 +109,10 @@ public class HtmxLocation {
 
     public void setPath(String path) {
         this.path = path;
+    }
+
+    public void setSelect(String select) {
+        this.select = select;
     }
 
     public void setSource(String source) {

@@ -79,7 +79,7 @@ public class HtmxHandlerMethodTest {
 
         mockMvc.perform(get("/location-redirect-with-context-data").headers(htmxRequest()))
                .andExpect(status().isOk())
-               .andExpect(header().string("HX-Location", "{\"path\":\"/path\",\"source\":\"source\",\"event\":\"event\",\"handler\":\"handler\",\"target\":\"target\",\"swap\":\"swap\",\"values\":{\"value1\":\"v1\",\"value2\":\"v2\"},\"headers\":{\"header1\":\"v1\",\"header2\":\"v2\"}}"));
+               .andExpect(header().string("HX-Location", "{\"path\":\"/path\",\"source\":\"source\",\"event\":\"event\",\"handler\":\"handler\",\"target\":\"target\",\"swap\":\"swap\",\"select\":\"select\",\"values\":{\"value1\":\"v1\",\"value2\":\"v2\"},\"headers\":{\"header1\":\"v1\",\"header2\":\"v2\"}}"));
     }
 
     @Test
@@ -87,7 +87,7 @@ public class HtmxHandlerMethodTest {
 
         mockMvc.perform(get("/location-redirect-context-data-flash-attributes").headers(htmxRequest()))
                .andExpect(status().isOk())
-               .andExpect(header().string("HX-Location", "{\"path\":\"/path\",\"source\":\"source\",\"event\":\"event\",\"handler\":\"handler\",\"target\":\"target\",\"swap\":\"swap\",\"values\":{\"value1\":\"v1\",\"value2\":\"v2\"},\"headers\":{\"header1\":\"v1\",\"header2\":\"v2\"}}"))
+               .andExpect(header().string("HX-Location", "{\"path\":\"/path\",\"source\":\"source\",\"event\":\"event\",\"handler\":\"handler\",\"target\":\"target\",\"swap\":\"swap\",\"select\":\"select\",\"values\":{\"value1\":\"v1\",\"value2\":\"v2\"},\"headers\":{\"header1\":\"v1\",\"header2\":\"v2\"}}"))
                .andExpect(flash().attribute("flash", "test"));
     }
 
@@ -96,7 +96,7 @@ public class HtmxHandlerMethodTest {
 
         mockMvc.perform(get("/location-redirect-with-context-data-expose-model-attributes").headers(htmxRequest()))
                .andExpect(status().isOk())
-               .andExpect(header().string("HX-Location", "{\"path\":\"/path?attr=value\",\"source\":\"source\",\"event\":\"event\",\"handler\":\"handler\",\"target\":\"target\",\"swap\":\"swap\",\"values\":{\"value1\":\"v1\",\"value2\":\"v2\"},\"headers\":{\"header1\":\"v1\",\"header2\":\"v2\"}}"));
+               .andExpect(header().string("HX-Location", "{\"path\":\"/path?attr=value\",\"source\":\"source\",\"event\":\"event\",\"handler\":\"handler\",\"target\":\"target\",\"swap\":\"swap\",\"select\":\"select\",\"values\":{\"value1\":\"v1\",\"value2\":\"v2\"},\"headers\":{\"header1\":\"v1\",\"header2\":\"v2\"}}"));
     }
 
     @Test
@@ -229,6 +229,7 @@ public class HtmxHandlerMethodTest {
             redirectView.setHandler("handler");
             redirectView.setTarget("target");
             redirectView.setSwap("swap");
+            redirectView.setSelect("select");
             redirectView.setValues(new TreeMap<>(Map.of("value1", "v1", "value2", "v2")));
             redirectView.setHeaders(new TreeMap<>(Map.of("header1", "v1", "header2", "v2")));
 
@@ -245,6 +246,7 @@ public class HtmxHandlerMethodTest {
             redirectView.setHandler("handler");
             redirectView.setTarget("target");
             redirectView.setSwap("swap");
+            redirectView.setSelect("select");
             redirectView.setValues(new TreeMap<>(Map.of("value1", "v1", "value2", "v2")));
             redirectView.setHeaders(new TreeMap<>(Map.of("header1", "v1", "header2", "v2")));
 
@@ -263,6 +265,7 @@ public class HtmxHandlerMethodTest {
             redirectView.setHandler("handler");
             redirectView.setTarget("target");
             redirectView.setSwap("swap");
+            redirectView.setSelect("select");
             redirectView.setValues(new TreeMap<>(Map.of("value1", "v1", "value2", "v2")));
             redirectView.setHeaders(new TreeMap<>(Map.of("header1", "v1", "header2", "v2")));
 

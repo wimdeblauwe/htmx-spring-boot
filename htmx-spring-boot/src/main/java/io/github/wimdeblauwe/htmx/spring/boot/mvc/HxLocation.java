@@ -52,6 +52,10 @@ public @interface HxLocation {
      */
     String swap() default "";
     /**
+     * A CSS selector to select the content you want swapped from a response.
+     */
+    String select() default "";
+    /**
      * If the path should be interpreted as context relative if it starts with a slash ("/").
      */
     boolean contextRelative() default true;
