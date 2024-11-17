@@ -137,7 +137,6 @@ public final class HtmxResponse {
      *
      * @param eventName   the event name
      * @param eventDetail details along with the event
-     * @return the builder
      * @see <a href="https://htmx.org/headers/hx-trigger/">HX-Trigger Response Headers</a>
      * @since 3.6.0
      */
@@ -165,7 +164,6 @@ public final class HtmxResponse {
      * the web application root, i.e. the context path will be prepended to the URL.
      *
      * @param contextRelative whether to interpret URLs in the htmx response as relative to the current ServletContext
-     * @return the builder
      */
     public void setContextRelative(boolean contextRelative) {
         this.contextRelative = contextRelative;
