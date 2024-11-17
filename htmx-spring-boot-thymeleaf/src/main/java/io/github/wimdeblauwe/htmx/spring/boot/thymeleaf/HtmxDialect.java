@@ -36,6 +36,7 @@ public class HtmxDialect extends AbstractProcessorDialect implements IExpression
         htmxProcessors.add(new HtmxAttributeProcessor(dialectPrefix, "history-elt", mapper));
         htmxProcessors.add(new HtmxAttributeProcessor(dialectPrefix, "include", mapper));
         htmxProcessors.add(new HtmxAttributeProcessor(dialectPrefix, "indicator", mapper));
+        htmxProcessors.add(new HtmxAttributePrefixProcessor(dialectPrefix, "on"));
         htmxProcessors.add(new HtmxAttributeProcessor(dialectPrefix, "params", mapper));
         htmxProcessors.add(new HtmxAttributeProcessor(dialectPrefix, "patch", mapper));
         htmxProcessors.add(new HtmxAttributeProcessor(dialectPrefix, "post", mapper));

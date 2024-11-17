@@ -28,6 +28,10 @@
 <div id="hx-swap-div-with-th-with" th:with="sum = ${1+1}" hx:swap="${sum.equals(2)}?'afterend':null"></div>
 <div id="hx-target-div-with-th-each" th:each="number : ${listVariable}" hx:target="${number}"></div>
 <div id="hx-validate-div" hx:validate="${trueVariable}"></div>
+<div id="hx-on-div" hx:on:click="|console.log('${stringVariable}')|"></div>
+<div id="hx-on-div2" th:hx-on:click="|console.log('${stringVariable}')|"></div>
+<div id="hx-on-div3" hx:on::before-request="|console.log('${stringVariable}')|"></div>
+<div id="hx-on-div4" th:hx-on::before-request="|console.log('${stringVariable}')|"></div>
 <!-- @formatter:on -->
 </body>
 </html>

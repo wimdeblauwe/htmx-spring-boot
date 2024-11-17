@@ -140,6 +140,17 @@ class HtmxDialectTest {
     }
 
     @Test
+    void testHxOn() throws Exception {
+        String html = mockMvc.perform(get("/htmx-dialect"))
+                             .andExpect(status().isOk())
+                             .andReturn().getResponse().getContentAsString();
+        assertThat(html).containsPattern("\"hx-on-div\".*hx-on:click=\"console.log\\(&#39;someString&#39;\\)\"");
+        assertThat(html).containsPattern("hx-on-div2.*hx-on:click=\"console.log\\(&#39;someString&#39;\\)\"");
+        assertThat(html).containsPattern("hx-on-div3.*hx-on::before-request=\"console.log\\(&#39;someString&#39;\\)\"");
+        assertThat(html).containsPattern("hx-on-div4.*hx-on::before-request=\"console.log\\(&#39;someString&#39;\\)\"");
+    }
+
+    @Test
     public void testHtmxRequestExpressionObject() throws Exception {
         mockMvc.perform(get("/htmx-dialect-expression-object-factory")
                                 .header("HX-Request", "true"))
