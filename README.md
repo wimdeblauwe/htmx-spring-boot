@@ -120,9 +120,9 @@ except for some control flow response headers such as [HX-Redirect](https://htmx
 ##### Special view name prefixes
 For these views, there is also a special view name handling if you prefer to return a view name instead of a view instance.
 
-* Redirect URLs can be specified via `htmx:redirect:`, e.g. `htmx:redirect:/path`, which causes htmx to perform a redirect to the specified URL.
-* Location redirect URLs can be specified via `htmx:location:`, e.g. `htmx:location:/path`, which causes htmx to perform a client-side redirect without reloading the entire page.
-* A refresh of the current page can be specified using `htmx:refresh`.
+* Redirect URLs can be specified via `redirect:htmx:`, e.g. `redirect:htmx:/path`, which causes htmx to perform a redirect to the specified URL.
+* Location redirect URLs can be specified via `redirect:htmx:location:`, e.g. `redirect:htmx:location:/path`, which causes htmx to perform a client-side redirect without reloading the entire page.
+* A refresh of the current page can be specified using `refresh:htmx`.
 
 ```java
 @HxRequest
@@ -139,7 +139,7 @@ public String user(@PathVariable Long id, @ModelAttribute @Valid UserForm form,
     redirectAttributes.addFlashAttribute("successMessage", "User has been successfully updated.");
     htmxResponse.addTrigger("user-updated");
     
-    return "htmx:redirect:/user/list";
+    return "redirect:htmx:/user/list";
 }
 ```
 

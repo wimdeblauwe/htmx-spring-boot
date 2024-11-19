@@ -22,18 +22,18 @@ public class HtmxViewResolver extends WebApplicationObjectSupport implements Vie
      * Prefix for special view names that specify a redirect URL
      * that htmx should navigate to.
      */
-    public static final String REDIRECT_URL_PREFIX = "htmx:redirect:";
+    public static final String REDIRECT_URL_PREFIX = "redirect:htmx:";
 
     /**
      * Prefix for special view names that specify a redirect URL that
      * htmx should navigate to without a full page reload.
      */
-    public static final String LOCATION_URL_PREFIX = "htmx:location:";
+    public static final String LOCATION_URL_PREFIX = "redirect:htmx:location:";
 
     /**
      * Prefix for special view names that specify a refresh of the current page.
      */
-    public static final String REFRESH_VIEW_NAME = "htmx:refresh";
+    public static final String REFRESH_VIEW_NAME = "refresh:htmx";
 
     private int order = Ordered.LOWEST_PRECEDENCE;
 
@@ -62,9 +62,9 @@ public class HtmxViewResolver extends WebApplicationObjectSupport implements Vie
             return new HtmxRefreshView();
         }
 
-        if (viewName.startsWith(REDIRECT_URL_PREFIX)) {
-            String redirectUrl = viewName.substring(REDIRECT_URL_PREFIX.length());
-            RedirectView view = new HtmxRedirectView(redirectUrl, isRedirectContextRelative());
+        if (viewName.startsWith(LOCATION_URL_PREFIX)) {
+            String redirectUrl = viewName.substring(LOCATION_URL_PREFIX.length());
+            RedirectView view = new HtmxLocationRedirectView(redirectUrl, isRedirectContextRelative());
             String[] hosts = getRedirectHosts();
             if (hosts != null) {
                 view.setHosts(hosts);
@@ -72,9 +72,9 @@ public class HtmxViewResolver extends WebApplicationObjectSupport implements Vie
             return view;
         }
 
-        if (viewName.startsWith(LOCATION_URL_PREFIX)) {
-            String redirectUrl = viewName.substring(LOCATION_URL_PREFIX.length());
-            RedirectView view = new HtmxLocationRedirectView(redirectUrl, isRedirectContextRelative());
+        if (viewName.startsWith(REDIRECT_URL_PREFIX)) {
+            String redirectUrl = viewName.substring(REDIRECT_URL_PREFIX.length());
+            RedirectView view = new HtmxRedirectView(redirectUrl, isRedirectContextRelative());
             String[] hosts = getRedirectHosts();
             if (hosts != null) {
                 view.setHosts(hosts);

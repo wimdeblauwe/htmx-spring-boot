@@ -75,6 +75,15 @@ public class HtmxHandlerMethodTest {
     }
 
     @Test
+    public void testLocationRedirectViewNamePrefixFlashAttributes() throws Exception {
+
+        mockMvc.perform(get("/location-redirect-view-name-prefix-flash-attributes").headers(htmxRequest()))
+               .andExpect(status().isOk())
+               .andExpect(header().string("HX-Location", "/path"))
+               .andExpect(flash().attribute("flash", "test"));
+    }
+
+    @Test
     public void testLocationRedirectWithContextData() throws Exception {
 
         mockMvc.perform(get("/location-redirect-with-context-data").headers(htmxRequest()))
@@ -149,6 +158,15 @@ public class HtmxHandlerMethodTest {
     }
 
     @Test
+    public void testRedirectViewNamePrefixFlashAttributes() throws Exception {
+
+        mockMvc.perform(get("/contextpath/redirect-view-name-prefix-flash-attributes").contextPath("/contextpath").headers(htmxRequest()))
+               .andExpect(status().isOk())
+               .andExpect(header().string("HX-Redirect", "/contextpath/test"))
+               .andExpect(flash().attribute("flash", "test"));;
+    }
+
+    @Test
     public void testRedirectWithContextPath() throws Exception {
 
         mockMvc.perform(get("/contextpath/redirect-context-relative").headers(htmxRequest()).contextPath("/contextpath"))
@@ -216,7 +234,15 @@ public class HtmxHandlerMethodTest {
         @HxRequest
         @GetMapping("/location-redirect-view-name-prefix")
         public String locationRedirectViewNamePrefix() {
-            return "htmx:location:/path";
+            return "redirect:htmx:location:/path";
+        }
+
+        @HxRequest
+        @GetMapping("/location-redirect-view-name-prefix-flash-attributes")
+        public String locationRedirectWithViewNamePrefixFlashAttributes(RedirectAttributes redirectAttributes) {
+
+            redirectAttributes.addFlashAttribute("flash", "test");
+            return "redirect:htmx:location:/path";
         }
 
         @HxRequest
@@ -309,9 +335,17 @@ public class HtmxHandlerMethodTest {
         }
 
         @HxRequest
+        @GetMapping("/redirect-view-name-prefix-flash-attributes")
+        public String redirectWithViewNamePrefixFlashAttributes(RedirectAttributes redirectAttributes) {
+
+            redirectAttributes.addFlashAttribute("flash", "test");
+            return "redirect:htmx:/test";
+        }
+
+        @HxRequest
         @GetMapping("/redirect-view-name-prefix")
         public String redirectViewNamePrefix() {
-            return "htmx:redirect:/test";
+            return "redirect:htmx:/test";
         }
 
         @HxRequest
@@ -331,7 +365,7 @@ public class HtmxHandlerMethodTest {
         @HxRequest
         @GetMapping("/refresh-view-name")
         public String refreshViewName() {
-            return "htmx:refresh";
+            return "refresh:htmx";
         }
 
         @HxRequest
