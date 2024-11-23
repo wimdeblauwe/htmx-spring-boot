@@ -18,10 +18,9 @@ import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
-import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
-import org.springframework.web.servlet.view.BeanNameViewResolver;
 
 import java.util.List;
 
@@ -32,6 +31,7 @@ public class HtmxMvcAutoConfiguration implements WebMvcRegistrations, WebMvcConf
     private final ObjectFactory<ViewResolver> viewResolverObjectFactory;
     private final ObjectFactory<LocaleResolver> localeResolverObjectFactory;
     private final ObjectMapper objectMapper;
+    private final HtmxHandlerMethodAnnotationHandler handlerMethodAnnotationHandler;
 
     HtmxMvcAutoConfiguration(@Qualifier("viewResolver") ObjectFactory<ViewResolver> viewResolverObjectFactory,
                              ObjectFactory<LocaleResolver> localeResolverObjectFactory) {
@@ -42,6 +42,7 @@ public class HtmxMvcAutoConfiguration implements WebMvcRegistrations, WebMvcConf
         this.viewResolverObjectFactory = viewResolverObjectFactory;
         this.localeResolverObjectFactory = localeResolverObjectFactory;
         this.objectMapper = JsonMapper.builder().build();
+        this.handlerMethodAnnotationHandler = new HtmxHandlerMethodAnnotationHandler(this.objectMapper);
     }
 
     @Override
@@ -51,7 +52,7 @@ public class HtmxMvcAutoConfiguration implements WebMvcRegistrations, WebMvcConf
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(new HtmxHandlerInterceptor(objectMapper));
+        registry.addInterceptor(new HtmxHandlerInterceptor(objectMapper, handlerMethodAnnotationHandler));
     }
 
     @Override
@@ -64,6 +65,11 @@ public class HtmxMvcAutoConfiguration implements WebMvcRegistrations, WebMvcConf
     public void addReturnValueHandlers(List<HandlerMethodReturnValueHandler> handlers) {
         handlers.add(new HtmxResponseHandlerMethodReturnValueHandler(viewResolverObjectFactory.getObject(), localeResolverObjectFactory, objectMapper));
         handlers.add(new HtmxViewMethodReturnValueHandler(viewResolverObjectFactory.getObject(), localeResolverObjectFactory.getObject()));
+    }
+
+    @Override
+    public ExceptionHandlerExceptionResolver getExceptionHandlerExceptionResolver() {
+        return new HtmxExceptionHandlerExceptionResolver(handlerMethodAnnotationHandler);
     }
 
     @Bean
