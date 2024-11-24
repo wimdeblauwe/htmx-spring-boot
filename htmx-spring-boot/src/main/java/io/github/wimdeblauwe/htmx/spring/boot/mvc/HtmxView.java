@@ -17,7 +17,9 @@ import java.util.Set;
  * this class.
  *
  * @since 3.6.0
+ * @deprecated since 4.0.0 for removal in 4.1.0 in favor of <a href="https://docs.spring.io/spring-framework/reference/web/webmvc-view/mvc-fragments.html">HTML Fragments</a> support.
  */
+@Deprecated
 public class HtmxView {
 
     private final Set<ModelAndView> views = new LinkedHashSet<>();

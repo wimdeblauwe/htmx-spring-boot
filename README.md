@@ -175,8 +175,9 @@ public String users() {
 ### HTML Fragments
 
 In Spring MVC, view rendering typically involves specifying one view and one model. However, in htmx a common capability is to send multiple HTML fragments that
-htmx can use to update different parts of the page, which is called [Out Of Band Swaps](https://htmx.org/docs/#oob_swaps). For this, controller methods can return
-[HtmxView](https://javadoc.io/doc/io.github.wimdeblauwe/htmx-spring-boot/latest/io/github/wimdeblauwe/htmx/spring/boot/mvc/HtmxView.html)
+htmx can use to update different parts of the page, which is called [Out Of Band Swaps](https://htmx.org/docs/#oob_swaps). Spring offers the ability to return 
+multiple HTML fragments using `Collection<ModelAndView>` or `FragmentsRendering` as return type of controller. Further information on this can be found in the
+Spring Framework documentation under [HTML Fragments](https://docs.spring.io/spring-framework/reference/web/webmvc-view/mvc-fragments.html).
 
 ```java
 @HxRequest
@@ -185,29 +186,12 @@ public View users(Model model) {
     model.addAttribute("users", userRepository.findAll());
     model.addAttribute("count", userRepository.count());
 
-    var view = new HtmxView();
-    view.add("users/list");
-    view.add("users/count");
-    
-    return view;
+    return FragmentsRendering
+        .with("users/list")
+        .fragment("users/count")
+        .build();
 }
 ```
-
-An `HtmxView` can be formed from view names, as above, or fully resolved `View` instances, if the controller knows how
-to do that, or from `ModelAndView` instances (resolved or unresolved). Each fragment can have its own model, which is merged with the controller model before rendering.
-
-```java
-@HxRequest
-@GetMapping("/users")
-public View users(Model model) {
-    var view = new HtmxView();
-    view.add("users/list", Map.of("users", userRepository.findAll()));
-    view.add("users/count", Map.of("count", userRepository.count()));
-
-    return view;
-}
-```
-
 
 ### Exceptions
 
