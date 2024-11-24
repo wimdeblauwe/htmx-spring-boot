@@ -5,8 +5,14 @@ import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.stereotype.Controller;
+import org.springframework.stereotype.Service;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.verify;
@@ -14,7 +20,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 
-@WebMvcTest(HtmxHandlerMethodArgumentResolverTestController.class)
+@WebMvcTest(HtmxHandlerMethodArgumentResolverTest.TestController.class)
+@ContextConfiguration(classes = HtmxHandlerMethodArgumentResolverTest.TestController.class)
 @WithMockUser
 class HtmxHandlerMethodArgumentResolverTest {
     @Autowired
@@ -165,7 +172,6 @@ class HtmxHandlerMethodArgumentResolverTest {
         mockMvc.perform(get("/method-arg-resolver/users")
                                 .header("HX-Request", "true"))
                .andExpect(view().name("users :: list"));
-        ;
     }
 
     @Test
@@ -173,13 +179,63 @@ class HtmxHandlerMethodArgumentResolverTest {
         mockMvc.perform(get("/method-arg-resolver/users/inherited")
                                 .header("HX-Request", "true"))
                .andExpect(view().name("users :: list"));
-        ;
     }
 
     @Test
     void testHxRequestSameUrlNoAnnotation() throws Exception {
         mockMvc.perform(get("/method-arg-resolver/users"))
                .andExpect(view().name("users"));
-        ;
     }
+
+    @Controller
+    @RequestMapping("/method-arg-resolver")
+    static class TestController {
+
+        @Autowired
+        private TestService service;
+
+        @GetMapping
+        @ResponseBody
+        public String htmxRequestDetails(HtmxRequest details) {
+            service.doSomething(details);
+
+            return "";
+        }
+
+        @GetMapping("/users")
+        @HxRequest
+        public String htmxRequest(HtmxRequest details) {
+            service.doSomething(details);
+
+            return "users :: list";
+        }
+
+        @GetMapping("/users")
+        public String normalRequest(HtmxRequest details) {
+            service.doSomething(details);
+
+            return "users";
+        }
+
+        @HxGetMapping("/users/inherited")
+        public String htmxRequestInheritance(HtmxRequest details) {
+            service.doSomething(details);
+
+            return "users :: list";
+        }
+
+        @GetMapping("/users/inherited")
+        public String normalRequestInheritance(HtmxRequest details) {
+            service.doSomething(details);
+
+            return "users";
+        }
+    }
+
+    @Service
+    public class TestService {
+        void doSomething(HtmxRequest details) {
+        }
+    }
+
 }
