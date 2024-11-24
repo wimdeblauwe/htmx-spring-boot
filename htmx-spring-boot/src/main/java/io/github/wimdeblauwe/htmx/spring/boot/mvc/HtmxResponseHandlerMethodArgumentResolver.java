@@ -12,8 +12,7 @@ public class HtmxResponseHandlerMethodArgumentResolver implements HandlerMethodA
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
-        return (parameter.getParameterType() == HtmxResponse.class ||
-                parameter.getParameterType() == HtmxResponse.Builder.class);
+        return parameter.getParameterType() == HtmxResponse.class;
     }
 
     @Override
@@ -24,15 +23,10 @@ public class HtmxResponseHandlerMethodArgumentResolver implements HandlerMethodA
 
         HttpServletRequest request = webRequest.getNativeRequest(HttpServletRequest.class);
 
-        if (parameter.getParameterType() == HtmxResponse.class) {
-            var htmxResponse = new HtmxResponse();
-            request.setAttribute(RequestContextUtils.HTMX_RESPONSE_CONTEXT_ATTRIBUTE, htmxResponse);
-            return htmxResponse;
-        } else {
-            HtmxResponse.Builder htmxResponseBuilder = HtmxResponse.builder();
-            request.setAttribute(RequestContextUtils.HTMX_RESPONSE_CONTEXT_ATTRIBUTE, htmxResponseBuilder);
-            return htmxResponseBuilder;
-        }
+        var htmxResponse = new HtmxResponse();
+        request.setAttribute(RequestContextUtils.HTMX_RESPONSE_CONTEXT_ATTRIBUTE, htmxResponse);
+
+        return htmxResponse;
     }
 
 }

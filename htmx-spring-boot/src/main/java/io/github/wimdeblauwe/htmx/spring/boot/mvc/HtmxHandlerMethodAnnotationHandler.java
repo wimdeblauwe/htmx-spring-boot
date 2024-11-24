@@ -5,12 +5,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.core.annotation.AnnotatedElementUtils;
-import org.springframework.http.HttpHeaders;
 
 import java.lang.reflect.Method;
 import java.time.Duration;
-
-import static io.github.wimdeblauwe.htmx.spring.boot.mvc.HtmxResponseHeader.*;
 
 /**
  * A handler for processing htmx annotations present on exception handler methods.
@@ -56,9 +53,9 @@ class HtmxHandlerMethodAnnotationHandler {
         HxPushUrl methodAnnotation = AnnotatedElementUtils.findMergedAnnotation(method, HxPushUrl.class);
         if (methodAnnotation != null) {
             if (HtmxValue.TRUE.equals(methodAnnotation.value())) {
-                setHeader(response, HX_PUSH_URL, getRequestUrl(request));
+                setHeader(response, HtmxResponseHeader.HX_PUSH_URL, getRequestUrl(request));
             } else {
-                setHeader(response, HX_PUSH_URL, RequestContextUtils.createUrl(request, methodAnnotation.value(), methodAnnotation.contextRelative()));
+                setHeader(response, HtmxResponseHeader.HX_PUSH_URL, RequestContextUtils.createUrl(request, methodAnnotation.value(), methodAnnotation.contextRelative()));
             }
         }
     }
@@ -66,7 +63,7 @@ class HtmxHandlerMethodAnnotationHandler {
     private void setHxRedirect(HttpServletRequest request, HttpServletResponse response, Method method) {
         HxRedirect methodAnnotation = AnnotatedElementUtils.findMergedAnnotation(method, HxRedirect.class);
         if (methodAnnotation != null) {
-            setHeader(response, HX_REDIRECT, RequestContextUtils.createUrl(request, methodAnnotation.value(), methodAnnotation.contextRelative()));
+            setHeader(response, HtmxResponseHeader.HX_REDIRECT, RequestContextUtils.createUrl(request, methodAnnotation.value(), methodAnnotation.contextRelative()));
         }
     }
 
@@ -74,9 +71,9 @@ class HtmxHandlerMethodAnnotationHandler {
         HxReplaceUrl methodAnnotation = AnnotatedElementUtils.findMergedAnnotation(method, HxReplaceUrl.class);
         if (methodAnnotation != null) {
             if (HtmxValue.TRUE.equals(methodAnnotation.value())) {
-                setHeader(response, HX_REPLACE_URL, getRequestUrl(request));
+                setHeader(response, HtmxResponseHeader.HX_REPLACE_URL, getRequestUrl(request));
             } else {
-                setHeader(response, HX_REPLACE_URL, RequestContextUtils.createUrl(request, methodAnnotation.value(), methodAnnotation.contextRelative()));
+                setHeader(response, HtmxResponseHeader.HX_REPLACE_URL, RequestContextUtils.createUrl(request, methodAnnotation.value(), methodAnnotation.contextRelative()));
             }
         }
     }
@@ -84,28 +81,28 @@ class HtmxHandlerMethodAnnotationHandler {
     private void setHxReswap(HttpServletResponse response, Method method) {
         HxReswap methodAnnotation = AnnotatedElementUtils.findMergedAnnotation(method, HxReswap.class);
         if (methodAnnotation != null) {
-            setHeader(response, HX_RESWAP, convertToReswap(methodAnnotation));
+            setHeader(response, HtmxResponseHeader.HX_RESWAP, convertToReswap(methodAnnotation));
         }
     }
 
     private void setHxRetarget(HttpServletResponse response, Method method) {
         HxRetarget methodAnnotation = AnnotatedElementUtils.findMergedAnnotation(method, HxRetarget.class);
         if (methodAnnotation != null) {
-            setHeader(response, HX_RETARGET, methodAnnotation.value());
+            setHeader(response, HtmxResponseHeader.HX_RETARGET, methodAnnotation.value());
         }
     }
 
     private void setHxReselect(HttpServletResponse response, Method method) {
         HxReselect methodAnnotation = AnnotatedElementUtils.findMergedAnnotation(method, HxReselect.class);
         if (methodAnnotation != null) {
-            setHeader(response, HX_RESELECT, methodAnnotation.value());
+            setHeader(response, HtmxResponseHeader.HX_RESELECT, methodAnnotation.value());
         }
     }
 
     private void setHxTrigger(HttpServletResponse response, Method method) {
         HxTrigger methodAnnotation = AnnotatedElementUtils.findMergedAnnotation(method, HxTrigger.class);
         if (methodAnnotation != null) {
-            setHeader(response, convertToHeader(methodAnnotation.lifecycle()), methodAnnotation.value());
+            setHeader(response, HtmxResponseHeader.HX_TRIGGER, methodAnnotation.value());
         }
     }
 
@@ -126,20 +123,7 @@ class HtmxHandlerMethodAnnotationHandler {
     private void setHxRefresh(HttpServletResponse response, Method method) {
         HxRefresh methodAnnotation = AnnotatedElementUtils.findMergedAnnotation(method, HxRefresh.class);
         if (methodAnnotation != null) {
-            setHeader(response, HX_REFRESH, HtmxValue.TRUE);
-        }
-    }
-
-    private HtmxResponseHeader convertToHeader(HxTriggerLifecycle lifecycle) {
-        switch (lifecycle) {
-            case RECEIVE:
-                return HX_TRIGGER;
-            case SETTLE:
-                return HX_TRIGGER_AFTER_SETTLE;
-            case SWAP:
-                return HX_TRIGGER_AFTER_SWAP;
-            default:
-                throw new IllegalArgumentException("Unknown lifecycle:" + lifecycle);
+            setHeader(response, HtmxResponseHeader.HX_REFRESH, HtmxValue.TRUE);
         }
     }
 

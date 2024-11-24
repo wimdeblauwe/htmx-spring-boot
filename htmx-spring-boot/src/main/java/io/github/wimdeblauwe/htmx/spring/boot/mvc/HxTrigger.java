@@ -21,9 +21,4 @@ public @interface HxTrigger {
      */
     String[] value();
 
-    /**
-     * @deprecated use annotation {@link HxTriggerAfterSettle} or {@link HxTriggerAfterSwap} instead.
-     */
-    @Deprecated
-    HxTriggerLifecycle lifecycle() default HxTriggerLifecycle.RECEIVE;
 }

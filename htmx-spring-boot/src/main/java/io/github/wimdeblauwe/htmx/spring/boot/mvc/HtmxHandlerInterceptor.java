@@ -31,30 +31,15 @@ public class HtmxHandlerInterceptor implements HandlerInterceptor {
 
         HtmxResponse htmxResponse = RequestContextUtils.getHtmxResponse(request);
         if (htmxResponse != null) {
-            addHxTriggerHeaders(response, HtmxResponseHeader.HX_TRIGGER, htmxResponse.getTriggersInternal());
-            addHxTriggerHeaders(response, HtmxResponseHeader.HX_TRIGGER_AFTER_SETTLE, htmxResponse.getTriggersAfterSettleInternal());
-            addHxTriggerHeaders(response, HtmxResponseHeader.HX_TRIGGER_AFTER_SWAP, htmxResponse.getTriggersAfterSwapInternal());
+            addHxTriggerHeaders(response, HtmxResponseHeader.HX_TRIGGER, htmxResponse.getTriggers());
+            addHxTriggerHeaders(response, HtmxResponseHeader.HX_TRIGGER_AFTER_SETTLE, htmxResponse.getTriggersAfterSettle());
+            addHxTriggerHeaders(response, HtmxResponseHeader.HX_TRIGGER_AFTER_SWAP, htmxResponse.getTriggersAfterSwap());
 
-            if (htmxResponse.getLocation() != null) {
-                HtmxLocation location = htmxResponse.getLocation();
-                if (location.hasContextData()) {
-                    location.setPath(RequestContextUtils.createUrl(request, location.getPath(), htmxResponse.isContextRelative()));
-                    setHeaderJsonValue(response, HtmxResponseHeader.HX_LOCATION, location);
-                } else {
-                    response.setHeader(HtmxResponseHeader.HX_LOCATION.getValue(), RequestContextUtils.createUrl(request, location.getPath(), htmxResponse.isContextRelative()));
-                }
-            }
             if (htmxResponse.getReplaceUrl() != null) {
                 response.setHeader(HtmxResponseHeader.HX_REPLACE_URL.getValue(), RequestContextUtils.createUrl(request, htmxResponse.getReplaceUrl(), htmxResponse.isContextRelative()));
             }
             if (htmxResponse.getPushUrl() != null) {
                 response.setHeader(HtmxResponseHeader.HX_PUSH_URL.getValue(), RequestContextUtils.createUrl(request, htmxResponse.getPushUrl(), htmxResponse.isContextRelative()));
-            }
-            if (htmxResponse.getRedirect() != null) {
-                response.setHeader(HtmxResponseHeader.HX_REDIRECT.getValue(), RequestContextUtils.createUrl(request, htmxResponse.getRedirect(), htmxResponse.isContextRelative()));
-            }
-            if (htmxResponse.isRefresh()) {
-                response.setHeader(HtmxResponseHeader.HX_REFRESH.getValue(), "true");
             }
             if (htmxResponse.getRetarget() != null) {
                 response.setHeader(HtmxResponseHeader.HX_RETARGET.getValue(), htmxResponse.getRetarget());

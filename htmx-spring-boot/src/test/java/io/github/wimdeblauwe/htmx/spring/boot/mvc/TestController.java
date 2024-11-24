@@ -29,20 +29,6 @@ public class TestController {
         return "";
     }
 
-    @GetMapping("/with-trigger-settle")
-    @HxTrigger(value = "eventTriggered", lifecycle = HxTriggerLifecycle.SETTLE)
-    @ResponseBody
-    public String methodWithHxTriggerAndLifecycleSettle() {
-        return "";
-    }
-
-    @GetMapping("/with-trigger-swap")
-    @HxTrigger(value = "eventTriggered", lifecycle = HxTriggerLifecycle.SWAP)
-    @ResponseBody
-    public String methodWithHxTriggerAndLifecycleSwap() {
-        return "";
-    }
-
     @GetMapping("/with-trigger-after-settle")
     @HxTriggerAfterSettle("eventTriggered")
     @ResponseBody

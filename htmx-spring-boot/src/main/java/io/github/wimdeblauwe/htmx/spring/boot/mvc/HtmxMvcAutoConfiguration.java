@@ -63,7 +63,6 @@ public class HtmxMvcAutoConfiguration implements WebMvcRegistrations, WebMvcConf
 
     @Override
     public void addReturnValueHandlers(List<HandlerMethodReturnValueHandler> handlers) {
-        handlers.add(new HtmxResponseHandlerMethodReturnValueHandler(viewResolverObjectFactory.getObject(), localeResolverObjectFactory, objectMapper));
         handlers.add(new HtmxViewMethodReturnValueHandler(viewResolverObjectFactory.getObject(), localeResolverObjectFactory.getObject()));
     }
 

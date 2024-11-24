@@ -1,9 +1,9 @@
 package io.github.wimdeblauwe.htmx.spring.boot.mvc;
 
-import static io.github.wimdeblauwe.htmx.spring.boot.mvc.HtmxRequestHeader.*;
-
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.lang.Nullable;
+
+import static io.github.wimdeblauwe.htmx.spring.boot.mvc.HtmxRequestHeader.*;
 
 /**
  * This class can be used as a controller method argument to access
@@ -188,25 +188,8 @@ public final class HtmxRequest {
         private Builder() {
         }
 
-        /**
-         * @deprecated use {@link #boosted(boolean)} instead. Will be removed in 4.0.
-         */
-        @Deprecated
-        public Builder withBoosted(boolean boosted) {
-            return boosted(boosted);
-        }
-
         public Builder boosted(boolean boosted) {
             this.boosted = boosted;
-            return this;
-        }
-
-        /**
-         * @deprecated use {@link #currentUrl(String)} instead. Will be removed in 4.0.
-         */
-        @Deprecated
-        public Builder withCurrentUrl(String currentUrl) {
-            this.currentUrl = currentUrl;
             return this;
         }
 
@@ -215,26 +198,8 @@ public final class HtmxRequest {
             return this;
         }
 
-        /**
-         * @deprecated use {@link #historyRestoreRequest(boolean)} instead. Will be removed in 4.0.
-         */
-        @Deprecated
-        public Builder withHistoryRestoreRequest(boolean historyRestoreRequest) {
-            this.historyRestoreRequest = historyRestoreRequest;
-            return this;
-        }
-
         public Builder historyRestoreRequest(boolean historyRestoreRequest) {
             this.historyRestoreRequest = historyRestoreRequest;
-            return this;
-        }
-
-        /**
-         * @deprecated use {@link #promptResponse(String)} instead. Will be removed in 4.0.
-         */
-        @Deprecated
-        public Builder withPromptResponse(String promptResponse) {
-            this.promptResponse = promptResponse;
             return this;
         }
 
@@ -243,40 +208,13 @@ public final class HtmxRequest {
             return this;
         }
 
-        /**
-         * @deprecated use {@link #target(String)} instead. Will be removed in 4.0.
-         */
-        @Deprecated
-        public Builder withTarget(String target) {
-            this.target = target;
-            return this;
-        }
-
         public Builder target(String target) {
             this.target = target;
             return this;
         }
 
-        /**
-         * @deprecated use {@link #triggerName(String)} instead. Will be removed in 4.0.
-         */
-        @Deprecated
-        public Builder withTriggerName(String triggerName) {
-            this.triggerName = triggerName;
-            return this;
-        }
-
         public Builder triggerName(String triggerName) {
             this.triggerName = triggerName;
-            return this;
-        }
-
-        /**
-         * @deprecated use {@link #triggerId(String)} instead. Will be removed in 4.0.
-         */
-        @Deprecated
-        public Builder withTriggerId(String triggerId) {
-            this.triggerId = triggerId;
             return this;
         }
 

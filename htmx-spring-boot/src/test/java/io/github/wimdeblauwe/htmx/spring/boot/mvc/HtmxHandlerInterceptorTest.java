@@ -6,11 +6,11 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static org.hamcrest.Matchers.not;
+import static org.hamcrest.collection.IsIterableContainingInRelativeOrder.containsInRelativeOrder;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.hamcrest.collection.IsIterableContainingInRelativeOrder.containsInRelativeOrder;
-import static org.hamcrest.Matchers.not;
 
 @WebMvcTest(TestController.class)
 @WithMockUser
@@ -31,20 +31,6 @@ class HtmxHandlerInterceptorTest {
         mockMvc.perform(get("/with-trigger-multiple-events"))
                .andExpect(status().isOk())
                .andExpect(header().string("HX-Trigger", "event1,event2"));
-    }
-
-    @Test
-    public void testAfterSettleHeaderIsSetOnResponseIfHxTriggerIsPresent() throws Exception {
-        mockMvc.perform(get("/with-trigger-settle"))
-               .andExpect(status().isOk())
-               .andExpect(header().string("HX-Trigger-After-Settle", "eventTriggered"));
-    }
-
-    @Test
-    public void testAfterSwapHeaderIsSetOnResponseIfHxTriggerIsPresent() throws Exception {
-        mockMvc.perform(get("/with-trigger-swap"))
-               .andExpect(status().isOk())
-               .andExpect(header().string("HX-Trigger-After-Swap", "eventTriggered"));
     }
 
     @Test

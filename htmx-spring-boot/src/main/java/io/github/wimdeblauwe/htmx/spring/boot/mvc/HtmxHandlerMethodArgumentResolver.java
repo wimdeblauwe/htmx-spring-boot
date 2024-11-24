@@ -9,10 +9,6 @@ import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
-import java.util.Objects;
-
-import static io.github.wimdeblauwe.htmx.spring.boot.mvc.HtmxRequestHeader.*;
-
 public class HtmxHandlerMethodArgumentResolver implements HandlerMethodArgumentResolver {
 
     @Override
