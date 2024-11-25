@@ -250,11 +250,10 @@ public View users(Model model) {
     model.addAttribute("users", userRepository.findAll());
     model.addAttribute("count", userRepository.count());
 
-    var view = new HtmxView();
-    view.add("users :: list");
-    view.add("users :: count");
-
-    return view;
+    return FragmentsRendering
+            .with("users :: list")
+            .fragment("users :: count")
+            .build();
 }
 ```
 
