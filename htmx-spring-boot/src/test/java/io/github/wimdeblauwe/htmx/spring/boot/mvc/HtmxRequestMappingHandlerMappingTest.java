@@ -4,14 +4,19 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.stereotype.Controller;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import static io.github.wimdeblauwe.htmx.spring.boot.mvc.HtmxRequestHeader.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(HtmxRequestMappingHandlerMappingTestController.class)
+@WebMvcTest(HtmxRequestMappingHandlerMappingTest.TestController.class)
+@ContextConfiguration(classes = HtmxRequestMappingHandlerMappingTest.TestController.class)
 @WithMockUser
 public class HtmxRequestMappingHandlerMappingTest {
 
@@ -130,6 +135,82 @@ public class HtmxRequestMappingHandlerMappingTest {
                                 .header(HX_TRIGGER.getValue(), "foo"))
                .andExpect(status().isOk())
                .andExpect(content().string("foo"));
+    }
+
+
+    @Controller
+    static class TestController {
+
+        @HxRequest
+        @GetMapping("/hx-request")
+        @ResponseBody
+        public String hxRequest() {
+            return "hx-request";
+        }
+
+        @HxRequest(boosted = false)
+        @GetMapping("/hx-request-ignore-boosted")
+        @ResponseBody
+        public String hxRequestIgnoreBoosted() {
+            return "boosted-ignored";
+        }
+
+        @HxRequest(target = "bar")
+        @GetMapping("/hx-request-target")
+        @ResponseBody
+        public String hxRequestTargetBar() {
+            return "bar";
+        }
+
+        @HxRequest(target = "foo")
+        @GetMapping("/hx-request-target")
+        @ResponseBody
+        public String hxRequestTargetFoo() {
+            return "foo";
+        }
+
+        @HxRequest(triggerId = "bar")
+        @GetMapping("/hx-request-trigger")
+        @ResponseBody
+        public String hxRequestTriggerIdBar() {
+            return "bar";
+        }
+
+        @HxRequest(triggerId = "foo")
+        @GetMapping("/hx-request-trigger")
+        @ResponseBody
+        public String hxRequestTriggerIdFoo() {
+            return "foo";
+        }
+
+        @HxRequest(triggerName = "bar")
+        @GetMapping("/hx-request-trigger")
+        @ResponseBody
+        public String hxRequestTriggerNameBar() {
+            return "bar";
+        }
+
+        @HxRequest(triggerName = "foo")
+        @GetMapping("/hx-request-trigger")
+        @ResponseBody
+        public String hxRequestTriggerNameFoo() {
+            return "foo";
+        }
+
+        @HxRequest("bar")
+        @GetMapping("/hx-request-value")
+        @ResponseBody
+        public String hxRequestValueBar() {
+            return "bar";
+        }
+
+        @HxRequest("foo")
+        @GetMapping("/hx-request-value")
+        @ResponseBody
+        public String hxRequestValueFoo() {
+            return "foo";
+        }
+
     }
 
 }

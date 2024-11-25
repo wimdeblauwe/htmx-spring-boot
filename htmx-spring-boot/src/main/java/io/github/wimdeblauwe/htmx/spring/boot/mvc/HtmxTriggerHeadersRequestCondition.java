@@ -1,7 +1,6 @@
 package io.github.wimdeblauwe.htmx.spring.boot.mvc;
 
 import jakarta.servlet.http.HttpServletRequest;
-
 import org.springframework.web.cors.CorsUtils;
 import org.springframework.web.servlet.mvc.condition.RequestCondition;
 

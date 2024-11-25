@@ -1,6 +1,5 @@
 package io.github.wimdeblauwe.htmx.spring.boot.mvc;
 
-import java.util.Map;
 import java.util.Objects;
 
 /**

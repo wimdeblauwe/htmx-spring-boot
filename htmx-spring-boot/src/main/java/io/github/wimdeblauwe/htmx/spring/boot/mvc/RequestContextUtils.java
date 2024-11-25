@@ -32,14 +32,8 @@ final class RequestContextUtils {
         Object contextAttribute = request.getAttribute(HTMX_RESPONSE_CONTEXT_ATTRIBUTE);
         if (contextAttribute instanceof HtmxResponse response) {
             return response;
-        } else if (contextAttribute instanceof HtmxResponse.Builder builder) {
-            return builder.build();
         }
         return null;
-    }
-
-    static HtmxResponse.Builder getHtmxResponseBuilder(HttpServletRequest request) {
-        return (HtmxResponse.Builder) request.getAttribute(HTMX_RESPONSE_CONTEXT_ATTRIBUTE);
     }
 
     private static String getContextPath(HttpServletRequest request) {
