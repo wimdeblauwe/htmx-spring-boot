@@ -34,11 +34,47 @@ public class HtmxHandlerMethodTest {
     }
 
     @Test
+    public void testExceptionHandlerWithOverride() throws Exception {
+
+        mockMvc.perform(get("/throw-exception-annotation-override").headers(htmxRequest()))
+               .andExpect(status().isOk())
+               .andExpect(header().string("HX-Retarget", "#container"))
+               .andExpect(content().string("View1\n"));
+    }
+
+    @Test
     public void testExceptionHandler() throws Exception {
 
         mockMvc.perform(get("/throw-exception").headers(htmxRequest()))
                .andExpect(status().isOk())
                .andExpect(header().string("HX-Retarget", "#container"))
+               .andExpect(content().string("View1\n"));
+    }
+
+    @Test
+    public void testExceptionHandlerWithHtmxView() throws Exception {
+
+        mockMvc.perform(get("/throw-exception-htmx-view").headers(htmxRequest()))
+               .andExpect(status().isOk())
+               .andExpect(header().string("HX-Retarget", "#container"))
+               .andExpect(content().string("View1\n"));
+    }
+
+    @Test
+    public void testExceptionHandlerUsingAnnotation() throws Exception {
+
+        mockMvc.perform(get("/throw-exception-annotated").headers(htmxRequest()))
+               .andExpect(status().isOk())
+               .andExpect(header().string("HX-Retarget", "#container"))
+               .andExpect(content().string("View1\n"));
+    }
+
+    @Test
+    public void testExceptionHandlerUsingAnnotationWithHtmxView() throws Exception {
+
+        mockMvc.perform(get("/throw-exception-annotated-htmx-view").headers(htmxRequest()))
+               .andExpect(status().isOk())
+               .andExpect(header().string("HX-Reswap", "none"))
                .andExpect(content().string("View1\n"));
     }
 
@@ -218,6 +254,32 @@ public class HtmxHandlerMethodTest {
             return "view1";
         }
 
+        @ExceptionHandler(TestExceptionForHtmxViewHandler.class)
+        public HtmxView handleError(TestExceptionForHtmxViewHandler ex, HtmxRequest htmxRequest, HtmxResponse htmxResponse) {
+            if (htmxRequest.isHtmxRequest()) {
+                htmxResponse.setRetarget("#container");
+            }
+            return new HtmxView("view1");
+        }
+
+        @ExceptionHandler(TestExceptionForAnnotatedHandlerWithAnnotationOverride.class)
+        @HxRetarget("#container")
+        public String handleError(TestExceptionForAnnotatedHandlerWithAnnotationOverride ex, HtmxRequest htmxRequest, HtmxResponse htmxResponse) {
+            return "view1";
+        }
+
+        @ExceptionHandler(TestExceptionForAnnotatedHandler.class)
+        @HxRetarget("#container")
+        public String handleError(TestExceptionForAnnotatedHandler ex, HtmxRequest htmxRequest, HtmxResponse htmxResponse) {
+            return "view1";
+        }
+
+        @ExceptionHandler(TestExceptionForAnnotatedHandlerWithHtmxView.class)
+        @HxReswap(HxSwapType.NONE)
+        public HtmxView handleError(TestExceptionForAnnotatedHandlerWithHtmxView ex, HtmxRequest htmxRequest, HtmxResponse htmxResponse) {
+            return new HtmxView("view1");
+        }
+
         @HxRequest
         @GetMapping("/location-redirect")
         public HtmxLocationRedirectView locationRedirect() {
@@ -379,6 +441,47 @@ public class HtmxHandlerMethodTest {
         public void throwException() {
             throw new RuntimeException();
         }
+
+        @HxRequest
+        @GetMapping("/throw-exception-htmx-view")
+        public void throwExceptionHtmxView() {
+            throw new TestExceptionForHtmxViewHandler();
+        }
+
+        @HxRequest
+        @GetMapping("/throw-exception-annotation-override")
+        @HxRetarget("controller-method-target")
+        public void throwExceptionAnnotationOverride() {
+            throw new TestExceptionForAnnotatedHandlerWithAnnotationOverride();
+        }
+
+        @HxRequest
+        @GetMapping("/throw-exception-annotated")
+        public void throwExceptionForAnnotatedHandler() {
+            throw new TestExceptionForAnnotatedHandler();
+        }
+
+        @HxRequest
+        @GetMapping("/throw-exception-annotated-htmx-view")
+        public void throwExceptionForAnnotatedHandlerWithHtmxView() {
+            throw new TestExceptionForAnnotatedHandlerWithHtmxView();
+        }
+
+    }
+
+    static class TestExceptionForHtmxViewHandler extends RuntimeException {
+
+    }
+
+    static class TestExceptionForAnnotatedHandler extends RuntimeException {
+
+    }
+
+    static class TestExceptionForAnnotatedHandlerWithHtmxView extends RuntimeException {
+
+    }
+
+    static class TestExceptionForAnnotatedHandlerWithAnnotationOverride extends RuntimeException {
 
     }
 
