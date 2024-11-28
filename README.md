@@ -193,6 +193,20 @@ public View users(Model model) {
 }
 ```
 
+Example with `Collection<ModelAndView>`:
+
+```java
+@HxRequest
+@GetMapping("/users")
+public Collection<ModelAndView> users() {
+    return List.of(
+            new ModelAndView("users/list", Map.of("users", userRepository.findAll())),
+            new ModelAndView("users/count", Map.of("count", userRepository.count()))
+    );
+}
+```
+
+
 ### Exceptions
 
 It is also possible to use `HtmxRequest` and `HtmxResponse` as method argument in handler methods annotated with `@ExceptionHandler`.
@@ -204,6 +218,16 @@ public String handleError(Exception ex, HtmxRequest htmxRequest, HtmxResponse ht
     if (htmxRequest.isHtmxRequest()) {
         htmxResponse.setRetarget("#error-message");
     }
+    return "error";
+}
+```
+
+It is also possible to add annotations on an exception handler to set response headers.
+
+```java
+@ExceptionHandler(Exception.class)
+@HxRetarget("#error-message")
+public String handleError(Exception ex) {
     return "error";
 }
 ```
@@ -255,6 +279,20 @@ public View users(Model model) {
             .fragment("users :: count")
             .build();
 }
+```
+
+This is also possible using `Collection<ModelAndView` as return type:
+
+```java
+@HxRequest
+@GetMapping("/users")
+public Collection<ModelAndView> test() {
+    return List.of(
+            new ModelAndView("users :: list", Map.of("users", userRepository.findAll())),
+            new ModelAndView("users :: count", Map.of("count", userRepository.count()))
+    );
+}
+
 ```
 
 #### Dialect
@@ -320,6 +358,7 @@ You can use multiple values like this:
 
 Links to articles and blog posts about this library:
 
+* [Redirect attributes with Spring MVC and htmx](https://www.wimdeblauwe.com/blog/2024/11/19/redirect-attributes-with-spring-mvc-and-htmx/)
 * [Release 1.0.0 and 2.0.0 of htmx-spring-boot-thymeleaf](https://www.wimdeblauwe.com/blog/2022/12/11/release-1.0.0-and-2.0.0-of-htmx-spring-boot-thymeleaf/)
 * [Htmx authentication error handling](https://www.wimdeblauwe.com/blog/2022/10/04/htmx-authentication-error-handling/)
 * [Thymeleaf and htmx with out of band swaps](https://www.wimdeblauwe.com/blog/2022/06/15/thymeleaf-and-htmx-with-out-of-band-swaps/)
