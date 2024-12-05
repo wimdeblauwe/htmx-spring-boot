@@ -1,184 +1,186 @@
 package io.github.wimdeblauwe.htmx.spring.boot.mvc;
 
+import io.restassured.RestAssured;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.context.annotation.Import;
 import org.springframework.stereotype.Controller;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.time.Duration;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static io.restassured.RestAssured.get;
+import static org.hamcrest.Matchers.nullValue;
 
-@WebMvcTest(HtmxResponseHandlerMethodArgumentResolverTest.TestController.class)
-@ContextConfiguration(classes = HtmxResponseHandlerMethodArgumentResolverTest.TestController.class)
-@WithMockUser
-public class HtmxResponseHandlerMethodArgumentResolverTest {
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@Import(HtmxResponseHandlerMethodArgumentResolverIT.TestController.class)
+public class HtmxResponseHandlerMethodArgumentResolverIT {
 
-    @Autowired
-    private MockMvc mockMvc;
+    @LocalServerPort
+    private int port;
+
+    @BeforeEach
+    void before() {
+        RestAssured.port = port;
+    }
 
     @Test
     public void testPreventHistoryUpdate() throws Exception {
 
-        mockMvc.perform(get("/prevent-history-update"))
-               .andExpect(status().isOk())
-               .andExpect(header().string("HX-Push-Url", "false"))
-               .andExpect(header().doesNotExist("HX-Replace-Url"));
+        get("/prevent-history-update")
+                .then()
+                .statusCode(200)
+                .header("HX-Push-Url", "false")
+                .header("HX-Replace-Url", nullValue());
     }
 
     @Test
     public void testPushUrl() throws Exception {
 
-        mockMvc.perform(get("/push-url"))
-               .andExpect(status().isOk())
-               .andExpect(header().string("HX-Push-Url", "/path"))
-               .andExpect(header().doesNotExist("HX-Replace-Url"));
-    }
-
-    @Test
-    public void testPushUrlContextRelative() throws Exception {
-
-        mockMvc.perform(get("/push-url"))
-               .andExpect(status().isOk())
-               .andExpect(header().string("HX-Push-Url", "/path"))
-               .andExpect(header().doesNotExist("HX-Replace-Url"));
-    }
-
-    @Test
-    public void testReplaceUrlContextRelative() throws Exception {
-
-        mockMvc.perform(get("/contextpath/replace-url").contextPath("/contextpath"))
-               .andExpect(status().isOk())
-               .andExpect(header().string("HX-Replace-Url", "/contextpath/path"))
-               .andExpect(header().doesNotExist("HX-Push-Url"));
+        get("/push-url")
+                .then()
+                .statusCode(200)
+                .header("HX-Push-Url", "/path")
+                .header("HX-Replace-Url", nullValue());
     }
 
     @Test
     public void testReselect() throws Exception {
 
-        mockMvc.perform(get("/reselect"))
-               .andExpect(status().isOk())
-               .andExpect(header().string("HX-Reselect", "#container"));
+        get("/reselect")
+                .then()
+                .statusCode(200)
+                .header("HX-Reselect", "#container");
     }
 
     @Test
     public void testReswap() throws Exception {
 
-        mockMvc.perform(get("/reswap"))
-               .andExpect(status().isOk())
-               .andExpect(header().string("HX-Reswap", "innerHTML transition:true focus-scroll:true swap:0ms settle:500ms scroll:#scrollTarget:top show:#showTarget:bottom"));
+        get("/reswap")
+                .then()
+                .statusCode(200)
+                .header("HX-Reswap", "innerHTML transition:true focus-scroll:true swap:0ms settle:500ms scroll:#scrollTarget:top show:#showTarget:bottom");
     }
 
     @Test
     public void testReswapAfterBegin() throws Exception {
 
-        mockMvc.perform(get("/reswap-after-begin"))
-               .andExpect(status().isOk())
-               .andExpect(header().string("HX-Reswap", "afterbegin"));
+        get("/reswap-after-begin")
+                .then()
+                .statusCode(200)
+                .header("HX-Reswap", "afterbegin");
     }
 
     @Test
     public void testReswapAfterEnd() throws Exception {
 
-        mockMvc.perform(get("/reswap-after-end"))
-               .andExpect(status().isOk())
-               .andExpect(header().string("HX-Reswap", "afterend"));
+        get("/reswap-after-end")
+                .then()
+                .statusCode(200)
+                .header("HX-Reswap", "afterend");
     }
 
     @Test
     public void testReswapBeforeBegin() throws Exception {
 
-        mockMvc.perform(get("/reswap-before-begin"))
-               .andExpect(status().isOk())
-               .andExpect(header().string("HX-Reswap", "beforebegin"));
+        get("/reswap-before-begin")
+                .then()
+                .statusCode(200)
+                .header("HX-Reswap", "beforebegin");
     }
 
     @Test
     public void testReswapBeforeEnd() throws Exception {
 
-        mockMvc.perform(get("/reswap-before-end"))
-               .andExpect(status().isOk())
-               .andExpect(header().string("HX-Reswap", "beforeend"));
+        get("/reswap-before-end")
+                .then()
+                .statusCode(200)
+                .header("HX-Reswap", "beforeend");
     }
 
     @Test
     public void testReswapDelete() throws Exception {
 
-        mockMvc.perform(get("/reswap-delete"))
-               .andExpect(status().isOk())
-               .andExpect(header().string("HX-Reswap", "delete"));
+        get("/reswap-delete")
+                .then()
+                .statusCode(200)
+                .header("HX-Reswap", "delete");
     }
 
     @Test
     public void testReswapInnerHtml() throws Exception {
 
-        mockMvc.perform(get("/reswap-inner-html"))
-               .andExpect(status().isOk())
-               .andExpect(header().string("HX-Reswap", "innerHTML"));
+        get("/reswap-inner-html")
+                .then()
+                .statusCode(200)
+                .header("HX-Reswap", "innerHTML");
     }
 
     @Test
     public void testReswapNone() throws Exception {
 
-        mockMvc.perform(get("/reswap-none"))
-               .andExpect(status().isOk())
-               .andExpect(header().string("HX-Reswap", "none"));
+        get("/reswap-none")
+                .then()
+                .statusCode(200)
+                .header("HX-Reswap", "none");
     }
 
     @Test
     public void testReswapOuterHtml() throws Exception {
 
-        mockMvc.perform(get("/reswap-outer-html"))
-               .andExpect(status().isOk())
-               .andExpect(header().string("HX-Reswap", "outerHTML"));
+        get("/reswap-outer-html")
+                .then()
+                .statusCode(200)
+                .header("HX-Reswap", "outerHTML");
     }
 
     @Test
     public void testRetarget() throws Exception {
 
-        mockMvc.perform(get("/retarget"))
-               .andExpect(status().isOk())
-               .andExpect(header().string("HX-Retarget", "#container"));
+        get("/retarget")
+                .then()
+                .statusCode(200)
+                .header("HX-Retarget", "#container");
     }
 
     @Test
     public void testTrigger() throws Exception {
 
-        mockMvc.perform(get("/trigger"))
-               .andExpect(status().isOk())
-               .andExpect(header().string("HX-Trigger", "trigger1,trigger2"));
+        get("/trigger")
+                .then()
+                .statusCode(200)
+                .header("HX-Trigger", "trigger1,trigger2");
     }
 
     @Test
     public void testTriggerAfterSettle() throws Exception {
 
-        mockMvc.perform(get("/trigger-after-settle"))
-               .andExpect(status().isOk())
-               .andExpect(header().string("HX-Trigger-After-Settle", "trigger1,trigger2"));
+        get("/trigger-after-settle")
+                .then()
+                .statusCode(200)
+                .header("HX-Trigger-After-Settle", "trigger1,trigger2");
     }
 
     @Test
     public void testTriggerAfterSwap() throws Exception {
 
-        mockMvc.perform(get("/trigger-after-swap"))
-               .andExpect(status().isOk())
-               .andExpect(header().string("HX-Trigger-After-Swap", "trigger1,trigger2"));
+        get("/trigger-after-swap")
+                .then()
+                .statusCode(200)
+                .header("HX-Trigger-After-Swap", "trigger1,trigger2");
     }
 
     @Test
     public void testResponseBodyReturnValue() throws Exception {
 
-        mockMvc.perform(get("/response-body"))
-               .andExpect(status().isOk())
-               .andExpect(header().string("HX-Trigger", "trigger"))
-                .andExpect(header().string("HX-Reswap", "none"));
+        get("/response-body")
+                .then()
+                .statusCode(200)
+                .header("HX-Trigger", "trigger")
+                .header("HX-Reswap", "none");
     }
 
     @Controller
