@@ -18,10 +18,10 @@ import java.lang.reflect.Method;
  */
 public class HtmxExceptionHandlerExceptionResolver extends ExceptionHandlerExceptionResolver {
 
-    private final HtmxHandlerMethodAnnotationHandler handlerMethodAnnotationHandler;
+    private final HtmxHandlerMethodHandler htmxHandlerMethodHandler;
 
-    public HtmxExceptionHandlerExceptionResolver(HtmxHandlerMethodAnnotationHandler handlerMethodAnnotationHandler) {
-        this.handlerMethodAnnotationHandler = handlerMethodAnnotationHandler;
+    public HtmxExceptionHandlerExceptionResolver(HtmxHandlerMethodHandler htmxHandlerMethodHandler) {
+        this.htmxHandlerMethodHandler = htmxHandlerMethodHandler;
     }
 
     @Override
@@ -31,10 +31,14 @@ public class HtmxExceptionHandlerExceptionResolver extends ExceptionHandlerExcep
         ServletInvocableHandlerMethod exceptionHandlerMethod = this.getExceptionHandlerMethod(handlerMethod, exception, webRequest);
         if (exceptionHandlerMethod != null) {
             Method method = exceptionHandlerMethod.getMethod();
-            handlerMethodAnnotationHandler.handleMethod(method, request, response);
+            htmxHandlerMethodHandler.handleMethodAnnotations(method, request, response);
         }
 
-        return super.doResolveHandlerMethodException(request, response, handlerMethod, exception);
+        ModelAndView modelAndView = super.doResolveHandlerMethodException(request, response, handlerMethod, exception);
+
+        htmxHandlerMethodHandler.handleMethodArgument(request, response);
+
+        return modelAndView;
     }
 
 }
