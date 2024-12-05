@@ -41,16 +41,14 @@
     </developers>
 
     <scm>
-        <!-- adjust to new repository name -->
-        <developerConnection>scm:git:git@github.com:wimdeblauwe/htmx-spring-boot-thymeleaf.git</developerConnection>
-        <connection>scm:git:git@github.com:wimdeblauwe/htmx-spring-boot-thymeleaf.git</connection>
-        <url>git@github.com:wimdeblauwe/htmx-spring-boot-thymeleaf.git</url>
+        <developerConnection>scm:git:git@github.com:wimdeblauwe/htmx-spring-boot.git</developerConnection>
+        <connection>scm:git:git@github.com:wimdeblauwe/htmx-spring-boot.git</connection>
+        <url>git@github.com:wimdeblauwe/htmx-spring-boot.git</url>
     </scm>
 
     <issueManagement>
         <system>github</system>
-        <!-- adjust to new repository name -->
-        <url>https://github.com/wimdeblauwe/htmx-spring-boot-thymeleaf/issues</url>
+        <url>https://github.com/wimdeblauwe/htmx-spring-boot/issues</url>
     </issueManagement>
 
     <modules>
