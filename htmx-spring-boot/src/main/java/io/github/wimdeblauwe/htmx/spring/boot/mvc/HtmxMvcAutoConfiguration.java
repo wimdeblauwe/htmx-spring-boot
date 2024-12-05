@@ -31,7 +31,7 @@ public class HtmxMvcAutoConfiguration implements WebMvcRegistrations, WebMvcConf
     private final ObjectFactory<ViewResolver> viewResolverObjectFactory;
     private final ObjectFactory<LocaleResolver> localeResolverObjectFactory;
     private final ObjectMapper objectMapper;
-    private final HtmxHandlerMethodAnnotationHandler handlerMethodAnnotationHandler;
+    private final HtmxHandlerMethodHandler handlerMethodHandler;
 
     HtmxMvcAutoConfiguration(@Qualifier("viewResolver") ObjectFactory<ViewResolver> viewResolverObjectFactory,
                              ObjectFactory<LocaleResolver> localeResolverObjectFactory) {
@@ -42,7 +42,7 @@ public class HtmxMvcAutoConfiguration implements WebMvcRegistrations, WebMvcConf
         this.viewResolverObjectFactory = viewResolverObjectFactory;
         this.localeResolverObjectFactory = localeResolverObjectFactory;
         this.objectMapper = JsonMapper.builder().build();
-        this.handlerMethodAnnotationHandler = new HtmxHandlerMethodAnnotationHandler(this.objectMapper);
+        this.handlerMethodHandler = new HtmxHandlerMethodHandler(this.objectMapper);
     }
 
     @Override
@@ -52,7 +52,7 @@ public class HtmxMvcAutoConfiguration implements WebMvcRegistrations, WebMvcConf
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(new HtmxHandlerInterceptor(objectMapper, handlerMethodAnnotationHandler));
+        registry.addInterceptor(new HtmxHandlerInterceptor(handlerMethodHandler));
     }
 
     @Override
@@ -69,7 +69,7 @@ public class HtmxMvcAutoConfiguration implements WebMvcRegistrations, WebMvcConf
 
     @Override
     public ExceptionHandlerExceptionResolver getExceptionHandlerExceptionResolver() {
-        return new HtmxExceptionHandlerExceptionResolver(handlerMethodAnnotationHandler);
+        return new HtmxExceptionHandlerExceptionResolver(handlerMethodHandler);
     }
 
     @Bean

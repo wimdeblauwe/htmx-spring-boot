@@ -9,23 +9,68 @@ import org.springframework.http.HttpHeaders;
 
 import java.lang.reflect.Method;
 import java.time.Duration;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.stream.Collectors;
 
 import static io.github.wimdeblauwe.htmx.spring.boot.mvc.HtmxResponseHeader.*;
 
 /**
- * A handler for processing htmx annotations present on exception handler methods.
+ * A handler for processing {@link HtmxResponse} and annotations present on handler methods.
  *
  * @since 3.6.2
  */
-class HtmxHandlerMethodAnnotationHandler {
+class HtmxHandlerMethodHandler {
 
     private final ObjectMapper objectMapper;
 
-    public HtmxHandlerMethodAnnotationHandler(ObjectMapper objectMapper) {
+    public HtmxHandlerMethodHandler(ObjectMapper objectMapper) {
         this.objectMapper = objectMapper;
     }
 
-    public void handleMethod(Method method, HttpServletRequest request, HttpServletResponse response) {
+    public void handleMethodArgument(HttpServletRequest request, HttpServletResponse response) {
+
+        HtmxResponse htmxResponse = RequestContextUtils.getHtmxResponse(request);
+        if (htmxResponse != null) {
+            addHxTriggerHeaders(response, HtmxResponseHeader.HX_TRIGGER, htmxResponse.getTriggersInternal());
+            addHxTriggerHeaders(response, HtmxResponseHeader.HX_TRIGGER_AFTER_SETTLE, htmxResponse.getTriggersAfterSettleInternal());
+            addHxTriggerHeaders(response, HtmxResponseHeader.HX_TRIGGER_AFTER_SWAP, htmxResponse.getTriggersAfterSwapInternal());
+
+            if (htmxResponse.getLocation() != null) {
+                HtmxLocation location = htmxResponse.getLocation();
+                if (location.hasContextData()) {
+                    location.setPath(RequestContextUtils.createUrl(request, location.getPath(), htmxResponse.isContextRelative()));
+                    setHeaderJsonValue(response, HtmxResponseHeader.HX_LOCATION, location);
+                } else {
+                    response.setHeader(HtmxResponseHeader.HX_LOCATION.getValue(), RequestContextUtils.createUrl(request, location.getPath(), htmxResponse.isContextRelative()));
+                }
+            }
+            if (htmxResponse.getReplaceUrl() != null) {
+                response.setHeader(HtmxResponseHeader.HX_REPLACE_URL.getValue(), RequestContextUtils.createUrl(request, htmxResponse.getReplaceUrl(), htmxResponse.isContextRelative()));
+            }
+            if (htmxResponse.getPushUrl() != null) {
+                response.setHeader(HtmxResponseHeader.HX_PUSH_URL.getValue(), RequestContextUtils.createUrl(request, htmxResponse.getPushUrl(), htmxResponse.isContextRelative()));
+            }
+            if (htmxResponse.getRedirect() != null) {
+                response.setHeader(HtmxResponseHeader.HX_REDIRECT.getValue(), RequestContextUtils.createUrl(request, htmxResponse.getRedirect(), htmxResponse.isContextRelative()));
+            }
+            if (htmxResponse.isRefresh()) {
+                response.setHeader(HtmxResponseHeader.HX_REFRESH.getValue(), "true");
+            }
+            if (htmxResponse.getRetarget() != null) {
+                response.setHeader(HtmxResponseHeader.HX_RETARGET.getValue(), htmxResponse.getRetarget());
+            }
+            if (htmxResponse.getReselect() != null) {
+                response.setHeader(HtmxResponseHeader.HX_RESELECT.getValue(), htmxResponse.getReselect());
+            }
+            if (htmxResponse.getReswap() != null) {
+                response.setHeader(HtmxResponseHeader.HX_RESWAP.getValue(), htmxResponse.getReswap().toHeaderValue());
+            }
+        }
+    }
+
+    public void handleMethodAnnotations(Method method, HttpServletRequest request, HttpServletResponse response) {
+
         setHxLocation(request, response, method);
         setHxPushUrl(request, response, method);
         setHxRedirect(request, response, method);
@@ -37,6 +82,29 @@ class HtmxHandlerMethodAnnotationHandler {
         setHxTriggerAfterSettle(response, method);
         setHxTriggerAfterSwap(response, method);
         setHxRefresh(response, method);
+    }
+
+    private void addHxTriggerHeaders(HttpServletResponse response, HtmxResponseHeader headerName, Collection<HtmxTrigger> triggers) {
+        if (triggers.isEmpty()) {
+            return;
+        }
+
+        // separate event names by commas if no additional details are available
+        if (triggers.stream().allMatch(t -> t.getEventDetail() == null)) {
+            String value = triggers.stream()
+                                   .map(HtmxTrigger::getEventName)
+                                   .collect(Collectors.joining(","));
+
+            response.setHeader(headerName.getValue(), value);
+            return;
+        }
+
+        // multiple events with or without details
+        var triggerMap = new HashMap<String, Object>();
+        for (HtmxTrigger trigger : triggers) {
+            triggerMap.put(trigger.getEventName(), trigger.getEventDetail());
+        }
+        setHeaderJsonValue(response, headerName, triggerMap);
     }
 
     private void setHxLocation(HttpServletRequest request, HttpServletResponse response, Method method) {
