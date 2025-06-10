@@ -52,29 +52,11 @@ public class HtmxHandlerMethodTest {
     }
 
     @Test
-    public void testExceptionHandlerWithHtmxView() throws Exception {
-
-        mockMvc.perform(get("/throw-exception-htmx-view").headers(htmxRequest()))
-               .andExpect(status().isOk())
-               .andExpect(header().string("HX-Retarget", "#container"))
-               .andExpect(content().string("View1\n"));
-    }
-
-    @Test
     public void testExceptionHandlerUsingAnnotation() throws Exception {
 
         mockMvc.perform(get("/throw-exception-annotated").headers(htmxRequest()))
                .andExpect(status().isOk())
                .andExpect(header().string("HX-Retarget", "#container"))
-               .andExpect(content().string("View1\n"));
-    }
-
-    @Test
-    public void testExceptionHandlerUsingAnnotationWithHtmxView() throws Exception {
-
-        mockMvc.perform(get("/throw-exception-annotated-htmx-view").headers(htmxRequest()))
-               .andExpect(status().isOk())
-               .andExpect(header().string("HX-Reswap", "none"))
                .andExpect(content().string("View1\n"));
     }
 
@@ -154,14 +136,6 @@ public class HtmxHandlerMethodTest {
     }
 
     @Test
-    public void testMultipleViews() throws Exception {
-
-        mockMvc.perform(get("/multiple-views").headers(htmxRequest()))
-               .andExpect(status().isOk())
-               .andExpect(content().string("View1\nView2\n"));
-    }
-
-    @Test
     public void testRedirect() throws Exception {
 
         mockMvc.perform(get("/redirect").headers(htmxRequest()))
@@ -199,7 +173,7 @@ public class HtmxHandlerMethodTest {
         mockMvc.perform(get("/contextpath/redirect-view-name-prefix-flash-attributes").contextPath("/contextpath").headers(htmxRequest()))
                .andExpect(status().isOk())
                .andExpect(header().string("HX-Redirect", "/contextpath/test"))
-               .andExpect(flash().attribute("flash", "test"));;
+               .andExpect(flash().attribute("flash", "test"));
     }
 
     @Test
@@ -235,14 +209,6 @@ public class HtmxHandlerMethodTest {
                .andExpect(header().string("HX-Refresh", HtmxValue.TRUE));
     }
 
-    @Test
-    public void testSingleView() throws Exception {
-
-        mockMvc.perform(get("/single-view").headers(htmxRequest()))
-               .andExpect(status().isOk())
-               .andExpect(content().string("View1\n"));
-    }
-
     @Controller
     static class TestController {
 
@@ -252,14 +218,6 @@ public class HtmxHandlerMethodTest {
                 htmxResponse.setRetarget("#container");
             }
             return "view1";
-        }
-
-        @ExceptionHandler(TestExceptionForHtmxViewHandler.class)
-        public HtmxView handleError(TestExceptionForHtmxViewHandler ex, HtmxRequest htmxRequest, HtmxResponse htmxResponse) {
-            if (htmxRequest.isHtmxRequest()) {
-                htmxResponse.setRetarget("#container");
-            }
-            return new HtmxView("view1");
         }
 
         @ExceptionHandler(TestExceptionForAnnotatedHandlerWithAnnotationOverride.class)
@@ -272,12 +230,6 @@ public class HtmxHandlerMethodTest {
         @HxRetarget("#container")
         public String handleError(TestExceptionForAnnotatedHandler ex, HtmxRequest htmxRequest, HtmxResponse htmxResponse) {
             return "view1";
-        }
-
-        @ExceptionHandler(TestExceptionForAnnotatedHandlerWithHtmxView.class)
-        @HxReswap(HxSwapType.NONE)
-        public HtmxView handleError(TestExceptionForAnnotatedHandlerWithHtmxView ex, HtmxRequest htmxRequest, HtmxResponse htmxResponse) {
-            return new HtmxView("view1");
         }
 
         @HxRequest
@@ -371,12 +323,6 @@ public class HtmxHandlerMethodTest {
         }
 
         @HxRequest
-        @GetMapping("/multiple-views")
-        public HtmxView multipleViews() {
-            return new HtmxView("view1", "view2");
-        }
-
-        @HxRequest
         @GetMapping("/redirect")
         public HtmxRedirectView redirect() {
             return new HtmxRedirectView("/test");
@@ -431,21 +377,9 @@ public class HtmxHandlerMethodTest {
         }
 
         @HxRequest
-        @GetMapping("/single-view")
-        public HtmxView singleView() {
-            return new HtmxView("view1");
-        }
-
-        @HxRequest
         @GetMapping("/throw-exception")
         public void throwException() {
             throw new RuntimeException();
-        }
-
-        @HxRequest
-        @GetMapping("/throw-exception-htmx-view")
-        public void throwExceptionHtmxView() {
-            throw new TestExceptionForHtmxViewHandler();
         }
 
         @HxRequest
@@ -461,23 +395,9 @@ public class HtmxHandlerMethodTest {
             throw new TestExceptionForAnnotatedHandler();
         }
 
-        @HxRequest
-        @GetMapping("/throw-exception-annotated-htmx-view")
-        public void throwExceptionForAnnotatedHandlerWithHtmxView() {
-            throw new TestExceptionForAnnotatedHandlerWithHtmxView();
-        }
-
-    }
-
-    static class TestExceptionForHtmxViewHandler extends RuntimeException {
-
     }
 
     static class TestExceptionForAnnotatedHandler extends RuntimeException {
-
-    }
-
-    static class TestExceptionForAnnotatedHandlerWithHtmxView extends RuntimeException {
 
     }
 
