@@ -5,7 +5,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.RedirectStrategy;
-import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.springframework.security.web.authentication.logout.SimpleUrlLogoutSuccessHandler;
 
@@ -18,15 +17,8 @@ import java.io.IOException;
  * <p>
  * This class is not used by the library itself, but users of the library can use it to configure their security for
  * native htmx redirects.
- * <p>
- * For detailed information and an example of how to integrate this into the {@link SecurityFilterChain} bean
- * definition, see the <a href="https://github.com/lcnicolau/cs50-todo-list?tab=readme-ov-file#htmx-redirect-pattern">
- * HTMX Redirect Pattern</a>.
  *
  * @author LC Nicolau
- * @see HxLocationRedirectAccessDeniedHandler
- * @see HxLocationRedirectAuthenticationEntryPoint
- * @see HxLocationRedirectAuthenticationSuccessHandler
  */
 public class HxLocationRedirectLogoutSuccessHandler implements LogoutSuccessHandler {
 

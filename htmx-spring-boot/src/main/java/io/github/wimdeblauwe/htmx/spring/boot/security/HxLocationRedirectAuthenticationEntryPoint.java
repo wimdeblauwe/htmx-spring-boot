@@ -7,7 +7,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.RedirectStrategy;
-import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.WebAttributes;
 
 import java.io.IOException;
@@ -19,15 +18,8 @@ import java.io.IOException;
  * <p>
  * This class is not used by the library itself, but users of the library can use it to configure their security for
  * native htmx redirects.
- * <p>
- * For detailed information and an example of how to integrate this into the {@link SecurityFilterChain} bean
- * definition, see the <a href="https://github.com/lcnicolau/cs50-todo-list?tab=readme-ov-file#htmx-redirect-pattern">
- * HTMX Redirect Pattern</a>.
  *
  * @author LC Nicolau
- * @see HxLocationRedirectAccessDeniedHandler
- * @see HxLocationRedirectAuthenticationSuccessHandler
- * @see HxLocationRedirectLogoutSuccessHandler
  */
 public class HxLocationRedirectAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
