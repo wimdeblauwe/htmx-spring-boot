@@ -24,27 +24,27 @@ import java.io.IOException;
 public class HxLocationRedirectAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
     private final String redirectUrl;
-    private final boolean storeInSession;
+    private final boolean allowSessionCreation;
     private final RedirectStrategy redirectStrategy;
 
     public HxLocationRedirectAuthenticationEntryPoint(String redirectUrl) {
         this(redirectUrl, true);
     }
 
-    public HxLocationRedirectAuthenticationEntryPoint(String redirectUrl, boolean storeInSession) {
-        this(redirectUrl, storeInSession, new HxLocationRedirectStrategy(HttpStatus.UNAUTHORIZED));
+    public HxLocationRedirectAuthenticationEntryPoint(String redirectUrl, boolean allowSessionCreation) {
+        this(redirectUrl, allowSessionCreation, new HxLocationRedirectStrategy(HttpStatus.UNAUTHORIZED));
     }
 
-    public HxLocationRedirectAuthenticationEntryPoint(String redirectUrl, boolean storeInSession, RedirectStrategy redirectStrategy) {
+    public HxLocationRedirectAuthenticationEntryPoint(String redirectUrl, boolean allowSessionCreation, RedirectStrategy redirectStrategy) {
         this.redirectUrl = redirectUrl;
-        this.storeInSession = storeInSession;
+        this.allowSessionCreation = allowSessionCreation;
         this.redirectStrategy = redirectStrategy;
     }
 
 
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
-        if (storeInSession) {
+        if (request.getSession(false) != null || this.allowSessionCreation) {
             request.getSession().setAttribute(WebAttributes.AUTHENTICATION_EXCEPTION, authException);
         }
         redirectStrategy.sendRedirect(request, response, redirectUrl);
