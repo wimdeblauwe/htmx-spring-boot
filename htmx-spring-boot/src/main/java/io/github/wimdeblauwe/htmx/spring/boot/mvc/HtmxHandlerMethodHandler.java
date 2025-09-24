@@ -54,9 +54,7 @@ class HtmxHandlerMethodHandler {
 
     public void handleMethodAnnotations(Method method, HttpServletRequest request, HttpServletResponse response) {
 
-        setHxLocation(request, response, method);
         setHxPushUrl(request, response, method);
-        setHxRedirect(request, response, method);
         setHxReplaceUrl(request, response, method);
         setHxReswap(response, method);
         setHxRetarget(response, method);
@@ -64,7 +62,6 @@ class HtmxHandlerMethodHandler {
         setHxTrigger(response, method);
         setHxTriggerAfterSettle(response, method);
         setHxTriggerAfterSwap(response, method);
-        setHxRefresh(response, method);
     }
 
     private void addHxTriggerHeaders(HttpServletResponse response, HtmxResponseHeader headerName, Collection<HtmxTrigger> triggers) {
@@ -90,19 +87,6 @@ class HtmxHandlerMethodHandler {
         setHeaderJsonValue(response, headerName, triggerMap);
     }
 
-    private void setHxLocation(HttpServletRequest request, HttpServletResponse response, Method method) {
-        HxLocation methodAnnotation = AnnotatedElementUtils.findMergedAnnotation(method, HxLocation.class);
-        if (methodAnnotation != null) {
-            var location = convertToLocation(methodAnnotation);
-            if (location.hasContextData()) {
-                location.setPath(RequestContextUtils.createUrl(request, location.getPath(), methodAnnotation.contextRelative()));
-                setHeaderJsonValue(response, HtmxResponseHeader.HX_LOCATION, location);
-            } else {
-                setHeader(response, HtmxResponseHeader.HX_LOCATION, RequestContextUtils.createUrl(request, location.getPath(), methodAnnotation.contextRelative()));
-            }
-        }
-    }
-
     private void setHxPushUrl(HttpServletRequest request, HttpServletResponse response, Method method) {
         HxPushUrl methodAnnotation = AnnotatedElementUtils.findMergedAnnotation(method, HxPushUrl.class);
         if (methodAnnotation != null) {
@@ -111,13 +95,6 @@ class HtmxHandlerMethodHandler {
             } else {
                 setHeader(response, HtmxResponseHeader.HX_PUSH_URL, RequestContextUtils.createUrl(request, methodAnnotation.value(), methodAnnotation.contextRelative()));
             }
-        }
-    }
-
-    private void setHxRedirect(HttpServletRequest request, HttpServletResponse response, Method method) {
-        HxRedirect methodAnnotation = AnnotatedElementUtils.findMergedAnnotation(method, HxRedirect.class);
-        if (methodAnnotation != null) {
-            setHeader(response, HtmxResponseHeader.HX_REDIRECT, RequestContextUtils.createUrl(request, methodAnnotation.value(), methodAnnotation.contextRelative()));
         }
     }
 
@@ -174,43 +151,12 @@ class HtmxHandlerMethodHandler {
         }
     }
 
-    private void setHxRefresh(HttpServletResponse response, Method method) {
-        HxRefresh methodAnnotation = AnnotatedElementUtils.findMergedAnnotation(method, HxRefresh.class);
-        if (methodAnnotation != null) {
-            setHeader(response, HtmxResponseHeader.HX_REFRESH, HtmxValue.TRUE);
-        }
-    }
-
     private void setHeader(HttpServletResponse response, HtmxResponseHeader header, String value) {
         response.setHeader(header.getValue(), value);
     }
 
     private void setHeader(HttpServletResponse response, HtmxResponseHeader header, String[] values) {
         response.setHeader(header.getValue(), String.join(",", values));
-    }
-
-    private HtmxLocation convertToLocation(HxLocation annotation) {
-        var location = new HtmxLocation();
-        location.setPath(annotation.path());
-        if (!annotation.source().isEmpty()) {
-            location.setSource(annotation.source());
-        }
-        if (!annotation.event().isEmpty()) {
-            location.setEvent(annotation.event());
-        }
-        if (!annotation.handler().isEmpty()) {
-            location.setHandler(annotation.handler());
-        }
-        if (!annotation.target().isEmpty()) {
-            location.setTarget(annotation.target());
-        }
-        if (!annotation.target().isEmpty()) {
-            location.setSwap(annotation.swap());
-        }
-        if (!annotation.select().isEmpty()) {
-            location.setSelect(annotation.select());
-        }
-        return location;
     }
 
     private String convertToReswap(HxReswap annotation) {

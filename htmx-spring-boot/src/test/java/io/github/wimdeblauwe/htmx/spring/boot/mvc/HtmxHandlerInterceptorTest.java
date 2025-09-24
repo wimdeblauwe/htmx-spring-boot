@@ -112,41 +112,6 @@ class HtmxHandlerInterceptorTest {
     }
 
     @Test
-    public void testHxRefresh() throws Exception {
-        mockMvc.perform(get("/hx-refresh"))
-               .andExpect(status().isOk())
-               .andExpect(header().string("HX-Refresh", "true"));
-    }
-
-    @Test
-    public void testHxLocationWithContextData() throws Exception {
-        mockMvc.perform(get("/hx-location-with-context-data"))
-               .andExpect(status().isOk())
-               .andExpect(header().string("HX-Location", "{\"path\":\"/path\",\"source\":\"source\",\"event\":\"event\",\"handler\":\"handler\",\"target\":\"target\",\"swap\":\"swap\",\"select\":\"select\"}"));
-    }
-
-    @Test
-    public void testHxLocationWithContextDataPathShouldPrependContextPath() throws Exception {
-        mockMvc.perform(get("/test/hx-location-with-context-data").contextPath("/test"))
-               .andExpect(status().isOk())
-               .andExpect(header().string("HX-Location", "{\"path\":\"/test/path\",\"source\":\"source\",\"event\":\"event\",\"handler\":\"handler\",\"target\":\"target\",\"swap\":\"swap\",\"select\":\"select\"}"));
-    }
-
-    @Test
-    public void testHxLocationWithoutContextData() throws Exception {
-        mockMvc.perform(get("/test/hx-location-without-context-data").contextPath("/test"))
-               .andExpect(status().isOk())
-               .andExpect(header().string("HX-Location", "/test/path"));
-    }
-
-    @Test
-    public void testHxLocationWithoutContextDataShouldPrependContextPath() throws Exception {
-        mockMvc.perform(get("/test/hx-location-without-context-data").contextPath("/test"))
-               .andExpect(status().isOk())
-               .andExpect(header().string("HX-Location", "/test/path"));
-    }
-
-    @Test
     public void testHxPushUrlPath() throws Exception {
         mockMvc.perform(get("/hx-push-url-path"))
                .andExpect(status().isOk())
@@ -172,20 +137,6 @@ class HtmxHandlerInterceptorTest {
         mockMvc.perform(get("/test/hx-push-url-path").contextPath("/test"))
                .andExpect(status().isOk())
                .andExpect(header().string("HX-Push-Url", "/test/path"));
-    }
-
-    @Test
-    public void testHxRedirect() throws Exception {
-        mockMvc.perform(get("/hx-redirect"))
-               .andExpect(status().isOk())
-               .andExpect(header().string("HX-Redirect", "/path"));
-    }
-
-    @Test
-    public void testHxRedirectShouldPrependContextPath() throws Exception {
-        mockMvc.perform(get("/test/hx-redirect").contextPath("/test"))
-               .andExpect(status().isOk())
-               .andExpect(header().string("HX-Redirect", "/test/path"));
     }
 
     @Test
@@ -312,30 +263,9 @@ class HtmxHandlerInterceptorTest {
             return "";
         }
 
-        @GetMapping("/hx-refresh")
-        @HxRefresh
-        @ResponseBody
-        public String hxRefresh() {
-            return "";
-        }
-
         @GetMapping("/hx-vary")
         @ResponseBody
         public String hxVary() {
-            return "";
-        }
-
-        @GetMapping("/hx-location-without-context-data")
-        @HxLocation("/path")
-        @ResponseBody
-        public String hxLocationWithoutContextData() {
-            return "";
-        }
-
-        @GetMapping("/hx-location-with-context-data")
-        @HxLocation(path = "/path", source = "source", event = "event", handler = "handler", target = "target", swap = "swap", select = "select")
-        @ResponseBody
-        public String hxLocationWithContextData() {
             return "";
         }
 
@@ -357,13 +287,6 @@ class HtmxHandlerInterceptorTest {
         @HxPushUrl(HtmxValue.FALSE)
         @ResponseBody
         public String hxPushUrlFalse() {
-            return "";
-        }
-
-        @GetMapping("/hx-redirect")
-        @HxRedirect("/path")
-        @ResponseBody
-        public String hxRedirect() {
             return "";
         }
 
