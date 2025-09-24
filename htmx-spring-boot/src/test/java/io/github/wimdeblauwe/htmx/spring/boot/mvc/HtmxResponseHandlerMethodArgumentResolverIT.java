@@ -3,9 +3,13 @@ package io.github.wimdeblauwe.htmx.spring.boot.mvc;
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.security.autoconfigure.servlet.SecurityAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.context.annotation.Import;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -15,7 +19,9 @@ import java.time.Duration;
 import static io.restassured.RestAssured.get;
 import static org.hamcrest.Matchers.nullValue;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(
+        classes = HtmxResponseHandlerMethodArgumentResolverIT.Application.class,
+        webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Import(HtmxResponseHandlerMethodArgumentResolverIT.TestController.class)
 public class HtmxResponseHandlerMethodArgumentResolverIT {
 
@@ -322,6 +328,15 @@ public class HtmxResponseHandlerMethodArgumentResolverIT {
 
             response.addTrigger("trigger");
             response.setReswap(HtmxReswap.none());
+        }
+
+    }
+
+    @SpringBootApplication(exclude = SecurityAutoConfiguration.class)
+    static class Application {
+
+        public static void main(String[] args) {
+            SpringApplication.run(Application.class);
         }
 
     }
