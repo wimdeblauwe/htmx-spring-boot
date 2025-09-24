@@ -382,20 +382,22 @@ Pull requests are welcome. For major changes, please open an issue first to disc
 
 Please make sure to update tests as appropriate.
 
-## License
-
-[Apache 2.0](https://choosealicense.com/licenses/apache-2.0/)
-
 ## Release
 
 To release a new version of the project, follow these steps:
 
-1. Update `pom.xml` with the new version (Use `mvn versions:set -DgenerateBackupPoms=false -DnewVersion=<VERSION>`)
-2. Commit the changes locally.
-3. Tag the commit with the version (e.g. `1.0.0`) and push the tag.
-4. Create a new release in GitHub via https://github.com/wimdeblauwe/htmx-spring-boot/releases/new
+1. Update the `pom.xml` with the new release version.\
+   `mvn versions:set -DgenerateBackupPoms=false -DnewVersion=<VERSION>`
+2. Update Spring Boot compatibility in the `README.md`.
+3. Commit the changes locally with the following commit message: `Release <VERSION>`.
+4. Create a tag for the commit with the version (e.g. `1.0.0`) and push the tag.
+5. Create a [new release](https://github.com/wimdeblauwe/htmx-spring-boot/releases/new) in GitHub. 
     - Select the newly pushed tag
-    - Update the release notes. This should automatically start
-      the [release action](https://github.com/wimdeblauwe/htmx-spring-boot-thymeleaf/actions).
-5. Update `pom.xml` again with the next `SNAPSHOT` version.
-6. Close the milestone in the GitHub issue tracker.
+    - Update the release notes.
+    - This should automatically start the [release action](https://github.com/wimdeblauwe/htmx-spring-boot/actions).
+6. Update `pom.xml` again with the next `SNAPSHOT` version.
+7. Close the [milestone](https://github.com/wimdeblauwe/htmx-spring-boot/milestones) in GitHub.
+
+## License
+
+[Apache 2.0](https://choosealicense.com/licenses/apache-2.0/)
