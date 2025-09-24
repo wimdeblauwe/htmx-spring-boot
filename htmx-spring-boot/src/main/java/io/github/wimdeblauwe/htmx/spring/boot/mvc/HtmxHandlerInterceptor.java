@@ -7,8 +7,6 @@ import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.lang.reflect.Method;
-
 /**
  * HandlerInterceptor that adds htmx specific headers to the response.
  */

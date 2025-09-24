@@ -1,192 +1,189 @@
 package io.github.wimdeblauwe.htmx.spring.boot.mvc;
 
-import io.restassured.RestAssured;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.security.autoconfigure.servlet.SecurityAutoConfiguration;
+import org.springframework.boot.resttestclient.autoconfigure.AutoConfigureRestTestClient;
+import org.springframework.boot.security.autoconfigure.SecurityAutoConfiguration;
+import org.springframework.boot.security.autoconfigure.UserDetailsServiceAutoConfiguration;
+import org.springframework.boot.security.autoconfigure.actuate.web.servlet.ManagementWebSecurityAutoConfiguration;
+import org.springframework.boot.security.autoconfigure.web.servlet.SecurityFilterAutoConfiguration;
+import org.springframework.boot.security.autoconfigure.web.servlet.ServletWebSecurityAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.context.annotation.Import;
+import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.test.context.support.WithSecurityContext;
+import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.stereotype.Controller;
+import org.springframework.test.web.servlet.client.RestTestClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.time.Duration;
 
-import static io.restassured.RestAssured.get;
-import static org.hamcrest.Matchers.nullValue;
-
 @SpringBootTest(
         classes = HtmxResponseHandlerMethodArgumentResolverIT.Application.class,
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Import(HtmxResponseHandlerMethodArgumentResolverIT.TestController.class)
+@AutoConfigureRestTestClient
+@WithMockUser
 public class HtmxResponseHandlerMethodArgumentResolverIT {
 
-    @LocalServerPort
-    private int port;
-
-    @BeforeEach
-    void before() {
-        RestAssured.port = port;
-    }
+    @Autowired
+    RestTestClient webClient;
 
     @Test
     public void testPreventHistoryUpdate() throws Exception {
 
         get("/prevent-history-update")
-                .then()
-                .statusCode(200)
-                .header("HX-Push-Url", "false")
-                .header("HX-Replace-Url", nullValue());
+                .expectHeader()
+                .doesNotExist("HX-Replace-Url")
+                .expectHeader()
+                .valueEquals("HX-Push-Url", "false");
     }
 
     @Test
     public void testPushUrl() throws Exception {
 
         get("/push-url")
-                .then()
-                .statusCode(200)
-                .header("HX-Push-Url", "/path")
-                .header("HX-Replace-Url", nullValue());
+                .expectHeader()
+                .doesNotExist("HX-Replace-Url")
+                .expectHeader()
+                .valueEquals("HX-Push-Url", "/path");
     }
 
     @Test
     public void testReselect() throws Exception {
 
         get("/reselect")
-                .then()
-                .statusCode(200)
-                .header("HX-Reselect", "#container");
+                .expectHeader()
+                .valueEquals("HX-Reselect", "#container");
     }
 
     @Test
     public void testReswap() throws Exception {
 
         get("/reswap")
-                .then()
-                .statusCode(200)
-                .header("HX-Reswap", "innerHTML transition:true focus-scroll:true swap:0ms settle:500ms scroll:#scrollTarget:top show:#showTarget:bottom");
+                .expectHeader()
+                .valueEquals("HX-Reswap", "innerHTML transition:true focus-scroll:true swap:0ms settle:500ms scroll:#scrollTarget:top show:#showTarget:bottom");
     }
 
     @Test
     public void testReswapAfterBegin() throws Exception {
 
         get("/reswap-after-begin")
-                .then()
-                .statusCode(200)
-                .header("HX-Reswap", "afterbegin");
+                .expectHeader()
+                .valueEquals("HX-Reswap", "afterbegin");
     }
 
     @Test
     public void testReswapAfterEnd() throws Exception {
 
         get("/reswap-after-end")
-                .then()
-                .statusCode(200)
-                .header("HX-Reswap", "afterend");
+                .expectHeader()
+                .valueEquals("HX-Reswap", "afterend");
     }
 
     @Test
     public void testReswapBeforeBegin() throws Exception {
 
         get("/reswap-before-begin")
-                .then()
-                .statusCode(200)
-                .header("HX-Reswap", "beforebegin");
+                .expectHeader()
+                .valueEquals("HX-Reswap", "beforebegin");
     }
 
     @Test
     public void testReswapBeforeEnd() throws Exception {
 
         get("/reswap-before-end")
-                .then()
-                .statusCode(200)
-                .header("HX-Reswap", "beforeend");
+                .expectHeader()
+                .valueEquals("HX-Reswap", "beforeend");
     }
 
     @Test
     public void testReswapDelete() throws Exception {
 
         get("/reswap-delete")
-                .then()
-                .statusCode(200)
-                .header("HX-Reswap", "delete");
+                .expectHeader()
+                .valueEquals("HX-Reswap", "delete");
     }
 
     @Test
     public void testReswapInnerHtml() throws Exception {
 
         get("/reswap-inner-html")
-                .then()
-                .statusCode(200)
-                .header("HX-Reswap", "innerHTML");
+                .expectHeader()
+                .valueEquals("HX-Reswap", "innerHTML");
     }
 
     @Test
     public void testReswapNone() throws Exception {
 
         get("/reswap-none")
-                .then()
-                .statusCode(200)
-                .header("HX-Reswap", "none");
+                .expectHeader()
+                .valueEquals("HX-Reswap", "none");
     }
 
     @Test
     public void testReswapOuterHtml() throws Exception {
 
         get("/reswap-outer-html")
-                .then()
-                .statusCode(200)
-                .header("HX-Reswap", "outerHTML");
+                .expectHeader()
+                .valueEquals("HX-Reswap", "outerHTML");
     }
 
     @Test
     public void testRetarget() throws Exception {
 
         get("/retarget")
-                .then()
-                .statusCode(200)
-                .header("HX-Retarget", "#container");
+                .expectHeader()
+                .valueEquals("HX-Retarget", "#container");
     }
 
     @Test
     public void testTrigger() throws Exception {
 
         get("/trigger")
-                .then()
-                .statusCode(200)
-                .header("HX-Trigger", "trigger1,trigger2");
+                .expectHeader()
+                .valueEquals("HX-Trigger", "trigger1,trigger2");
     }
 
     @Test
     public void testTriggerAfterSettle() throws Exception {
 
         get("/trigger-after-settle")
-                .then()
-                .statusCode(200)
-                .header("HX-Trigger-After-Settle", "trigger1,trigger2");
+                .expectHeader()
+                .valueEquals("HX-Trigger-After-Settle", "trigger1,trigger2");
     }
 
     @Test
     public void testTriggerAfterSwap() throws Exception {
 
         get("/trigger-after-swap")
-                .then()
-                .statusCode(200)
-                .header("HX-Trigger-After-Swap", "trigger1,trigger2");
+                .expectHeader()
+                .valueEquals("HX-Trigger-After-Swap", "trigger1,trigger2");
     }
 
     @Test
     public void testResponseBodyReturnValue() throws Exception {
 
         get("/response-body")
-                .then()
-                .statusCode(200)
-                .header("HX-Trigger", "trigger")
-                .header("HX-Reswap", "none");
+                .expectHeader()
+                .valueEquals("HX-Trigger", "trigger")
+                .expectHeader()
+                .valueEquals("HX-Reswap", "none");
+    }
+
+    private RestTestClient.ResponseSpec get(String uri) {
+
+        return webClient
+                .get()
+                .uri(uri)
+                .exchange()
+                .expectStatus()
+                .isOk();
     }
 
     @Controller
@@ -332,7 +329,7 @@ public class HtmxResponseHandlerMethodArgumentResolverIT {
 
     }
 
-    @SpringBootApplication(exclude = SecurityAutoConfiguration.class)
+    @SpringBootApplication(exclude = ServletWebSecurityAutoConfiguration.class)
     static class Application {
 
         public static void main(String[] args) {

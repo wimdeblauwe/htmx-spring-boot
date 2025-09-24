@@ -2,7 +2,7 @@ package io.github.wimdeblauwe.htmx.spring.boot.mvc;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.stereotype.Controller;
 import org.springframework.test.context.ContextConfiguration;
@@ -11,10 +11,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import static io.github.wimdeblauwe.htmx.spring.boot.mvc.HeaderResultMatchers.header;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.collection.IsIterableContainingInRelativeOrder.containsInRelativeOrder;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(HtmxHandlerInterceptorTest.TestController.class)
@@ -296,12 +296,14 @@ class HtmxHandlerInterceptorTest {
         public String hxReplaceUrlPath() {
             return "";
         }
+
         @GetMapping("/hx-replace-url")
         @HxReplaceUrl
         @ResponseBody
         public String hxReplaceUrl() {
             return "";
         }
+
         @GetMapping("/hx-replace-url-false")
         @HxReplaceUrl(HtmxValue.FALSE)
         @ResponseBody
