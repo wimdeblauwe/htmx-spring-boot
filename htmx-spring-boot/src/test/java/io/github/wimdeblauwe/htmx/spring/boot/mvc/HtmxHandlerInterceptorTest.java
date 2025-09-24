@@ -11,10 +11,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import static io.github.wimdeblauwe.htmx.spring.boot.mvc.HeaderResultMatchers.header;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.collection.IsIterableContainingInRelativeOrder.containsInRelativeOrder;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(HtmxHandlerInterceptorTest.TestController.class)
@@ -122,14 +122,14 @@ class HtmxHandlerInterceptorTest {
     public void testHxLocationWithContextData() throws Exception {
         mockMvc.perform(get("/hx-location-with-context-data"))
                .andExpect(status().isOk())
-               .andExpect(header().string("HX-Location", "{\"path\":\"/path\",\"source\":\"source\",\"event\":\"event\",\"handler\":\"handler\",\"target\":\"target\",\"swap\":\"swap\",\"select\":\"select\"}"));
+               .andExpect(header().json("HX-Location", "{\"path\":\"/path\",\"source\":\"source\",\"event\":\"event\",\"handler\":\"handler\",\"target\":\"target\",\"swap\":\"swap\",\"select\":\"select\"}"));
     }
 
     @Test
     public void testHxLocationWithContextDataPathShouldPrependContextPath() throws Exception {
         mockMvc.perform(get("/test/hx-location-with-context-data").contextPath("/test"))
                .andExpect(status().isOk())
-               .andExpect(header().string("HX-Location", "{\"path\":\"/test/path\",\"source\":\"source\",\"event\":\"event\",\"handler\":\"handler\",\"target\":\"target\",\"swap\":\"swap\",\"select\":\"select\"}"));
+               .andExpect(header().json("HX-Location", "{\"path\":\"/test/path\",\"source\":\"source\",\"event\":\"event\",\"handler\":\"handler\",\"target\":\"target\",\"swap\":\"swap\",\"select\":\"select\"}"));
     }
 
     @Test
