@@ -1,10 +1,10 @@
 package io.github.wimdeblauwe.htmx.spring.boot.mvc;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.json.JsonMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.web.servlet.view.RedirectView;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.json.JsonMapper;
 
 import java.io.IOException;
 import java.util.Map;
@@ -172,7 +172,7 @@ public class HtmxLocationRedirectView extends RedirectView {
     private void setHeaderAsJson(HttpServletResponse response, String name, Object value) {
         try {
             response.setHeader(name, jsonMapper.writeValueAsString(value));
-        } catch (JsonProcessingException e) {
+        } catch (JacksonException e) {
             throw new IllegalArgumentException("Unable to set header " + name + " to " + value, e);
         }
     }
