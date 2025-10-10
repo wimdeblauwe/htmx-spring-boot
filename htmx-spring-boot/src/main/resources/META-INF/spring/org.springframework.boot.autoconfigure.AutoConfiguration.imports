@@ -1,1 +1,2 @@
 io.github.wimdeblauwe.htmx.spring.boot.mvc.HtmxMvcAutoConfiguration
+io.github.wimdeblauwe.htmx.spring.boot.endpoint.HtmxEndpointConfig
