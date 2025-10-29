@@ -1,7 +1,5 @@
 package io.github.wimdeblauwe.htmx.spring.boot.security;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.json.JsonMapper;
 import io.github.wimdeblauwe.htmx.spring.boot.mvc.HtmxLocation;
 import io.github.wimdeblauwe.htmx.spring.boot.mvc.HtmxResponseHeader;
 import jakarta.servlet.http.HttpServletRequest;
@@ -9,6 +7,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.web.DefaultRedirectStrategy;
 import org.springframework.security.web.RedirectStrategy;
+import tools.jackson.databind.json.JsonMapper;
 
 import java.io.IOException;
 import java.util.Map;
@@ -57,29 +56,31 @@ import static org.springframework.http.HttpStatus.OK;
  * @see <a href="https://htmx.org/headers/hx-location/">HX-Location Response Header</a>
  * @see <a href="https://htmx.org/reference/#headers">HTTP Header Reference</a>
  */
-class HxLocationRedirectStrategy implements RedirectStrategy {
+public class HxLocationRedirectStrategy implements RedirectStrategy {
 
     private final boolean redirectAsBoosted;
     private final HttpStatus status;
 
-    private final RedirectStrategy delegate = new DefaultRedirectStrategy();
-    private final JsonMapper jsonMapper = new JsonMapper();
+    private final RedirectStrategy delegate;
+    private final JsonMapper jsonMapper;
 
-    HxLocationRedirectStrategy() {
+    public HxLocationRedirectStrategy() {
         this(true, OK);
     }
 
-    HxLocationRedirectStrategy(boolean redirectAsBoosted) {
+    public HxLocationRedirectStrategy(boolean redirectAsBoosted) {
         this(redirectAsBoosted, OK);
     }
 
-    HxLocationRedirectStrategy(HttpStatus status) {
+    public HxLocationRedirectStrategy(HttpStatus status) {
         this(true, status);
     }
 
-    HxLocationRedirectStrategy(boolean redirectAsBoosted, HttpStatus status) {
+    public HxLocationRedirectStrategy(boolean redirectAsBoosted, HttpStatus status) {
         this.redirectAsBoosted = redirectAsBoosted;
         this.status = status;
+        this.delegate = new DefaultRedirectStrategy();
+        this.jsonMapper = new JsonMapper();
     }
 
 
@@ -92,14 +93,14 @@ class HxLocationRedirectStrategy implements RedirectStrategy {
         }
     }
 
-    private void sendLocationRedirect(HttpServletRequest request, HttpServletResponse response, String url) throws IOException {
+    protected void sendLocationRedirect(HttpServletRequest request, HttpServletResponse response, String url) throws IOException {
         var location = redirectAsBoosted ? boosted(url) : url;
         response.setHeader(HX_LOCATION.getValue(), location);
         response.setStatus(status.value());
         response.getWriter().flush();
     }
 
-    private String boosted(String url) throws JsonProcessingException {
+    protected String boosted(String url) {
         HtmxLocation location = new HtmxLocation(url);
         location.setTarget("body");
         location.setHeaders(Map.of(HX_BOOSTED.getValue(), "true"));
