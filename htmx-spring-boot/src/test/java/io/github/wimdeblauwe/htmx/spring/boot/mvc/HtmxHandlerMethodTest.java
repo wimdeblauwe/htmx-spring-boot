@@ -2,7 +2,7 @@ package io.github.wimdeblauwe.htmx.spring.boot.mvc;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.stereotype.Controller;
@@ -15,6 +15,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.util.Map;
 import java.util.TreeMap;
 
+import static io.github.wimdeblauwe.htmx.spring.boot.mvc.HeaderResultMatchers.header;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -106,7 +107,7 @@ public class HtmxHandlerMethodTest {
 
         mockMvc.perform(get("/location-redirect-with-context-data").headers(htmxRequest()))
                .andExpect(status().isOk())
-               .andExpect(header().string("HX-Location", "{\"path\":\"/path\",\"source\":\"source\",\"event\":\"event\",\"handler\":\"handler\",\"target\":\"target\",\"swap\":\"swap\",\"select\":\"select\",\"values\":{\"value1\":\"v1\",\"value2\":\"v2\"},\"headers\":{\"header1\":\"v1\",\"header2\":\"v2\"}}"));
+               .andExpect(header().json("HX-Location", "{\"path\":\"/path\",\"source\":\"source\",\"event\":\"event\",\"handler\":\"handler\",\"target\":\"target\",\"swap\":\"swap\",\"select\":\"select\",\"values\":{\"value1\":\"v1\",\"value2\":\"v2\"},\"headers\":{\"header1\":\"v1\",\"header2\":\"v2\"}}"));
     }
 
     @Test
@@ -114,7 +115,7 @@ public class HtmxHandlerMethodTest {
 
         mockMvc.perform(get("/location-redirect-context-data-flash-attributes").headers(htmxRequest()))
                .andExpect(status().isOk())
-               .andExpect(header().string("HX-Location", "{\"path\":\"/path\",\"source\":\"source\",\"event\":\"event\",\"handler\":\"handler\",\"target\":\"target\",\"swap\":\"swap\",\"select\":\"select\",\"values\":{\"value1\":\"v1\",\"value2\":\"v2\"},\"headers\":{\"header1\":\"v1\",\"header2\":\"v2\"}}"))
+               .andExpect(header().json("HX-Location", "{\"path\":\"/path\",\"source\":\"source\",\"event\":\"event\",\"handler\":\"handler\",\"target\":\"target\",\"swap\":\"swap\",\"select\":\"select\",\"values\":{\"value1\":\"v1\",\"value2\":\"v2\"},\"headers\":{\"header1\":\"v1\",\"header2\":\"v2\"}}"))
                .andExpect(flash().attribute("flash", "test"));
     }
 
@@ -123,7 +124,7 @@ public class HtmxHandlerMethodTest {
 
         mockMvc.perform(get("/location-redirect-with-context-data-expose-model-attributes").headers(htmxRequest()))
                .andExpect(status().isOk())
-               .andExpect(header().string("HX-Location", "{\"path\":\"/path?attr=value\",\"source\":\"source\",\"event\":\"event\",\"handler\":\"handler\",\"target\":\"target\",\"swap\":\"swap\",\"select\":\"select\",\"values\":{\"value1\":\"v1\",\"value2\":\"v2\"},\"headers\":{\"header1\":\"v1\",\"header2\":\"v2\"}}"));
+               .andExpect(header().json("HX-Location", "{\"path\":\"/path?attr=value\",\"source\":\"source\",\"event\":\"event\",\"handler\":\"handler\",\"target\":\"target\",\"swap\":\"swap\",\"select\":\"select\",\"values\":{\"value1\":\"v1\",\"value2\":\"v2\"},\"headers\":{\"header1\":\"v1\",\"header2\":\"v2\"}}"));
     }
 
     @Test

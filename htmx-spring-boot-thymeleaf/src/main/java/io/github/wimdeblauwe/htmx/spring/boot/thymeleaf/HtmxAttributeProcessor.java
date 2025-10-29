@@ -1,7 +1,5 @@
 package io.github.wimdeblauwe.htmx.spring.boot.thymeleaf;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.thymeleaf.context.ITemplateContext;
 import org.thymeleaf.engine.AttributeDefinition;
 import org.thymeleaf.engine.AttributeDefinitions;
@@ -16,6 +14,8 @@ import org.thymeleaf.standard.util.StandardProcessorUtils;
 import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.util.Validate;
 import org.unbescape.html.HtmlEscape;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.ObjectMapper;
 
 import java.util.LinkedHashMap;
 
@@ -60,7 +60,7 @@ public class HtmxAttributeProcessor extends AbstractStandardExpressionAttributeT
             if (expressionResult instanceof LinkedHashMap) {
                 try {
                     expressionResultString = this.mapper.writeValueAsString(expressionResult);
-                } catch (JsonProcessingException e) {
+                } catch (JacksonException e) {
                     throw new TemplateProcessingException("Exception writing map", tag.getTemplateName(), tag.getLine(), tag.getLine(), e);
                 }
             } else {

@@ -1,11 +1,10 @@
 package io.github.wimdeblauwe.htmx.spring.boot.mvc;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.core.annotation.AnnotatedElementUtils;
-import org.springframework.http.HttpHeaders;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.ObjectMapper;
 
 import java.lang.reflect.Method;
 import java.time.Duration;
@@ -211,7 +210,7 @@ class HtmxHandlerMethodHandler {
     private void setHeaderJsonValue(HttpServletResponse response, HtmxResponseHeader header, Object value) {
         try {
             response.setHeader(header.getValue(), objectMapper.writeValueAsString(value));
-        } catch (JsonProcessingException e) {
+        } catch (JacksonException e) {
             throw new IllegalArgumentException("Unable to set header " + header.getValue() + " to " + value, e);
         }
     }

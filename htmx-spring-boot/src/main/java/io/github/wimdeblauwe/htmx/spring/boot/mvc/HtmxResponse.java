@@ -2,7 +2,9 @@ package io.github.wimdeblauwe.htmx.spring.boot.mvc;
 
 import org.springframework.util.Assert;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 /**
  * A holder for htmx-related response headers that can be used as method argument in controllers.
