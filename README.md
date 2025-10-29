@@ -362,16 +362,17 @@ Links to articles and blog posts about this library:
 
 ## Spring Boot compatibility
 
-| Library version                                                                       | Spring Boot  | Minimum Java version | Documentation                                                                      |
-|---------------------------------------------------------------------------------------|--------------|----------------------|------------------------------------------------------------------------------------|
-| [4.0.1](https://github.com/wimdeblauwe/htmx-spring-boot/releases/tag/4.0.1)           | 3.4.x, 3.5.x | 17                   | [README.md](https://github.com/wimdeblauwe/htmx-spring-boot/blob/4.0.0/README.md) |
-| [3.6.2](https://github.com/wimdeblauwe/htmx-spring-boot/releases/tag/3.6.2)           | 3.2.x        | 17                   | [README.md](https://github.com/wimdeblauwe/htmx-spring-boot/blob/3.6.2/README.md)  |
-| [3.5.1](https://github.com/wimdeblauwe/htmx-spring-boot/releases/tag/3.5.1)           | 3.2.x        | 17                   | [README.md](https://github.com/wimdeblauwe/htmx-spring-boot/blob/3.5.1/README.md)  |
-| [3.4.1](https://github.com/wimdeblauwe/htmx-spring-boot/releases/tag/3.4.1)           | 3.2.x        | 17                   | [README.md](https://github.com/wimdeblauwe/htmx-spring-boot/blob/3.4.1/README.md)  |
-| [3.3.0](https://github.com/wimdeblauwe/htmx-spring-boot/releases/tag/3.3.0)           | 3.1.x        | 17                   | [README.md](https://github.com/wimdeblauwe/htmx-spring-boot/blob/3.3.0/README.md)  |
-| [3.2.0](https://github.com/wimdeblauwe/htmx-spring-boot/releases/tag/3.2.0)           | 3.1.x        | 17                   | [README.md](https://github.com/wimdeblauwe/htmx-spring-boot/blob/3.2.0/README.md)  |
-| [2.2.0](https://github.com/wimdeblauwe/htmx-spring-boot-thymeleaf/releases/tag/2.2.0) | 3.0.x        | 17                   | [README.md](https://github.com/wimdeblauwe/htmx-spring-boot/blob/2.2.0/README.md)  |
-| [1.0.0](https://github.com/wimdeblauwe/htmx-spring-boot-thymeleaf/releases/tag/1.0.0) | 2.7.x        | 11                   | [README.md](https://github.com/wimdeblauwe/htmx-spring-boot/blob/1.0.0/README.md)  |
+| Library version                                                                       | Spring Boot  | Minimum Java version | Documentation                                                                          |
+|---------------------------------------------------------------------------------------|--------------|----------------------|----------------------------------------------------------------------------------------|
+| [5.0.0-rc.1](https://github.com/wimdeblauwe/htmx-spring-boot/releases/tag/5.0.0-rc.1) | 4.0.0-RC1    | 17                   | [README.md](https://github.com/wimdeblauwe/htmx-spring-boot/blob/5.0.0-rc.1/README.md) |
+| [4.0.1](https://github.com/wimdeblauwe/htmx-spring-boot/releases/tag/4.0.1)           | 3.4.x, 3.5.x | 17                   | [README.md](https://github.com/wimdeblauwe/htmx-spring-boot/blob/4.0.0/README.md)      |
+| [3.6.2](https://github.com/wimdeblauwe/htmx-spring-boot/releases/tag/3.6.2)           | 3.2.x        | 17                   | [README.md](https://github.com/wimdeblauwe/htmx-spring-boot/blob/3.6.2/README.md)      |
+| [3.5.1](https://github.com/wimdeblauwe/htmx-spring-boot/releases/tag/3.5.1)           | 3.2.x        | 17                   | [README.md](https://github.com/wimdeblauwe/htmx-spring-boot/blob/3.5.1/README.md)      |
+| [3.4.1](https://github.com/wimdeblauwe/htmx-spring-boot/releases/tag/3.4.1)           | 3.2.x        | 17                   | [README.md](https://github.com/wimdeblauwe/htmx-spring-boot/blob/3.4.1/README.md)      |
+| [3.3.0](https://github.com/wimdeblauwe/htmx-spring-boot/releases/tag/3.3.0)           | 3.1.x        | 17                   | [README.md](https://github.com/wimdeblauwe/htmx-spring-boot/blob/3.3.0/README.md)      |
+| [3.2.0](https://github.com/wimdeblauwe/htmx-spring-boot/releases/tag/3.2.0)           | 3.1.x        | 17                   | [README.md](https://github.com/wimdeblauwe/htmx-spring-boot/blob/3.2.0/README.md)      |
+| [2.2.0](https://github.com/wimdeblauwe/htmx-spring-boot-thymeleaf/releases/tag/2.2.0) | 3.0.x        | 17                   | [README.md](https://github.com/wimdeblauwe/htmx-spring-boot/blob/2.2.0/README.md)      |
+| [1.0.0](https://github.com/wimdeblauwe/htmx-spring-boot-thymeleaf/releases/tag/1.0.0) | 2.7.x        | 11                   | [README.md](https://github.com/wimdeblauwe/htmx-spring-boot/blob/1.0.0/README.md)      |
 
 ## Contributing
 
