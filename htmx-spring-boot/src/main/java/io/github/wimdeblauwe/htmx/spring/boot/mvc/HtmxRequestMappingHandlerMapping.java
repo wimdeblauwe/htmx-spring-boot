@@ -55,6 +55,11 @@ public class HtmxRequestMappingHandlerMapping extends RequestMappingHandlerMappi
             conditions.add(new HeadersRequestCondition("!" + HX_BOOSTED.getValue()));
         }
 
+        if (!hxRequest.historyRestoreRequest()) {
+            // exclude history restore requests by checking whether the header is absent
+            conditions.add(new HeadersRequestCondition("!" + HX_HISTORY_RESTORE_REQUEST.getValue()));
+        }
+
         return new CompositeRequestCondition(conditions.toArray(RequestCondition[]::new));
     }
 

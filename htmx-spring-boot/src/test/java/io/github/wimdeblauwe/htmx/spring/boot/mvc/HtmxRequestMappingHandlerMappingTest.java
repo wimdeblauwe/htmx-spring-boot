@@ -2,7 +2,7 @@ package io.github.wimdeblauwe.htmx.spring.boot.mvc;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.stereotype.Controller;
 import org.springframework.test.context.ContextConfiguration;
@@ -44,6 +44,23 @@ public class HtmxRequestMappingHandlerMappingTest {
         mockMvc.perform(get("/hx-request-ignore-boosted")
                                 .header(HX_REQUEST.getValue(), "true")
                                 .header(HX_BOOSTED.getValue(), "true"))
+               .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void testHxRequestShouldHandleHistoryRestoreRequest() throws Exception {
+        mockMvc.perform(get("/hx-request-handle-history-restore-request")
+                                .header(HX_REQUEST.getValue(), "true")
+                                .header(HX_HISTORY_RESTORE_REQUEST.getValue(), "true"))
+               .andExpect(status().isOk())
+               .andExpect(content().string("history-restore-request-handled"));
+    }
+
+    @Test
+    void testHxRequestShouldIgnoreHistoryRestoreRequest() throws Exception {
+        mockMvc.perform(get("/hx-request")
+                                .header(HX_REQUEST.getValue(), "true")
+                                .header(HX_HISTORY_RESTORE_REQUEST.getValue(), "true"))
                .andExpect(status().isNotFound());
     }
 
@@ -153,6 +170,13 @@ public class HtmxRequestMappingHandlerMappingTest {
         @ResponseBody
         public String hxRequestIgnoreBoosted() {
             return "boosted-ignored";
+        }
+
+        @HxRequest(historyRestoreRequest = true)
+        @GetMapping("/hx-request-handle-history-restore-request")
+        @ResponseBody
+        public String hxRequestHandleHistoryRestoreRequest() {
+            return "history-restore-request-handled";
         }
 
         @HxRequest(target = "bar")

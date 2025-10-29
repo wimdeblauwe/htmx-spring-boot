@@ -147,10 +147,7 @@ public String user(@PathVariable Long id, @ModelAttribute @Valid UserForm form,
 
 The following annotations can be used on controller methods to set the necessary response headers.
 
-* [@HxLocation](https://javadoc.io/doc/io.github.wimdeblauwe/htmx-spring-boot/latest/io/github/wimdeblauwe/htmx/spring/boot/mvc/HxLocation.html)
 * [@HxPushUrl](https://javadoc.io/doc/io.github.wimdeblauwe/htmx-spring-boot/latest/io/github/wimdeblauwe/htmx/spring/boot/mvc/HxPushUrl.html)
-* [@HxRedirect](https://javadoc.io/doc/io.github.wimdeblauwe/htmx-spring-boot/latest/io/github/wimdeblauwe/htmx/spring/boot/mvc/HxRedirect.html)
-* [@HxRefresh](https://javadoc.io/doc/io.github.wimdeblauwe/htmx-spring-boot/latest/io/github/wimdeblauwe/htmx/spring/boot/mvc/HxRefresh.html)
 * [@HxReplaceUrl](https://javadoc.io/doc/io.github.wimdeblauwe/htmx-spring-boot/latest/io/github/wimdeblauwe/htmx/spring/boot/mvc/HxReplaceUrl.html)
 * [@HxReselect](https://javadoc.io/doc/io.github.wimdeblauwe/htmx-spring-boot/latest/io/github/wimdeblauwe/htmx/spring/boot/mvc/HxReselect.html)
 * [@HxReswap](https://javadoc.io/doc/io.github.wimdeblauwe/htmx-spring-boot/latest/io/github/wimdeblauwe/htmx/spring/boot/mvc/HxReswap.html)
@@ -385,16 +382,17 @@ Links to articles and blog posts about this library:
 
 ## Spring Boot compatibility
 
-| Library version                                                                       | Spring Boot | Minimum Java version | Documentation                                                                      |
-|---------------------------------------------------------------------------------------|-------------|----------------------|------------------------------------------------------------------------------------|
-| [4.0.0](https://github.com/wimdeblauwe/htmx-spring-boot/releases/tag/4.0.0)           | 3.4.x       | 17                   | [README.md](https://github.com/wimdeblauwe/htmx-spring-boot/blob/4.0.0/README.md) |
-| [3.6.2](https://github.com/wimdeblauwe/htmx-spring-boot/releases/tag/3.6.2)           | 3.2.x       | 17                   | [README.md](https://github.com/wimdeblauwe/htmx-spring-boot/blob/3.6.2/README.md)  |
-| [3.5.1](https://github.com/wimdeblauwe/htmx-spring-boot/releases/tag/3.5.1)           | 3.2.x       | 17                   | [README.md](https://github.com/wimdeblauwe/htmx-spring-boot/blob/3.5.1/README.md)  |
-| [3.4.1](https://github.com/wimdeblauwe/htmx-spring-boot/releases/tag/3.4.1)           | 3.2.x       | 17                   | [README.md](https://github.com/wimdeblauwe/htmx-spring-boot/blob/3.4.1/README.md)  |
-| [3.3.0](https://github.com/wimdeblauwe/htmx-spring-boot/releases/tag/3.3.0)           | 3.1.x       | 17                   | [README.md](https://github.com/wimdeblauwe/htmx-spring-boot/blob/3.3.0/README.md)  |
-| [3.2.0](https://github.com/wimdeblauwe/htmx-spring-boot/releases/tag/3.2.0)           | 3.1.x       | 17                   | [README.md](https://github.com/wimdeblauwe/htmx-spring-boot/blob/3.2.0/README.md)  |
-| [2.2.0](https://github.com/wimdeblauwe/htmx-spring-boot-thymeleaf/releases/tag/2.2.0) | 3.0.x       | 17                   | [README.md](https://github.com/wimdeblauwe/htmx-spring-boot/blob/2.2.0/README.md)  |
-| [1.0.0](https://github.com/wimdeblauwe/htmx-spring-boot-thymeleaf/releases/tag/1.0.0) | 2.7.x       | 11                   | [README.md](https://github.com/wimdeblauwe/htmx-spring-boot/blob/1.0.0/README.md)  |
+| Library version                                                                       | Spring Boot  | Minimum Java version | Documentation                                                                          |
+|---------------------------------------------------------------------------------------|--------------|----------------------|----------------------------------------------------------------------------------------|
+| [5.0.0-rc.1](https://github.com/wimdeblauwe/htmx-spring-boot/releases/tag/5.0.0-rc.1) | 4.0.0-RC1    | 17                   | [README.md](https://github.com/wimdeblauwe/htmx-spring-boot/blob/5.0.0-rc.1/README.md) |
+| [4.0.1](https://github.com/wimdeblauwe/htmx-spring-boot/releases/tag/4.0.1)           | 3.4.x, 3.5.x | 17                   | [README.md](https://github.com/wimdeblauwe/htmx-spring-boot/blob/4.0.0/README.md)      |
+| [3.6.2](https://github.com/wimdeblauwe/htmx-spring-boot/releases/tag/3.6.2)           | 3.2.x        | 17                   | [README.md](https://github.com/wimdeblauwe/htmx-spring-boot/blob/3.6.2/README.md)      |
+| [3.5.1](https://github.com/wimdeblauwe/htmx-spring-boot/releases/tag/3.5.1)           | 3.2.x        | 17                   | [README.md](https://github.com/wimdeblauwe/htmx-spring-boot/blob/3.5.1/README.md)      |
+| [3.4.1](https://github.com/wimdeblauwe/htmx-spring-boot/releases/tag/3.4.1)           | 3.2.x        | 17                   | [README.md](https://github.com/wimdeblauwe/htmx-spring-boot/blob/3.4.1/README.md)      |
+| [3.3.0](https://github.com/wimdeblauwe/htmx-spring-boot/releases/tag/3.3.0)           | 3.1.x        | 17                   | [README.md](https://github.com/wimdeblauwe/htmx-spring-boot/blob/3.3.0/README.md)      |
+| [3.2.0](https://github.com/wimdeblauwe/htmx-spring-boot/releases/tag/3.2.0)           | 3.1.x        | 17                   | [README.md](https://github.com/wimdeblauwe/htmx-spring-boot/blob/3.2.0/README.md)      |
+| [2.2.0](https://github.com/wimdeblauwe/htmx-spring-boot-thymeleaf/releases/tag/2.2.0) | 3.0.x        | 17                   | [README.md](https://github.com/wimdeblauwe/htmx-spring-boot/blob/2.2.0/README.md)      |
+| [1.0.0](https://github.com/wimdeblauwe/htmx-spring-boot-thymeleaf/releases/tag/1.0.0) | 2.7.x        | 11                   | [README.md](https://github.com/wimdeblauwe/htmx-spring-boot/blob/1.0.0/README.md)      |
 
 ## Contributing
 
@@ -402,20 +400,22 @@ Pull requests are welcome. For major changes, please open an issue first to disc
 
 Please make sure to update tests as appropriate.
 
-## License
-
-[Apache 2.0](https://choosealicense.com/licenses/apache-2.0/)
-
 ## Release
 
 To release a new version of the project, follow these steps:
 
-1. Update `pom.xml` with the new version (Use `mvn versions:set -DgenerateBackupPoms=false -DnewVersion=<VERSION>`)
-2. Commit the changes locally.
-3. Tag the commit with the version (e.g. `1.0.0`) and push the tag.
-4. Create a new release in GitHub via https://github.com/wimdeblauwe/htmx-spring-boot/releases/new
+1. Update the `pom.xml` with the new release version.\
+   `mvn versions:set -DgenerateBackupPoms=false -DnewVersion=<VERSION>`
+2. Update Spring Boot compatibility in the `README.md`.
+3. Commit the changes locally with the following commit message: `Release <VERSION>`.
+4. Create a tag for the commit with the version (e.g. `1.0.0`) and push the tag.
+5. Create a [new release](https://github.com/wimdeblauwe/htmx-spring-boot/releases/new) in GitHub. 
     - Select the newly pushed tag
-    - Update the release notes. This should automatically start
-      the [release action](https://github.com/wimdeblauwe/htmx-spring-boot-thymeleaf/actions).
-5. Update `pom.xml` again with the next `SNAPSHOT` version.
-6. Close the milestone in the GitHub issue tracker.
+    - Update the release notes.
+    - This should automatically start the [release action](https://github.com/wimdeblauwe/htmx-spring-boot/actions).
+6. Update `pom.xml` again with the next `SNAPSHOT` version.
+7. Close the [milestone](https://github.com/wimdeblauwe/htmx-spring-boot/milestones) in GitHub.
+
+## License
+
+[Apache 2.0](https://choosealicense.com/licenses/apache-2.0/)

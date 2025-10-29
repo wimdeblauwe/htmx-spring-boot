@@ -22,6 +22,14 @@ public @interface HxRequest {
     boolean boosted() default true;
 
     /**
+     * Whether the mapping applies also for requests that have been made for history restoration.
+     *
+     * @see <a href="https://htmx.org/reference/#request_headers">HX-History-Restore-Request</a>
+     * @since 4.1.0
+     */
+    boolean historyRestoreRequest() default false;
+
+    /**
      * Restricts the mapping to the {@code id} of a specific target element.
      *
      * @see <a href="https://htmx.org/reference/#request_headers">HX-Target</a>

@@ -1,21 +1,19 @@
 package io.github.wimdeblauwe.htmx.spring.boot.mvc;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.json.JsonMapper;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
-import org.springframework.boot.autoconfigure.web.servlet.WebMvcRegistrations;
+import org.springframework.boot.webmvc.autoconfigure.WebMvcRegistrations;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.Ordered;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
-import org.springframework.web.method.support.HandlerMethodReturnValueHandler;
 import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
+import tools.jackson.databind.json.JsonMapper;
 
 import java.util.List;
 
@@ -23,12 +21,11 @@ import java.util.List;
 @ConditionalOnWebApplication
 public class HtmxMvcAutoConfiguration implements WebMvcRegistrations, WebMvcConfigurer {
 
-    private final ObjectMapper objectMapper;
     private final HtmxHandlerMethodHandler handlerMethodHandler;
 
     HtmxMvcAutoConfiguration() {
-        this.objectMapper = JsonMapper.builder().build();
-        this.handlerMethodHandler = new HtmxHandlerMethodHandler(this.objectMapper);
+        JsonMapper jsonMapper = JsonMapper.builder().build();
+        this.handlerMethodHandler = new HtmxHandlerMethodHandler(jsonMapper);
     }
 
     @Override
@@ -45,11 +42,6 @@ public class HtmxMvcAutoConfiguration implements WebMvcRegistrations, WebMvcConf
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
         resolvers.add(new HtmxHandlerMethodArgumentResolver());
         resolvers.add(new HtmxResponseHandlerMethodArgumentResolver());
-    }
-
-    @Override
-    public void addReturnValueHandlers(List<HandlerMethodReturnValueHandler> handlers) {
-        handlers.add(new HtmxViewMethodReturnValueHandler());
     }
 
     @Override

@@ -1,10 +1,10 @@
 package io.github.wimdeblauwe.htmx.spring.boot.thymeleaf;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.thymeleaf.dialect.AbstractProcessorDialect;
 import org.thymeleaf.dialect.IExpressionObjectDialect;
 import org.thymeleaf.expression.IExpressionObjectFactory;
 import org.thymeleaf.processor.IProcessor;
+import tools.jackson.databind.ObjectMapper;
 
 import java.util.HashSet;
 import java.util.Set;
