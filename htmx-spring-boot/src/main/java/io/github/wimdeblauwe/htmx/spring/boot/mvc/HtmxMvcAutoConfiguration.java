@@ -15,6 +15,7 @@ import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver;
+import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
 import java.util.List;
@@ -54,7 +55,16 @@ public class HtmxMvcAutoConfiguration implements WebMvcRegistrations, WebMvcConf
 
     @Override
     public ExceptionHandlerExceptionResolver getExceptionHandlerExceptionResolver() {
-        return new HtmxExceptionHandlerExceptionResolver(handlerMethodHandler);
+        var resolver = new HtmxExceptionHandlerExceptionResolver(handlerMethodHandler);
+        resolver.setResponseBodyAdvice(List.of(new HtmxResponseBodyAdvice(handlerMethodHandler)));
+        return resolver;
+    }
+
+    @Override
+    public RequestMappingHandlerAdapter getRequestMappingHandlerAdapter() {
+        var adapter = new RequestMappingHandlerAdapter();
+        adapter.setResponseBodyAdvice(List.of(new HtmxResponseBodyAdvice(handlerMethodHandler)));
+        return adapter;
     }
 
     @Bean
