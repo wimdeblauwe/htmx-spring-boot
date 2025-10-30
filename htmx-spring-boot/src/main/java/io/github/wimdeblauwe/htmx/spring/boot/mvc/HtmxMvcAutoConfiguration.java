@@ -1,7 +1,7 @@
 package io.github.wimdeblauwe.htmx.spring.boot.mvc;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.json.JsonMapper;
+import java.util.List;
+
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -17,18 +17,23 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
-import java.util.List;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.json.JsonMapper;
 
 @AutoConfiguration
 @ConditionalOnWebApplication
 public class HtmxMvcAutoConfiguration implements WebMvcRegistrations, WebMvcConfigurer {
 
     private final ObjectMapper objectMapper;
-    private final HtmxHandlerMethodHandler handlerMethodHandler;
 
     HtmxMvcAutoConfiguration() {
         this.objectMapper = JsonMapper.builder().build();
-        this.handlerMethodHandler = new HtmxHandlerMethodHandler(this.objectMapper);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public HtmxHandlerMethodHandler htmxHandlerMethodHandler() {
+        return new HtmxHandlerMethodHandler(this.objectMapper);
     }
 
     @Override
@@ -38,7 +43,7 @@ public class HtmxMvcAutoConfiguration implements WebMvcRegistrations, WebMvcConf
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(new HtmxHandlerInterceptor(handlerMethodHandler));
+        registry.addInterceptor(new HtmxHandlerInterceptor(htmxHandlerMethodHandler()));
     }
 
     @Override
@@ -54,7 +59,7 @@ public class HtmxMvcAutoConfiguration implements WebMvcRegistrations, WebMvcConf
 
     @Override
     public ExceptionHandlerExceptionResolver getExceptionHandlerExceptionResolver() {
-        return new HtmxExceptionHandlerExceptionResolver(handlerMethodHandler);
+        return new HtmxExceptionHandlerExceptionResolver(htmxHandlerMethodHandler());
     }
 
     @Bean
