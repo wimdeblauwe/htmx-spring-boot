@@ -32,6 +32,7 @@ class HtmxRedirectPatternTest {
 
     private static final String USERNAME = "user";
     private static final String PASSWORD = "pass";
+    private static final String LOGIN_FAILURE_URL = "/login?failure";
     private static final String LOGIN_SUCCESS_URL = "/home?login";
     private static final String LOGOUT_SUCCESS_URL = "/home?logout";
     private static final String UNAUTHORIZED_URL = "/login?unauthorized";
@@ -49,6 +50,29 @@ class HtmxRedirectPatternTest {
     @Autowired
     private MockMvc mockMvc;
 
+
+    @Test
+    void shouldSendRedirectOnFailedLogin() throws Exception {
+        mockMvc.perform(post("/login")
+                                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                                .param("username", "Invalid")
+                                .param("password", "Invalid")
+                                .with(csrf()))
+               .andExpect(status().is3xxRedirection())
+               .andExpect(header().string(HttpHeaders.LOCATION, LOGIN_FAILURE_URL));
+    }
+
+    @Test
+    void shouldSendHxRedirectOnFailedHxLogin() throws Exception {
+        mockMvc.perform(post("/login")
+                                .header("HX-Request", "true")
+                                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                                .param("username", "Invalid")
+                                .param("password", "Invalid")
+                                .with(csrf()))
+               .andExpect(status().isUnauthorized())
+               .andExpect(header().json(HX_LOCATION.getValue(), HX_LOCATION_TEMPLATE.formatted(LOGIN_FAILURE_URL)));
+    }
 
     @Test
     void shouldSendRedirectOnSuccessfulLogin() throws Exception {
@@ -148,6 +172,7 @@ class HtmxRedirectPatternTest {
             return http.userDetailsService(new InMemoryUserDetailsManager(
                     User.withUsername(USERNAME).password("{noop}" + PASSWORD).build())
             ).formLogin(login -> login
+                    .failureHandler(new HxLocationRedirectAuthenticationFailureHandler(LOGIN_FAILURE_URL))
                     .successHandler(new HxLocationRedirectAuthenticationSuccessHandler(LOGIN_SUCCESS_URL))
             ).logout(logout -> logout
                     .logoutSuccessHandler(new HxLocationRedirectLogoutSuccessHandler(LOGOUT_SUCCESS_URL))
