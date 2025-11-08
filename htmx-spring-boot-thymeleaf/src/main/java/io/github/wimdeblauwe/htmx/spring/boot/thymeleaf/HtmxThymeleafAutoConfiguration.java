@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Bean;
 import tools.jackson.databind.json.JsonMapper;
 
 @AutoConfiguration
-@ConditionalOnWebApplication
+@ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
 public class HtmxThymeleafAutoConfiguration {
 
     @Bean
