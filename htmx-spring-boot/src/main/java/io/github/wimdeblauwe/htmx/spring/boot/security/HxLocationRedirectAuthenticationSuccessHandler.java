@@ -32,6 +32,10 @@ public class HxLocationRedirectAuthenticationSuccessHandler implements Authentic
         this(defaultSuccessUrl, alwaysUse, new HxLocationRedirectStrategy());
     }
 
+    public HxLocationRedirectAuthenticationSuccessHandler(String defaultSuccessUrl, RedirectStrategy redirectStrategy) {
+        this(defaultSuccessUrl, false, redirectStrategy);
+    }
+
     public HxLocationRedirectAuthenticationSuccessHandler(String defaultSuccessUrl, boolean alwaysUse, RedirectStrategy redirectStrategy) {
         var handler = new SavedRequestAwareAuthenticationSuccessHandler();
         handler.setDefaultTargetUrl(defaultSuccessUrl);

@@ -32,6 +32,10 @@ public class HxLocationRedirectLogoutSuccessHandler implements LogoutSuccessHand
         this(logoutSuccessUrl, alwaysUse, new HxLocationRedirectStrategy());
     }
 
+    public HxLocationRedirectLogoutSuccessHandler(String logoutSuccessUrl, RedirectStrategy redirectStrategy) {
+        this(logoutSuccessUrl, false, redirectStrategy);
+    }
+
     public HxLocationRedirectLogoutSuccessHandler(String logoutSuccessUrl, boolean alwaysUse, RedirectStrategy redirectStrategy) {
         var handler = new SimpleUrlLogoutSuccessHandler();
         handler.setDefaultTargetUrl(logoutSuccessUrl);

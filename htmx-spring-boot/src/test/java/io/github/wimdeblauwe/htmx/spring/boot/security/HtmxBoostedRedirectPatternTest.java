@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -26,9 +27,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(controllers = HtmxRedirectPatternTest.TestController.class)
-@ContextConfiguration(classes = HtmxRedirectPatternTest.SecurityConfig.class)
-class HtmxRedirectPatternTest {
+@WebMvcTest(controllers = HtmxBoostedRedirectPatternTest.TestController.class)
+@ContextConfiguration(classes = HtmxBoostedRedirectPatternTest.SecurityConfig.class)
+class HtmxBoostedRedirectPatternTest {
 
     private static final String USERNAME = "user";
     private static final String PASSWORD = "pass";
@@ -37,6 +38,15 @@ class HtmxRedirectPatternTest {
     private static final String LOGOUT_SUCCESS_URL = "/home?logout";
     private static final String UNAUTHORIZED_URL = "/login?unauthorized";
     private static final String FORBIDDEN_URL = "/error?forbidden";
+    private static final String HX_BOOSTED_TEMPLATE = """
+            {
+              "path": "%s",
+              "headers": {
+                "HX-Boosted": "true"
+              },
+              "target": "body"
+            }
+            """;
 
     @Autowired
     private MockMvc mockMvc;
@@ -62,7 +72,7 @@ class HtmxRedirectPatternTest {
                                 .param("password", "Invalid")
                                 .with(csrf()))
                .andExpect(status().isUnauthorized())
-               .andExpect(header().string(HX_LOCATION.getValue(), LOGIN_FAILURE_URL));
+               .andExpect(header().json(HX_LOCATION.getValue(), HX_BOOSTED_TEMPLATE.formatted(LOGIN_FAILURE_URL)));
     }
 
     @Test
@@ -85,7 +95,7 @@ class HtmxRedirectPatternTest {
                                 .param("password", PASSWORD)
                                 .with(csrf()))
                .andExpect(status().isOk())
-               .andExpect(header().string(HX_LOCATION.getValue(), LOGIN_SUCCESS_URL));
+               .andExpect(header().json(HX_LOCATION.getValue(), HX_BOOSTED_TEMPLATE.formatted(LOGIN_SUCCESS_URL)));
     }
 
     @Test
@@ -106,7 +116,7 @@ class HtmxRedirectPatternTest {
                                 .with(testSecurityContext())
                                 .with(csrf()))
                .andExpect(status().isOk())
-               .andExpect(header().string(HX_LOCATION.getValue(), LOGOUT_SUCCESS_URL));
+               .andExpect(header().json(HX_LOCATION.getValue(), HX_BOOSTED_TEMPLATE.formatted(LOGOUT_SUCCESS_URL)));
     }
 
     @Test
@@ -121,7 +131,7 @@ class HtmxRedirectPatternTest {
         mockMvc.perform(get("/unauthorized")
                                 .header("HX-Request", "true"))
                .andExpect(status().isUnauthorized())
-               .andExpect(header().string(HX_LOCATION.getValue(), UNAUTHORIZED_URL));
+               .andExpect(header().json(HX_LOCATION.getValue(), HX_BOOSTED_TEMPLATE.formatted(UNAUTHORIZED_URL)));
     }
 
     @Test
@@ -140,7 +150,7 @@ class HtmxRedirectPatternTest {
                                 .header("HX-Request", "true")
                                 .with(testSecurityContext()))
                .andExpect(status().isForbidden())
-               .andExpect(header().string(HX_LOCATION.getValue(), FORBIDDEN_URL));
+               .andExpect(header().json(HX_LOCATION.getValue(), HX_BOOSTED_TEMPLATE.formatted(FORBIDDEN_URL)));
     }
 
 
@@ -163,13 +173,13 @@ class HtmxRedirectPatternTest {
             return http.userDetailsService(new InMemoryUserDetailsManager(
                     User.withUsername(USERNAME).password("{noop}" + PASSWORD).build())
             ).formLogin(login -> login
-                    .failureHandler(new HxLocationRedirectAuthenticationFailureHandler(LOGIN_FAILURE_URL))
-                    .successHandler(new HxLocationRedirectAuthenticationSuccessHandler(LOGIN_SUCCESS_URL))
+                    .failureHandler(new HxLocationRedirectAuthenticationFailureHandler(LOGIN_FAILURE_URL, new HxLocationBoostedRedirectStrategy(HttpStatus.UNAUTHORIZED)))
+                    .successHandler(new HxLocationRedirectAuthenticationSuccessHandler(LOGIN_SUCCESS_URL, new HxLocationBoostedRedirectStrategy()))
             ).logout(logout -> logout
-                    .logoutSuccessHandler(new HxLocationRedirectLogoutSuccessHandler(LOGOUT_SUCCESS_URL))
+                    .logoutSuccessHandler(new HxLocationRedirectLogoutSuccessHandler(LOGOUT_SUCCESS_URL, new HxLocationBoostedRedirectStrategy()))
             ).exceptionHandling(handler -> handler
-                    .authenticationEntryPoint(new HxLocationRedirectAuthenticationEntryPoint(UNAUTHORIZED_URL))
-                    .accessDeniedHandler(new HxLocationRedirectAccessDeniedHandler(FORBIDDEN_URL))
+                    .authenticationEntryPoint(new HxLocationRedirectAuthenticationEntryPoint(UNAUTHORIZED_URL, new HxLocationBoostedRedirectStrategy(HttpStatus.UNAUTHORIZED)))
+                    .accessDeniedHandler(new HxLocationRedirectAccessDeniedHandler(FORBIDDEN_URL, new HxLocationBoostedRedirectStrategy(HttpStatus.FORBIDDEN)))
             ).authorizeHttpRequests(config -> config
                     .requestMatchers("/home", "/login", "/error").permitAll()
                     .requestMatchers("/forbidden").hasRole("ADMIN")
