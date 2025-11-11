@@ -21,7 +21,7 @@ import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandl
 import java.util.List;
 
 @AutoConfiguration
-@ConditionalOnWebApplication
+@ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
 public class HtmxMvcAutoConfiguration implements WebMvcRegistrations, WebMvcConfigurer {
 
     private final ObjectMapper objectMapper;
