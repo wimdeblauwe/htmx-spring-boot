@@ -12,6 +12,7 @@ import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver;
+import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 import tools.jackson.databind.json.JsonMapper;
 
@@ -22,15 +23,24 @@ import java.util.List;
 public class HtmxMvcAutoConfiguration implements WebMvcRegistrations, WebMvcConfigurer {
 
     private final HtmxHandlerMethodHandler handlerMethodHandler;
+    private final HtmxResponseBodyAdvice responseBodyAdvice;
 
     HtmxMvcAutoConfiguration() {
         JsonMapper jsonMapper = JsonMapper.builder().build();
         this.handlerMethodHandler = new HtmxHandlerMethodHandler(jsonMapper);
+        this.responseBodyAdvice = new HtmxResponseBodyAdvice(handlerMethodHandler);
     }
 
     @Override
     public RequestMappingHandlerMapping getRequestMappingHandlerMapping() {
         return new HtmxRequestMappingHandlerMapping();
+    }
+
+    @Override
+    public RequestMappingHandlerAdapter getRequestMappingHandlerAdapter() {
+        var adapter = new RequestMappingHandlerAdapter();
+        adapter.setResponseBodyAdvice(List.of(responseBodyAdvice));
+        return adapter;
     }
 
     @Override
@@ -46,7 +56,9 @@ public class HtmxMvcAutoConfiguration implements WebMvcRegistrations, WebMvcConf
 
     @Override
     public ExceptionHandlerExceptionResolver getExceptionHandlerExceptionResolver() {
-        return new HtmxExceptionHandlerExceptionResolver(handlerMethodHandler);
+        var resolver = new HtmxExceptionHandlerExceptionResolver(handlerMethodHandler);
+        resolver.setResponseBodyAdvice(List.of(responseBodyAdvice));
+        return resolver;
     }
 
     @Bean
