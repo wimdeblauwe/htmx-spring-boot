@@ -171,7 +171,7 @@ class HtmxHandlerInterceptorTest {
     public void testHxReswap() throws Exception {
         mockMvc.perform(get("/hx-reswap"))
                .andExpect(status().isOk())
-               .andExpect(header().string("HX-Reswap", "innerHTML swap:300ms"));
+               .andExpect(header().string("HX-Reswap", "innerHTML transition:true focus-scroll:true swap:0ms settle:500ms scroll:#scrollTarget:top show:#showTarget:bottom"));
     }
 
     @Test
@@ -312,7 +312,15 @@ class HtmxHandlerInterceptorTest {
         }
 
         @GetMapping("/hx-reswap")
-        @HxReswap(value = HxSwapType.INNER_HTML, swap = 300)
+        @HxReswap(value = HxSwapType.INNER_HTML,
+                swap = 0,
+                settle = 500,
+                scroll = HxReswap.Position.TOP,
+                scrollTarget = "#scrollTarget",
+                show = HxReswap.Position.BOTTOM,
+                showTarget = "#showTarget",
+                transition = true,
+                focusScroll = HxReswap.FocusScroll.TRUE)
         @ResponseBody
         public String hxReswap() {
             return "";

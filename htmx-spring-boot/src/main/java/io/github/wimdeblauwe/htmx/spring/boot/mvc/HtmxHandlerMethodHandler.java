@@ -165,7 +165,7 @@ class HtmxHandlerMethodHandler {
             reswap.swap(Duration.ofMillis(annotation.swap()));
         }
         if (annotation.settle() != -1) {
-            reswap.swap(Duration.ofMillis(annotation.settle()));
+            reswap.settle(Duration.ofMillis(annotation.settle()));
         }
         if (annotation.transition()) {
             reswap.transition();
@@ -176,7 +176,7 @@ class HtmxHandlerMethodHandler {
         if (annotation.show() != HxReswap.Position.UNDEFINED) {
             reswap.show(convertToPosition(annotation.show()));
             if (!annotation.showTarget().isEmpty()) {
-                reswap.scrollTarget(annotation.showTarget());
+                reswap.showTarget(annotation.showTarget());
             }
         }
         if (annotation.scroll() != HxReswap.Position.UNDEFINED) {
