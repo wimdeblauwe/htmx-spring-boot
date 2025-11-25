@@ -12,7 +12,7 @@
 
     <groupId>io.github.wimdeblauwe</groupId>
     <artifactId>htmx-spring-boot-parent</artifactId>
-    <version>4.0.2</version>
+    <version>4.0.3-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>Parent of Spring Boot library for htmx</name>
 
