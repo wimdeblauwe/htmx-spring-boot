@@ -250,6 +250,38 @@ public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 }
 ```
 
+In addition, htmx provides a special way to send a redirect instruction to the client, keeping a success code ([200](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/200)) and sending a custom HTTP header from the server ([HX-Location](https://htmx.org/headers/hx-location/) / [HX-Redirect](https://htmx.org/headers/hx-redirect/)). Htmx correctly interprets these headers and follows the redirect, replacing the response in the page body.
+
+You can take advantage of this behavior by integrating the `HxLocationRedirectAuthenticationFailureHandler`, `HxLocationRedirectAuthenticationSuccessHandler`, `HxLocationRedirectLogoutSuccessHandler`, `HxLocationRedirectAuthenticationEntryPoint` and/or `HxLocationRedirectAccessDeniedHandler` into the `SecurityFilterChain` bean definition.
+
+```java
+@Bean
+public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    // probably some other configurations here
+    return http
+            .formLogin(login -> login
+                    .failureHandler(new HxLocationRedirectAuthenticationFailureHandler("/login?failure"))
+                    .successHandler(new HxLocationRedirectAuthenticationSuccessHandler("/home?login"))
+            ).logout(logout -> logout
+                    .logoutSuccessHandler(new HxLocationRedirectLogoutSuccessHandler("/home?logout"))
+            ).exceptionHandling(handler -> handler
+                    .authenticationEntryPoint(new HxLocationRedirectAuthenticationEntryPoint("/login?unauthorized"))
+                    .accessDeniedHandler(new HxLocationRedirectAccessDeniedHandler("/error?forbidden"))
+            ).build();
+}
+```
+
+Also, you can use the provided `HxLocationBoostedRedirectStrategy` as the second parameter in the handlers, instructing the client to include the [HX-Boosted](https://htmx.org/reference/#headers) header in the new request. This can be useful if you want to take advantage of existing controller optimizations, for example, rendering a fragment instead of the full page for non-boosted, htmx-driven requests:
+
+```java
+@GetMapping("/login")
+String login(HtmxRequest request) {
+    return request.isHtmxRequest() && !request.isBoosted()
+            ? "pages/login :: content"
+            : "pages/login";
+}
+```
+
 ### Thymeleaf
 
 #### Markup Selectors and HTML Fragments
