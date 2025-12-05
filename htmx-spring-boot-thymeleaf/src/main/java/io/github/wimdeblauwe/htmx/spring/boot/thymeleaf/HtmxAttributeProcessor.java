@@ -17,14 +17,14 @@ import org.unbescape.html.HtmlEscape;
 import tools.jackson.core.JacksonException;
 import tools.jackson.databind.ObjectMapper;
 
-import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class HtmxAttributeProcessor extends AbstractStandardExpressionAttributeTagProcessor
         implements IAttributeDefinitionsAware {
 
     public static final int ATTR_PRECEDENCE = 1000;
     private final String attrName;
-    private final ObjectMapper mapper;
+    protected final ObjectMapper mapper;
 
     private static final TemplateMode TEMPLATE_MODE = TemplateMode.HTML;
 
@@ -33,7 +33,14 @@ public class HtmxAttributeProcessor extends AbstractStandardExpressionAttributeT
     public HtmxAttributeProcessor(String dialectPrefix,
                                   String attrName,
                                   ObjectMapper mapper) {
-        super(TEMPLATE_MODE, dialectPrefix, attrName, ATTR_PRECEDENCE, false, true);
+        this(dialectPrefix, attrName, ATTR_PRECEDENCE, mapper);
+    }
+
+    public HtmxAttributeProcessor(String dialectPrefix,
+                                  String attrName,
+                                  int precedence,
+                                  ObjectMapper mapper) {
+        super(TEMPLATE_MODE, dialectPrefix, attrName, precedence, false, true);
         this.attrName = attrName;
         this.mapper = mapper;
     }
@@ -46,7 +53,7 @@ public class HtmxAttributeProcessor extends AbstractStandardExpressionAttributeT
     }
 
     @Override
-    protected final void doProcess(
+    protected void doProcess(
             final ITemplateContext context,
             final IProcessableElementTag tag,
             final AttributeName attributeName,
@@ -57,7 +64,7 @@ public class HtmxAttributeProcessor extends AbstractStandardExpressionAttributeT
             structureHandler.removeAttribute(attributeName);
         } else {
             String expressionResultString;
-            if (expressionResult instanceof LinkedHashMap) {
+            if (expressionResult instanceof Map) {
                 try {
                     expressionResultString = this.mapper.writeValueAsString(expressionResult);
                 } catch (JacksonException e) {

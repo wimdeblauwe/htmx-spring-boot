@@ -26,7 +26,7 @@ public class HtmxDialect extends AbstractProcessorDialect implements IExpression
 
         htmxProcessors.add(new HtmxAttributeProcessor(dialectPrefix, "boost", mapper));
         htmxProcessors.add(new HtmxAttributeProcessor(dialectPrefix, "confirm", mapper));
-        htmxProcessors.add(new HtmxAttributeProcessor(dialectPrefix, "delete", mapper));
+        htmxProcessors.add(new HtmxCsrfAttributeProcessor(dialectPrefix, "delete", mapper));
         htmxProcessors.add(new HtmxAttributeProcessor(dialectPrefix, "disable", mapper));
         htmxProcessors.add(new HtmxAttributeProcessor(dialectPrefix, "disinherit", mapper));
         htmxProcessors.add(new HtmxAttributeProcessor(dialectPrefix, "encoding", mapper));
@@ -37,11 +37,11 @@ public class HtmxDialect extends AbstractProcessorDialect implements IExpression
         htmxProcessors.add(new HtmxAttributeProcessor(dialectPrefix, "include", mapper));
         htmxProcessors.add(new HtmxAttributeProcessor(dialectPrefix, "indicator", mapper));
         htmxProcessors.add(new HtmxAttributeProcessor(dialectPrefix, "params", mapper));
-        htmxProcessors.add(new HtmxAttributeProcessor(dialectPrefix, "patch", mapper));
-        htmxProcessors.add(new HtmxAttributeProcessor(dialectPrefix, "post", mapper));
+        htmxProcessors.add(new HtmxCsrfAttributeProcessor(dialectPrefix, "patch", mapper));
+        htmxProcessors.add(new HtmxCsrfAttributeProcessor(dialectPrefix, "post", mapper));
         htmxProcessors.add(new HtmxAttributeProcessor(dialectPrefix, "preserve", mapper));
         htmxProcessors.add(new HtmxAttributeProcessor(dialectPrefix, "prompt", mapper));
-        htmxProcessors.add(new HtmxAttributeProcessor(dialectPrefix, "put", mapper));
+        htmxProcessors.add(new HtmxCsrfAttributeProcessor(dialectPrefix, "put", mapper));
         htmxProcessors.add(new HtmxAttributeProcessor(dialectPrefix, "push-url", mapper));
         htmxProcessors.add(new HtmxAttributeProcessor(dialectPrefix, "request", mapper));
         htmxProcessors.add(new HtmxAttributeProcessor(dialectPrefix, "select", mapper));

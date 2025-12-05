@@ -383,6 +383,14 @@ You can use multiple values like this:
 <div hx:vals="${ {id: user.id, groupId: group.id } }"></div>
 ```
 
+#### Automatic CSRF token injection
+
+A Cross-Site Request Forgery (CSRF) attack tricks an authenticated user into performing unintended state-changing actions in a web application.
+
+By default, Spring Security provides built-in protection against CSRF attacks on unsafe HTTP methods, while Thymeleaf automatically includes the required CSRF token as a hidden field in forms using `th:action`.
+
+The library extends this support to htmx by automatically injecting the CSRF token into the request payload through the `hx-vals` attribute of elements using `hx:post`, `hx:put`, `hx:patch`, or `hx:delete`, even if the element is not part of a form.
+
 ## Articles
 
 Links to articles and blog posts about this library:

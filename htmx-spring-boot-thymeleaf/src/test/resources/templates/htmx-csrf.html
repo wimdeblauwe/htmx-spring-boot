@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:hx="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Htmx CSRF Test</title>
+</head>
+<body>
+<div id="hx-post-div" hx:post="'/foo'"></div>
+<div id="hx-post-vals" hx:post="'/foo'" hx:vals="${ {someProperty: true} }"></div>
+<div id="hx-put-div" hx:put="'/foo'"></div>
+<div id="hx-put-vals" hx:put="'/foo'" hx:vals="${ {someProperty: true} }"></div>
+<div id="hx-patch-div" hx:patch="'/foo'"></div>
+<div id="hx-patch-vals" hx:patch="'/foo'" hx:vals="${ {someProperty: true} }"></div>
+<div id="hx-delete-div" hx:delete="'/foo'"></div>
+<div id="hx-delete-vals" hx:delete="'/foo'" hx:vals="${ {someProperty: true} }"></div>
+</body>
+</html>
