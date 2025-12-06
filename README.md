@@ -389,7 +389,7 @@ A Cross-Site Request Forgery (CSRF) attack tricks an authenticated user into per
 
 By default, Spring Security provides built-in protection against CSRF attacks on unsafe HTTP methods, while Thymeleaf automatically includes the required CSRF token as a hidden field in forms using `th:action`.
 
-The library extends this support to htmx by automatically injecting the CSRF token into the request payload through the `hx-vals` attribute of elements using `hx:post`, `hx:put`, `hx:patch`, or `hx:delete`, even if the element is not part of a form.
+The library extends this support to htmx by automatically injecting the CSRF token into the request headers through the `hx-headers` attribute of elements using `hx:post`, `hx:put`, `hx:patch`, or `hx:delete`, even if the element is not part of a form.
 
 ## Articles
 

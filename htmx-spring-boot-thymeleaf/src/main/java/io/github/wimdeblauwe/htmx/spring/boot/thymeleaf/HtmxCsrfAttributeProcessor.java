@@ -17,9 +17,9 @@ import java.util.Map;
 /**
  * Thymeleaf processor for seamless integration of htmx with Spring Boot applications using CSRF protection.
  * <p>
- * Automatically injects the current Spring Security {@link CsrfToken} into htmx request payloads.
+ * Automatically injects the current Spring Security {@link CsrfToken} into htmx request headers.
  * It obtains the CSRF token from the Thymeleaf context (via the {@code _csrf} variable)
- * and merges it into the {@code hx-vals} attribute, while preserving any existing values.
+ * and merges it into the {@code hx-headers} attribute, while preserving any existing values.
  * <p>
  * If no CSRF token is available, the processor performs no action.
  * <p>
@@ -34,12 +34,13 @@ import java.util.Map;
  * After processing, will render as:
  * <pre>{@code
  * <a hx-post="/logout"
- *    hx-vals="{&quot;_csrf&quot;:&quot;abc123&quot;}">Log out</a>
+ *    hx-headers="{&quot;X-CSRF-TOKEN&quot;:&quot;abc123&quot;}">Log out</a>
  * }</pre>
  * ("abc123" represents the real CSRF token that Spring Security provides at runtime)
  *
  * @author LC Nicolau
- * @see <a href="https://htmx.org/attributes/hx-vals/">hx-vals Attribute Reference</a>
+ * @see <a href="https://htmx.org/docs/#csrf-prevention">CSRF Prevention</a>
+ * @see <a href="https://htmx.org/attributes/hx-headers/">hx-headers Attribute Reference</a>
  * @since 5.1.0
  */
 public class HtmxCsrfAttributeProcessor extends HtmxAttributeProcessor {
@@ -64,19 +65,19 @@ public class HtmxCsrfAttributeProcessor extends HtmxAttributeProcessor {
         if (token == null || expressionResult == null) {
             return;
         }
-        var vals = this.getCurrentVals(tag);
-        vals.put(token.getParameterName(), token.getToken());
+        var headers = this.getHeaders(tag);
+        headers.put(token.getHeaderName(), token.getToken());
         try {
-            var json = mapper.writeValueAsString(vals);
+            var json = mapper.writeValueAsString(headers);
             var escaped = HtmlEscape.escapeHtml4Xml(json);
-            structureHandler.setAttribute("hx-vals", escaped);
+            structureHandler.setAttribute("hx-headers", escaped);
         } catch (JacksonException e) {
             throw new TemplateProcessingException("Exception writing map", tag.getTemplateName(), tag.getLine(), tag.getLine(), e);
         }
     }
 
-    protected Map<String, Object> getCurrentVals(IProcessableElementTag tag) {
-        var current = tag.getAttributeValue("hx-vals");
+    protected Map<String, Object> getHeaders(IProcessableElementTag tag) {
+        var current = tag.getAttributeValue("hx-headers");
         if (current == null || current.isBlank()) {
             return new HashMap<>();
         }

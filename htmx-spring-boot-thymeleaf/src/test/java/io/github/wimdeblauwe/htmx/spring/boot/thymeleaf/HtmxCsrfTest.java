@@ -26,8 +26,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * <p>
  * Tests cover the following scenarios:
  * <ul>
- *     <li>The CSRF token is automatically injected into the {@code hx-vals} attribute.</li>
- *     <li>Correct merging when {@code hx-vals} already contains additional entries.</li>
+ *     <li>The CSRF token is automatically injected into the {@code hx-headers} attribute.</li>
+ *     <li>Correct merging when {@code hx-headers} already contains additional entries.</li>
  *     <li>Proper behavior when CSRF protection is disabled or no token is present.</li>
  * </ul>
  *
@@ -51,18 +51,18 @@ class HtmxCsrfTest {
         String html = result.getResponse().getContentAsString();
         assertThat(html)
                 .containsPattern("hx-post-div.*hx-post=\"/foo\"")
-                .containsPattern("hx-post-vals.*hx-post=\"/foo\"");
+                .containsPattern("hx-post-headers.*hx-post=\"/foo\"");
 
         CsrfToken csrf = ((CsrfToken) result.getRequest().getAttribute("_csrf"));
         if (csrf == null) {
             assertThat(html)
-                    .doesNotContainPattern("hx-post-div.*hx-vals=")
-                    .doesNotContainPattern("hx-post-vals.*hx-vals=.*_csrf");
+                    .doesNotContainPattern("hx-post-div.*hx-headers=")
+                    .doesNotContainPattern("hx-post-headers.*hx-headers=.*X-CSRF-TOKEN");
         } else {
             String token = csrf.getToken();
             assertThat(html)
-                    .containsPattern("hx-post-div.*hx-vals=\"\\{&quot;_csrf&quot;:&quot;" + token + "&quot;}\"")
-                    .containsPattern("hx-post-vals.*hx-vals=\"\\{&quot;someProperty&quot;:true,&quot;_csrf&quot;:&quot;" + token + "&quot;}\"");
+                    .containsPattern("hx-post-div.*hx-headers=\"\\{&quot;X-CSRF-TOKEN&quot;:&quot;" + token + "&quot;}\"")
+                    .containsPattern("hx-post-headers.*hx-headers=\"\\{&quot;someHeader&quot;:true,&quot;X-CSRF-TOKEN&quot;:&quot;" + token + "&quot;}\"");
         }
     }
 
@@ -75,18 +75,18 @@ class HtmxCsrfTest {
         String html = result.getResponse().getContentAsString();
         assertThat(html)
                 .containsPattern("hx-put-div.*hx-put=\"/foo\"")
-                .containsPattern("hx-put-vals.*hx-put=\"/foo\"");
+                .containsPattern("hx-put-headers.*hx-put=\"/foo\"");
 
         CsrfToken csrf = ((CsrfToken) result.getRequest().getAttribute("_csrf"));
         if (csrf == null) {
             assertThat(html)
-                    .doesNotContainPattern("hx-put-div.*hx-vals=")
-                    .doesNotContainPattern("hx-put-vals.*hx-vals=.*_csrf");
+                    .doesNotContainPattern("hx-put-div.*hx-headers=")
+                    .doesNotContainPattern("hx-put-headers.*hx-headers=.*X-CSRF-TOKEN");
         } else {
             String token = csrf.getToken();
             assertThat(html)
-                    .containsPattern("hx-put-div.*hx-vals=\"\\{&quot;_csrf&quot;:&quot;" + token + "&quot;}\"")
-                    .containsPattern("hx-put-vals.*hx-vals=\"\\{&quot;someProperty&quot;:true,&quot;_csrf&quot;:&quot;" + token + "&quot;}\"");
+                    .containsPattern("hx-put-div.*hx-headers=\"\\{&quot;X-CSRF-TOKEN&quot;:&quot;" + token + "&quot;}\"")
+                    .containsPattern("hx-put-headers.*hx-headers=\"\\{&quot;someHeader&quot;:true,&quot;X-CSRF-TOKEN&quot;:&quot;" + token + "&quot;}\"");
         }
     }
 
@@ -99,18 +99,18 @@ class HtmxCsrfTest {
         String html = result.getResponse().getContentAsString();
         assertThat(html)
                 .containsPattern("hx-patch-div.*hx-patch=\"/foo\"")
-                .containsPattern("hx-patch-vals.*hx-patch=\"/foo\"");
+                .containsPattern("hx-patch-headers.*hx-patch=\"/foo\"");
 
         CsrfToken csrf = ((CsrfToken) result.getRequest().getAttribute("_csrf"));
         if (csrf == null) {
             assertThat(html)
-                    .doesNotContainPattern("hx-patch-div.*hx-vals=")
-                    .doesNotContainPattern("hx-patch-vals.*hx-vals=.*_csrf");
+                    .doesNotContainPattern("hx-patch-div.*hx-headers=")
+                    .doesNotContainPattern("hx-patch-headers.*hx-headers=.*X-CSRF-TOKEN");
         } else {
             String token = csrf.getToken();
             assertThat(html)
-                    .containsPattern("hx-patch-div.*hx-vals=\"\\{&quot;_csrf&quot;:&quot;" + token + "&quot;}\"")
-                    .containsPattern("hx-patch-vals.*hx-vals=\"\\{&quot;someProperty&quot;:true,&quot;_csrf&quot;:&quot;" + token + "&quot;}\"");
+                    .containsPattern("hx-patch-div.*hx-headers=\"\\{&quot;X-CSRF-TOKEN&quot;:&quot;" + token + "&quot;}\"")
+                    .containsPattern("hx-patch-headers.*hx-headers=\"\\{&quot;someHeader&quot;:true,&quot;X-CSRF-TOKEN&quot;:&quot;" + token + "&quot;}\"");
         }
     }
 
@@ -123,18 +123,18 @@ class HtmxCsrfTest {
         String html = result.getResponse().getContentAsString();
         assertThat(html)
                 .containsPattern("hx-delete-div.*hx-delete=\"/foo\"")
-                .containsPattern("hx-delete-vals.*hx-delete=\"/foo\"");
+                .containsPattern("hx-delete-headers.*hx-delete=\"/foo\"");
 
         CsrfToken csrf = ((CsrfToken) result.getRequest().getAttribute("_csrf"));
         if (csrf == null) {
             assertThat(html)
-                    .doesNotContainPattern("hx-delete-div.*hx-vals=")
-                    .doesNotContainPattern("hx-delete-vals.*hx-vals=.*_csrf");
+                    .doesNotContainPattern("hx-delete-div.*hx-headers=")
+                    .doesNotContainPattern("hx-delete-headers.*hx-headers=.*X-CSRF-TOKEN");
         } else {
             String token = csrf.getToken();
             assertThat(html)
-                    .containsPattern("hx-delete-div.*hx-vals=\"\\{&quot;_csrf&quot;:&quot;" + token + "&quot;}\"")
-                    .containsPattern("hx-delete-vals.*hx-vals=\"\\{&quot;someProperty&quot;:true,&quot;_csrf&quot;:&quot;" + token + "&quot;}\"");
+                    .containsPattern("hx-delete-div.*hx-headers=\"\\{&quot;X-CSRF-TOKEN&quot;:&quot;" + token + "&quot;}\"")
+                    .containsPattern("hx-delete-headers.*hx-headers=\"\\{&quot;someHeader&quot;:true,&quot;X-CSRF-TOKEN&quot;:&quot;" + token + "&quot;}\"");
         }
     }
 
