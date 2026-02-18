@@ -22,6 +22,14 @@ public class HtmxReswap {
     private Boolean focusScroll;
 
     /**
+     * Use the default swap behavior as configured by {@code htmx.config.defaultSwapStyle}
+     * or {@code innerHTML} for boosted requests.
+     */
+    public static HtmxReswap defaultSwap() {
+        return new HtmxReswap(HxSwapType.DEFAULT);
+    }
+
+    /**
      * Insert the response before the first child of the target element.
      */
     public static HtmxReswap afterBegin() {
@@ -154,7 +162,7 @@ public class HtmxReswap {
             }
         }
 
-        return value.toString();
+        return value.toString().trim();
     }
 
     /**

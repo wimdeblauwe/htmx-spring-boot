@@ -128,6 +128,14 @@ public class HtmxResponseHandlerMethodArgumentResolverIT {
     }
 
     @Test
+    public void testReswapDefaultWithSwapTiming() throws Exception {
+
+        get("/reswap-default-with-swap-timing")
+                .expectHeader()
+                .valueEquals("HX-Reswap", "swap:0ms");
+    }
+
+    @Test
     public void testRetarget() throws Exception {
 
         get("/retarget")
@@ -278,6 +286,14 @@ public class HtmxResponseHandlerMethodArgumentResolverIT {
         public String reswapOuterHtml(HtmxResponse response) {
 
             response.setReswap(HtmxReswap.outerHtml());
+            return "view";
+        }
+
+        @GetMapping("/reswap-default-with-swap-timing")
+        public String reswapDefaultWithSwapTiming(HtmxResponse response) {
+
+            response.setReswap(HtmxReswap.defaultSwap()
+                                         .swap(Duration.ZERO));
             return "view";
         }
 
