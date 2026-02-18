@@ -149,6 +149,14 @@ public class HtmxResponseHandlerMethodArgumentResolverTest {
     }
 
     @Test
+    public void testReswapShowNone() throws Exception {
+
+        mockMvc.perform(get("/reswap-show-none"))
+               .andExpect(status().isOk())
+               .andExpect(header().string("HX-Reswap", "show:none"));
+    }
+
+    @Test
     public void testRetarget() throws Exception {
 
         mockMvc.perform(get("/retarget"))
@@ -296,6 +304,14 @@ public class HtmxResponseHandlerMethodArgumentResolverTest {
 
             response.setReswap(HtmxReswap.defaultSwap()
                                          .swap(Duration.ZERO));
+            return "view";
+        }
+
+        @GetMapping("/reswap-show-none")
+        public String reswapShowNone(HtmxResponse response) {
+
+            response.setReswap(HtmxReswap.defaultSwap()
+                                         .show(HtmxReswap.Position.NONE));
             return "view";
         }
 

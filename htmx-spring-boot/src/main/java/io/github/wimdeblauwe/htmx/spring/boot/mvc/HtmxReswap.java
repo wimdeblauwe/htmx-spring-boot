@@ -148,14 +148,14 @@ public class HtmxReswap {
             value.append(" settle:").append(settle.toMillis()).append("ms");
         }
         if (scroll != null) {
-            if (scrollTarget != null) {
+            if (scroll != Position.NONE && scrollTarget != null) {
                 value.append(" scroll:").append(scrollTarget).append(":").append(scroll.getValue());
             } else {
                 value.append(" scroll:").append(scroll.getValue());
             }
         }
         if (show != null) {
-            if (showTarget != null) {
+            if (show != Position.NONE && showTarget != null) {
                 value.append(" show:").append(showTarget).append(":").append(show.getValue());
             } else {
                 value.append(" show:").append(show.getValue());
@@ -282,6 +282,7 @@ public class HtmxReswap {
      */
     public enum Position {
 
+        NONE("none"),
         TOP("top"),
         BOTTOM("bottom");
 

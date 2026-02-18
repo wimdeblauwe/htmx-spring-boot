@@ -78,6 +78,7 @@ public @interface HxReswap {
      * Represents the position values for {@link #show()} and {@link #scroll()}
      */
     public enum Position {
+        NONE,
         TOP,
         BOTTOM,
         UNDEFINED

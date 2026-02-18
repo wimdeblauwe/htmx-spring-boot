@@ -182,6 +182,13 @@ class HtmxHandlerInterceptorTest {
     }
 
     @Test
+    public void testHxReswapShowNone() throws Exception {
+        mockMvc.perform(get("/hx-reswap-show-none"))
+               .andExpect(status().isOk())
+               .andExpect(header().string("HX-Reswap", "show:none"));
+    }
+
+    @Test
     public void testHxRetarget() throws Exception {
         mockMvc.perform(get("/hx-retarget"))
                .andExpect(status().isOk())
@@ -337,6 +344,13 @@ class HtmxHandlerInterceptorTest {
         @HxReswap(value = HxSwapType.DEFAULT, swap = 0)
         @ResponseBody
         public String hxReswapDefaultWithSwapTiming() {
+            return "";
+        }
+
+        @GetMapping("/hx-reswap-show-none")
+        @HxReswap(show = HxReswap.Position.NONE)
+        @ResponseBody
+        public String hxReswapShowNone() {
             return "";
         }
 

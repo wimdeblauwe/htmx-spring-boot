@@ -191,6 +191,7 @@ class HtmxHandlerMethodHandler {
 
     private HtmxReswap.Position convertToPosition(HxReswap.Position position) {
         return switch (position) {
+            case NONE -> HtmxReswap.Position.NONE;
             case TOP -> HtmxReswap.Position.TOP;
             case BOTTOM -> HtmxReswap.Position.BOTTOM;
             default -> throw new IllegalStateException("Unexpected value: " + position);
