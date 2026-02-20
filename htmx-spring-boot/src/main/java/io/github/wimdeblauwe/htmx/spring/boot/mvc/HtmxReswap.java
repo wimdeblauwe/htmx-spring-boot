@@ -22,6 +22,14 @@ public class HtmxReswap {
     private Boolean focusScroll;
 
     /**
+     * Use the default swap behavior as configured by {@code htmx.config.defaultSwapStyle}
+     * or {@code innerHTML} for boosted requests.
+     */
+    public static HtmxReswap defaultSwap() {
+        return new HtmxReswap(HxSwapType.DEFAULT);
+    }
+
+    /**
      * Insert the response before the first child of the target element.
      */
     public static HtmxReswap afterBegin() {
@@ -140,21 +148,21 @@ public class HtmxReswap {
             value.append(" settle:").append(settle.toMillis()).append("ms");
         }
         if (scroll != null) {
-            if (scrollTarget != null) {
+            if (scroll != Position.NONE && scrollTarget != null) {
                 value.append(" scroll:").append(scrollTarget).append(":").append(scroll.getValue());
             } else {
                 value.append(" scroll:").append(scroll.getValue());
             }
         }
         if (show != null) {
-            if (showTarget != null) {
+            if (show != Position.NONE && showTarget != null) {
                 value.append(" show:").append(showTarget).append(":").append(show.getValue());
             } else {
                 value.append(" show:").append(show.getValue());
             }
         }
 
-        return value.toString();
+        return value.toString().trim();
     }
 
     /**
@@ -274,6 +282,7 @@ public class HtmxReswap {
      */
     public enum Position {
 
+        NONE("none"),
         TOP("top"),
         BOTTOM("bottom");
 

@@ -16,11 +16,12 @@ import java.lang.annotation.Target;
 public @interface HxReswap {
 
     /**
-     * A value to specify how the response will be swapped.
+     * A value to specify how the response will be swapped. The default value is {@link HxSwapType#DEFAULT}
+     * which uses the default swap behavior as configured by {@code htmx.config.defaultSwapStyle}
      *
      * @see <a href="https://htmx.org/attributes/hx-swap/">hx-swap</a>
      */
-    HxSwapType value() default HxSwapType.INNER_HTML;
+    HxSwapType value() default HxSwapType.DEFAULT;
 
     /**
      * Set the time in milliseconds that should elapse after receiving a response to swap the content.
@@ -77,6 +78,7 @@ public @interface HxReswap {
      * Represents the position values for {@link #show()} and {@link #scroll()}
      */
     public enum Position {
+        NONE,
         TOP,
         BOTTOM,
         UNDEFINED

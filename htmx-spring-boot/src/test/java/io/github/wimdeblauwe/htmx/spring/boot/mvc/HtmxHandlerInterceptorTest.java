@@ -175,6 +175,20 @@ class HtmxHandlerInterceptorTest {
     }
 
     @Test
+    public void testHxReswapDefaultWithSwapTiming() throws Exception {
+        mockMvc.perform(get("/hx-reswap-default-with-swap-timing"))
+               .andExpect(status().isOk())
+               .andExpect(header().string("HX-Reswap", "swap:0ms"));
+    }
+
+    @Test
+    public void testHxReswapShowNone() throws Exception {
+        mockMvc.perform(get("/hx-reswap-show-none"))
+               .andExpect(status().isOk())
+               .andExpect(header().string("HX-Reswap", "show:none"));
+    }
+
+    @Test
     public void testHxRetarget() throws Exception {
         mockMvc.perform(get("/hx-retarget"))
                .andExpect(status().isOk())
@@ -323,6 +337,20 @@ class HtmxHandlerInterceptorTest {
                 focusScroll = HxReswap.FocusScroll.TRUE)
         @ResponseBody
         public String hxReswap() {
+            return "";
+        }
+
+        @GetMapping("/hx-reswap-default-with-swap-timing")
+        @HxReswap(value = HxSwapType.DEFAULT, swap = 0)
+        @ResponseBody
+        public String hxReswapDefaultWithSwapTiming() {
+            return "";
+        }
+
+        @GetMapping("/hx-reswap-show-none")
+        @HxReswap(show = HxReswap.Position.NONE)
+        @ResponseBody
+        public String hxReswapShowNone() {
             return "";
         }
 

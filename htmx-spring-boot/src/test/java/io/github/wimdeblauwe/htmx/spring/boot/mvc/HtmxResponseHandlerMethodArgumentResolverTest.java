@@ -141,6 +141,22 @@ public class HtmxResponseHandlerMethodArgumentResolverTest {
     }
 
     @Test
+    public void testReswapDefaultWithSwapTiming() throws Exception {
+
+        mockMvc.perform( get("/reswap-default-with-swap-timing"))
+               .andExpect(status().isOk())
+               .andExpect(header().string("HX-Reswap", "swap:0ms"));
+    }
+
+    @Test
+    public void testReswapShowNone() throws Exception {
+
+        mockMvc.perform(get("/reswap-show-none"))
+               .andExpect(status().isOk())
+               .andExpect(header().string("HX-Reswap", "show:none"));
+    }
+
+    @Test
     public void testRetarget() throws Exception {
 
         mockMvc.perform(get("/retarget"))
@@ -280,6 +296,22 @@ public class HtmxResponseHandlerMethodArgumentResolverTest {
         public String reswapOuterHtml(HtmxResponse response) {
 
             response.setReswap(HtmxReswap.outerHtml());
+            return "view";
+        }
+
+        @GetMapping("/reswap-default-with-swap-timing")
+        public String reswapDefaultWithSwapTiming(HtmxResponse response) {
+
+            response.setReswap(HtmxReswap.defaultSwap()
+                                         .swap(Duration.ZERO));
+            return "view";
+        }
+
+        @GetMapping("/reswap-show-none")
+        public String reswapShowNone(HtmxResponse response) {
+
+            response.setReswap(HtmxReswap.defaultSwap()
+                                         .show(HtmxReswap.Position.NONE));
             return "view";
         }
 
