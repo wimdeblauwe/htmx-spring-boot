@@ -1,9 +1,9 @@
 package io.github.wimdeblauwe.htmx.spring.boot.thymeleaf;
 
-
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -14,6 +14,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(HtmxDialectTestController.class)
 @ContextConfiguration(classes = HtmxDialectTestController.class)
+@WithMockUser
 class HtmxDialectTest {
 
     @Autowired
