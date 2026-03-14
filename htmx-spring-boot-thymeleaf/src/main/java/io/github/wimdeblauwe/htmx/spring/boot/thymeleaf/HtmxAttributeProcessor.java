@@ -18,6 +18,8 @@ import org.thymeleaf.util.Validate;
 import org.unbescape.html.HtmlEscape;
 
 import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public class HtmxAttributeProcessor extends AbstractStandardExpressionAttributeTagProcessor
         implements IAttributeDefinitionsAware {
@@ -58,8 +60,12 @@ public class HtmxAttributeProcessor extends AbstractStandardExpressionAttributeT
         } else {
             String expressionResultString;
             if (expressionResult instanceof LinkedHashMap) {
+                Map<?, ?> mapWithoutNullValues = ((Map<?, ?>) expressionResult).entrySet().stream()
+                                                                               .filter(entry -> entry.getKey() != null && entry.getValue() != null)
+                                                                               .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (x, y) -> y, LinkedHashMap::new));
+
                 try {
-                    expressionResultString = this.mapper.writeValueAsString(expressionResult);
+                    expressionResultString = this.mapper.writeValueAsString(mapWithoutNullValues);
                 } catch (JsonProcessingException e) {
                     throw new TemplateProcessingException("Exception writing map", tag.getTemplateName(), tag.getLine(), tag.getLine(), e);
                 }
