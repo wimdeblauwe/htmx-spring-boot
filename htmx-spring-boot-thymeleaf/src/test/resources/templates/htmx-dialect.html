@@ -23,6 +23,7 @@
 <div id="hx-vals-div-string" hx:vals="${ {someStringProperty: stringVariable} }"></div>
 <div id="hx-vals-div-number" hx:vals="${ {someNumberProperty: numberVariable} }"></div>
 <div id="hx-vals-div-multiple" hx:vals="${ {someBooleanProperty: trueVariable, someNumberProperty: numberVariable} }"></div>
+<div id="hx-vals-div-with-null" hx:vals="${ {someStringProperty: null, someNumberProperty: numberVariable} }"></div>
 <div id="hx-swap-div-with-empty-string" hx:swap="${falseVariable}?'afterend':''"></div>
 <div id="hx-swap-div-with-null" hx:swap="${falseVariable}?'afterend':null"></div>
 <div id="hx-swap-div-with-th-with" th:with="sum = ${1+1}" hx:swap="${sum.equals(2)}?'afterend':null"></div>
