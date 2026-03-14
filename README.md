@@ -367,7 +367,7 @@ Links to articles and blog posts about this library:
 
 | Library version                                                                       | Spring Boot  | Minimum Java version | Documentation                                                                     |
 |---------------------------------------------------------------------------------------|--------------|----------------------|-----------------------------------------------------------------------------------|
-| [4.0.2](https://github.com/wimdeblauwe/htmx-spring-boot/releases/tag/4.0.2)           | 3.4.x, 3.5.x | 17                   | [README.md](https://github.com/wimdeblauwe/htmx-spring-boot/blob/4.0.2/README.md) |
+| [4.0.3](https://github.com/wimdeblauwe/htmx-spring-boot/releases/tag/4.0.3)           | 3.4.x, 3.5.x | 17                   | [README.md](https://github.com/wimdeblauwe/htmx-spring-boot/blob/4.0.3/README.md) |
 | [3.6.2](https://github.com/wimdeblauwe/htmx-spring-boot/releases/tag/3.6.2)           | 3.2.x        | 17                   | [README.md](https://github.com/wimdeblauwe/htmx-spring-boot/blob/3.6.2/README.md) |
 | [3.5.1](https://github.com/wimdeblauwe/htmx-spring-boot/releases/tag/3.5.1)           | 3.2.x        | 17                   | [README.md](https://github.com/wimdeblauwe/htmx-spring-boot/blob/3.5.1/README.md) |
 | [3.4.1](https://github.com/wimdeblauwe/htmx-spring-boot/releases/tag/3.4.1)           | 3.2.x        | 17                   | [README.md](https://github.com/wimdeblauwe/htmx-spring-boot/blob/3.4.1/README.md) |
