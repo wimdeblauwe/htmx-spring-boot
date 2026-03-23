@@ -22,8 +22,8 @@ import static org.springframework.http.HttpStatus.OK;
  * For non-htmx requests, it delegates to the {@link DefaultRedirectStrategy}.
  *
  * @author LC Nicolau
- * @see <a href="https://htmx.org/headers/hx-location/">HX-Location Response Header</a>
- * @see <a href="https://htmx.org/reference/#headers">HTTP Header Reference</a>
+ * @see <a href="https://four.htmx.org/reference/headers/HX-Location">HX-Location</a>
+ * @see <a href="https://four.htmx.org/reference/headers#response">HTTP Response Headers</a>
  * @since 5.0.0
  */
 public class HxLocationRedirectStrategy implements RedirectStrategy {

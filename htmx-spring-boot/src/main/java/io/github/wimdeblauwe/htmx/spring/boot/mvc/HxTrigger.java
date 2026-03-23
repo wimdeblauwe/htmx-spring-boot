@@ -10,7 +10,7 @@ import java.lang.annotation.Target;
  * <br>
  * You can trigger a single event or as many uniquely named events as you would like.
  *
- * @see <a href="https://htmx.org/headers/hx-trigger/">HX-Trigger Response Headers</a>
+ * @see <a href="https://four.htmx.org/reference/headers/HX-Trigger">HX-Trigger</a>
  */
 @Target({ElementType.TYPE, ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)

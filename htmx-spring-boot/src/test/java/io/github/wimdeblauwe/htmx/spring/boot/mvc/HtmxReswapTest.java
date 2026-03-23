@@ -93,20 +93,54 @@ public class HtmxReswapTest {
     }
 
     @Test
-    void testSwapOptions() {
+    void testSwapTypes() {
+        assertThat(HtmxReswap.after()).hasToString("after");
         assertThat(HtmxReswap.afterBegin()).hasToString("afterbegin");
         assertThat(HtmxReswap.afterEnd()).hasToString("afterend");
+        assertThat(HtmxReswap.append()).hasToString("append");
+        assertThat(HtmxReswap.before()).hasToString("before");
         assertThat(HtmxReswap.beforeBegin()).hasToString("beforebegin");
         assertThat(HtmxReswap.beforeEnd()).hasToString("beforeend");
         assertThat(HtmxReswap.delete()).hasToString("delete");
+        assertThat(HtmxReswap.innerHtml()).hasToString("innerHTML");
+        assertThat(HtmxReswap.innerMorph()).hasToString("innerMorph");
         assertThat(HtmxReswap.none()).hasToString("none");
         assertThat(HtmxReswap.outerHtml()).hasToString("outerHTML");
+        assertThat(HtmxReswap.outerMorph()).hasToString("outerMorph");
+        assertThat(HtmxReswap.outerSync()).hasToString("outerSync");
+        assertThat(HtmxReswap.prepend()).hasToString("prepend");
+        assertThat(HtmxReswap.textContent()).hasToString("textContent");
+        assertThat(HtmxReswap.upsert()).hasToString("upsert");
     }
 
     @Test
     void testTransition() {
         var reswap = HtmxReswap.innerHtml().transition();
         assertThat(reswap).hasToString("innerHTML transition:true");
+    }
+
+    @Test
+    void testTarget() {
+        var reswap = HtmxReswap.innerHtml().target("#container");
+        assertThat(reswap).hasToString("innerHTML target:#container");
+    }
+
+    @Test
+    void testIgnoreTitle() {
+        var reswap = HtmxReswap.innerHtml().ignoreTitle();
+        assertThat(reswap).hasToString("innerHTML ignoreTitle:true");
+    }
+
+    @Test
+    void testStrip() {
+        var reswap = HtmxReswap.innerHtml().strip();
+        assertThat(reswap).hasToString("innerHTML strip:true");
+    }
+
+    @Test
+    void testSwapEmpty() {
+        var reswap = HtmxReswap.innerHtml().swapEmpty();
+        assertThat(reswap).hasToString("innerHTML swapEmpty:true");
     }
 
 }

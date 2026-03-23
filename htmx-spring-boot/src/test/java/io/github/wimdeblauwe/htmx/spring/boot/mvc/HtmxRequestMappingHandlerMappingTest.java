@@ -83,77 +83,22 @@ public class HtmxRequestMappingHandlerMappingTest {
     }
 
     @Test
-    void testHxRequestTriggerIdBar() throws Exception {
-        mockMvc.perform(get("/hx-request-trigger")
+    void testHxRequestSourceElement() throws Exception {
+        mockMvc.perform(get("/hx-request-source")
                                 .header(HX_REQUEST.getValue(), "true")
-                                .header(HX_TRIGGER.getValue(), "bar"))
+                                .header(HX_SOURCE.getValue(), "element"))
                .andExpect(status().isOk())
-               .andExpect(content().string("bar"));
+               .andExpect(content().string("element"));
     }
 
     @Test
-    void testHxRequestTriggerIdFoo() throws Exception {
-        mockMvc.perform(get("/hx-request-trigger")
+    void testHxRequestSourceElementAndId() throws Exception {
+        mockMvc.perform(get("/hx-request-source")
                                 .header(HX_REQUEST.getValue(), "true")
-                                .header(HX_TRIGGER.getValue(), "foo"))
+                                .header(HX_SOURCE.getValue(), "element#id"))
                .andExpect(status().isOk())
-               .andExpect(content().string("foo"));
+               .andExpect(content().string("element#id"));
     }
-
-    @Test
-    void testHxRequestTriggerNameBar() throws Exception {
-        mockMvc.perform(get("/hx-request-trigger")
-                                .header(HX_REQUEST.getValue(), "true")
-                                .header(HX_TRIGGER_NAME.getValue(), "bar"))
-               .andExpect(status().isOk())
-               .andExpect(content().string("bar"));
-    }
-
-    @Test
-    void testHxRequestTriggerNameFoo() throws Exception {
-        mockMvc.perform(get("/hx-request-trigger")
-                                .header(HX_REQUEST.getValue(), "true")
-                                .header(HX_TRIGGER_NAME.getValue(), "foo"))
-               .andExpect(status().isOk())
-               .andExpect(content().string("foo"));
-    }
-
-    @Test
-    void testHxRequestValueWithHeaderHxTriggerNameBar() throws Exception {
-        mockMvc.perform(get("/hx-request-value")
-                                .header(HX_REQUEST.getValue(), "true")
-                                .header(HX_TRIGGER_NAME.getValue(), "bar"))
-               .andExpect(status().isOk())
-               .andExpect(content().string("bar"));
-    }
-
-    @Test
-    void testHxRequestValueWithHeaderHxTriggerNameFoo() throws Exception {
-        mockMvc.perform(get("/hx-request-value")
-                                .header(HX_REQUEST.getValue(), "true")
-                                .header(HX_TRIGGER_NAME.getValue(), "foo"))
-               .andExpect(status().isOk())
-               .andExpect(content().string("foo"));
-    }
-
-    @Test
-    void testHxRequestValueWithHxHeaderTriggerBar() throws Exception {
-        mockMvc.perform(get("/hx-request-value")
-                                .header(HX_REQUEST.getValue(), "true")
-                                .header(HX_TRIGGER.getValue(), "bar"))
-               .andExpect(status().isOk())
-               .andExpect(content().string("bar"));
-    }
-
-    @Test
-    void testHxRequestValueWithHxHeaderTriggerFoo() throws Exception {
-        mockMvc.perform(get("/hx-request-value")
-                                .header(HX_REQUEST.getValue(), "true")
-                                .header(HX_TRIGGER.getValue(), "foo"))
-               .andExpect(status().isOk())
-               .andExpect(content().string("foo"));
-    }
-
 
     @Controller
     static class TestController {
@@ -193,46 +138,18 @@ public class HtmxRequestMappingHandlerMappingTest {
             return "foo";
         }
 
-        @HxRequest(triggerId = "bar")
-        @GetMapping("/hx-request-trigger")
+        @HxRequest("element")
+        @GetMapping("/hx-request-source")
         @ResponseBody
-        public String hxRequestTriggerIdBar() {
-            return "bar";
+        public String hxRequestSourceElement() {
+            return "element";
         }
 
-        @HxRequest(triggerId = "foo")
-        @GetMapping("/hx-request-trigger")
+        @HxRequest("element#id")
+        @GetMapping("/hx-request-source")
         @ResponseBody
-        public String hxRequestTriggerIdFoo() {
-            return "foo";
-        }
-
-        @HxRequest(triggerName = "bar")
-        @GetMapping("/hx-request-trigger")
-        @ResponseBody
-        public String hxRequestTriggerNameBar() {
-            return "bar";
-        }
-
-        @HxRequest(triggerName = "foo")
-        @GetMapping("/hx-request-trigger")
-        @ResponseBody
-        public String hxRequestTriggerNameFoo() {
-            return "foo";
-        }
-
-        @HxRequest("bar")
-        @GetMapping("/hx-request-value")
-        @ResponseBody
-        public String hxRequestValueBar() {
-            return "bar";
-        }
-
-        @HxRequest("foo")
-        @GetMapping("/hx-request-value")
-        @ResponseBody
-        public String hxRequestValueFoo() {
-            return "foo";
+        public String hxRequestSourceElementAndId() {
+            return "element#id";
         }
 
     }

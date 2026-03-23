@@ -10,7 +10,7 @@ import java.io.IOException;
  * A specialization of {@link RedirectView} that can be used to signal htmx to perform a client-side redirect.
  * This View supports all the features of RedirectView e.g. exposing model attributes, flash attributes, etc.
  *
- * @see <a href="https://htmx.org/headers/hx-redirect/">HX-Redirect Response Header</a>
+ * @see <a href="https://four.htmx.org/reference/headers/HX-Redirect">HX-Redirect</a>
  * @since 3.6.0
  */
 public class HtmxRedirectView extends RedirectView {

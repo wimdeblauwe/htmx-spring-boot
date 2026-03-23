@@ -1,5 +1,7 @@
 package io.github.wimdeblauwe.htmx.spring.boot.mvc;
 
+import org.springframework.core.annotation.AliasFor;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -16,7 +18,7 @@ public @interface HxRequest {
      * Whether the mapping applies also for requests that have been boosted.
      * Defaults to {@code true}.
      *
-     * @see <a href="https://htmx.org/reference/#request_headers">HX-Boosted</a>
+     * @see <a href="https://four.htmx.org/reference/headers/HX-Boosted">HX-Boosted</a>
      * @since 3.6.0
      */
     boolean boosted() default true;
@@ -24,7 +26,7 @@ public @interface HxRequest {
     /**
      * Whether the mapping applies also for requests that have been made for history restoration.
      *
-     * @see <a href="https://htmx.org/reference/#request_headers">HX-History-Restore-Request</a>
+     * @see <a href="https://four.htmx.org/reference/headers/HX-History-Restore-Request">HX-History-Restore-Request</a>
      * @since 4.1.0
      */
     boolean historyRestoreRequest() default false;
@@ -32,32 +34,30 @@ public @interface HxRequest {
     /**
      * Restricts the mapping to the {@code id} of a specific target element.
      *
-     * @see <a href="https://htmx.org/reference/#request_headers">HX-Target</a>
+     * @see <a href="https://four.htmx.org/reference/headers/HX-Target">HX-Target</a>
      */
     String target() default "";
 
     /**
-     * Restricts the mapping to the {@code id} of a specific triggered element.
-     *
-     * @see <a href="https://htmx.org/reference/#request_headers">HX-Trigger</a>
-     */
-    String triggerId() default "";
-
-    /**
-     * Restricts the mapping to the {@code name} of a specific triggered element.
-     *
-     * @see <a href="https://htmx.org/reference/#request_headers">HX-Trigger-Name</a>
-     */
-    String triggerName() default "";
-
-    /**
-     * Restricts the mapping to the {@code id}, if any, or to the {@code name} of a specific triggered element.
+     * Restricts the mapping to the element that triggered the request.
      * <p>
-     * If you want to be explicit use {@link #triggerId()} or {@link #triggerName()}.
+     * Format is {@code tag#id} like {@code button#submit}.
+     * Elements without an ID use only the tag name like {@code div} or {@code form}.
      *
-     * @see <a href="https://htmx.org/reference/#request_headers">HX-Trigger</a>
-     * @see <a href="https://htmx.org/reference/#request_headers">HX-Trigger-Name</a>
+     * @see <a href="https://four.htmx.org/reference/headers/HX-Source">HX-Source</a>
+     * @since 6.0.0
      */
+    String source() default "";
+
+    /**
+     * Restricts the mapping to the element that triggered the request.
+     * <p>
+     * Format is {@code tag#id} like {@code button#submit}.
+     * Elements without an ID use only the tag name like {@code div} or {@code form}.
+     *
+     * @see <a href="https://four.htmx.org/reference/headers/HX-Source">HX-Source</a>
+     */
+    @AliasFor("source")
     String value() default "";
 
 }
