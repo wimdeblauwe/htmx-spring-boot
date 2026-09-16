@@ -2,7 +2,7 @@
 [![Maven Central](https://maven-badges.sml.io/sonatype-central/io.github.wimdeblauwe/htmx-spring-boot/badge.svg)](https://maven-badges.sml.io/sonatype-central/io.github.wimdeblauwe/htmx-spring-boot)
 [![javadoc](https://javadoc.io/badge2/io.github.wimdeblauwe/htmx-spring-boot/javadoc.svg)](https://javadoc.io/doc/io.github.wimdeblauwe/htmx-spring-boot)
 
-# Spring Boot and Thymeleaf library for htmx
+# Spring Boot and Thymeleaf library for htmx 2.x
 
 > 📕 Want to write production-ready Spring Boot starters like this one? Read [Crafting Spring Boot Starters](https://www.wimdeblauwe.com/books/crafting-spring-boot-starters/).
 
