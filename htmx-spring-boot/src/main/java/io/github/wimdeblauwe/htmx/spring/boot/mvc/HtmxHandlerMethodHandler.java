@@ -30,8 +30,6 @@ class HtmxHandlerMethodHandler {
         HtmxResponse htmxResponse = RequestContextUtils.getHtmxResponse(request);
         if (htmxResponse != null) {
             addHxTriggerHeaders(response, HtmxResponseHeader.HX_TRIGGER, htmxResponse.getTriggers());
-            addHxTriggerHeaders(response, HtmxResponseHeader.HX_TRIGGER_AFTER_SETTLE, htmxResponse.getTriggersAfterSettle());
-            addHxTriggerHeaders(response, HtmxResponseHeader.HX_TRIGGER_AFTER_SWAP, htmxResponse.getTriggersAfterSwap());
 
             if (htmxResponse.getReplaceUrl() != null) {
                 response.setHeader(HtmxResponseHeader.HX_REPLACE_URL.getValue(), RequestContextUtils.createUrl(request, htmxResponse.getReplaceUrl(), htmxResponse.isContextRelative()));
@@ -59,8 +57,6 @@ class HtmxHandlerMethodHandler {
         setHxRetarget(response, method);
         setHxReselect(response, method);
         setHxTrigger(response, method);
-        setHxTriggerAfterSettle(response, method);
-        setHxTriggerAfterSwap(response, method);
     }
 
     private void addHxTriggerHeaders(HttpServletResponse response, HtmxResponseHeader headerName, Collection<HtmxTrigger> triggers) {
@@ -136,20 +132,6 @@ class HtmxHandlerMethodHandler {
         }
     }
 
-    private void setHxTriggerAfterSettle(HttpServletResponse response, Method method) {
-        HxTriggerAfterSettle methodAnnotation = AnnotatedElementUtils.findMergedAnnotation(method, HxTriggerAfterSettle.class);
-        if (methodAnnotation != null) {
-            setHeader(response, HtmxResponseHeader.HX_TRIGGER_AFTER_SETTLE, methodAnnotation.value());
-        }
-    }
-
-    private void setHxTriggerAfterSwap(HttpServletResponse response, Method method) {
-        HxTriggerAfterSwap methodAnnotation = AnnotatedElementUtils.findMergedAnnotation(method, HxTriggerAfterSwap.class);
-        if (methodAnnotation != null) {
-            setHeader(response, HtmxResponseHeader.HX_TRIGGER_AFTER_SWAP, methodAnnotation.value());
-        }
-    }
-
     private void setHeader(HttpServletResponse response, HtmxResponseHeader header, String value) {
         response.setHeader(header.getValue(), value);
     }
@@ -184,6 +166,18 @@ class HtmxHandlerMethodHandler {
             if (!annotation.scrollTarget().isEmpty()) {
                 reswap.scrollTarget(annotation.scrollTarget());
             }
+        }
+        if (annotation.ignoreTitle()) {
+            reswap.ignoreTitle();
+        }
+        if (!annotation.target().isBlank()) {
+            reswap.target(annotation.target());
+        }
+        if (annotation.strip()) {
+            reswap.strip();
+        }
+        if (annotation.swapEmpty()) {
+            reswap.swapEmpty();
         }
 
         return reswap.toString();

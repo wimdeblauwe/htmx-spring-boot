@@ -10,7 +10,7 @@ import java.util.Map;
 /**
  * A View that can be used to signal htmx to refresh the page.
  *
- * @see <a href="https://htmx.org/reference/#response_header">HX-Refresh Response Header</a>
+ * @see <a href="https://four.htmx.org/reference/headers/HX-Refresh">HX-Refresh</a>
  * @since 3.6.0
  */
 public class HtmxRefreshView implements View, SmartView {

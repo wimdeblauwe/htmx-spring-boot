@@ -7,7 +7,7 @@ import static io.github.wimdeblauwe.htmx.spring.boot.mvc.HtmxRequestHeader.*;
 
 /**
  * This class can be used as a controller method argument to access
- * the <a href="https://htmx.org/reference/#request_headers">htmx Request Headers</a>.
+ * the <a href="https://four.htmx.org/reference/headers#request">htmx Request Headers</a>.
  *
  * <pre>
  * {@code
@@ -21,7 +21,7 @@ import static io.github.wimdeblauwe.htmx.spring.boot.mvc.HtmxRequestHeader.*;
  * }
  * </pre>
  *
- * @see <a href="https://htmx.org/reference/#request_headers">Request Headers Reference</a>
+ * @see <a href="https://four.htmx.org/reference/headers#request">Request Headers Reference</a>
  */
 public final class HtmxRequest {
 
@@ -31,8 +31,8 @@ public final class HtmxRequest {
     private final boolean historyRestoreRequest;
     private final String promptResponse;
     private final String target;
-    private final String triggerName;
-    private final String triggerId;
+    private final HtmxRequestType requestType;
+    private final String source;
 
     /**
      * Return a {@link Builder} to create a {@link HtmxRequest}.
@@ -82,25 +82,27 @@ public final class HtmxRequest {
         if (request.getHeader(HX_TARGET.getValue()) != null) {
             builder.target(request.getHeader(HX_TARGET.getValue()));
         }
-        if (request.getHeader(HX_TRIGGER_NAME.getValue()) != null) {
-            builder.triggerName(request.getHeader(HX_TRIGGER_NAME.getValue()));
+        if (request.getHeader(HX_REQUEST_TYPE.getValue()) != null) {
+            builder.requestType(request.getHeader(HX_REQUEST_TYPE.getValue()));
         }
-        if (request.getHeader(HX_TRIGGER.getValue()) != null) {
-            builder.triggerId(request.getHeader(HX_TRIGGER.getValue()));
+        if (request.getHeader(HX_SOURCE.getValue()) != null) {
+            builder.source(request.getHeader(HX_SOURCE.getValue()));
         }
 
         return builder.build();
     }
 
-    HtmxRequest(boolean htmxRequest, boolean boosted, String currentUrl, boolean historyRestoreRequest, String promptResponse, String target, String triggerName, String triggerId) {
+    HtmxRequest(boolean htmxRequest, boolean boosted, String currentUrl, boolean historyRestoreRequest, String promptResponse,
+                String target, HtmxRequestType requestType, String source) {
+
         this.htmxRequest = htmxRequest;
         this.boosted = boosted;
         this.currentUrl = currentUrl;
         this.historyRestoreRequest = historyRestoreRequest;
         this.promptResponse = promptResponse;
         this.target = target;
-        this.triggerName = triggerName;
-        this.triggerId = triggerId;
+        this.requestType = requestType;
+        this.source = source;
     }
 
     public boolean isHtmxRequest() {
@@ -136,9 +138,25 @@ public final class HtmxRequest {
     }
 
     /**
-     * The user response to an hx-prompt.
+     * Returns {@code true} if the request targets a specific element or {@code false} the whole page.
+     *
+     * @return if the request targets a specific element or the whole page
+     * @throws NullPointerException if the request type is not available, which means that the request was made with an htmx version older than 4.x
+     * @since 6.0.0
+     */
+    public boolean isPartialRequest() {
+
+        if (requestType == null) {
+            throw new NullPointerException("Unable to determine if the request is partial because 'HX-Request-Type' header is missing.");
+        }
+        return requestType == HtmxRequestType.PARTIAL;
+    }
+
+    /**
+     * The user response to a prompt.
      *
      * @return The response of the user. Can be null.
+     * @see <a href="https://four.htmx.org/extensions/hx-prompt">hx-prompt extension</a>
      */
     @Nullable
     public String getPromptResponse() {
@@ -146,9 +164,12 @@ public final class HtmxRequest {
     }
 
     /**
-     * The id of the target element if it exists.
+     * The element or id that will receive the response.
+     * <p>
+     * Format is {@code tag#id} like {@code button#submit}
      *
-     * @return the id, or null if no id was passed in the request
+     * @return the element that will receive the response, or null if it was not passed in {@code HX-Target} header.
+     * @see <a href="https://four.htmx.org/reference/headers/HX-Target">HX-Target</a>
      */
     @Nullable
     public String getTarget() {
@@ -156,23 +177,102 @@ public final class HtmxRequest {
     }
 
     /**
-     * The name of the triggered element if it exists.
+     * Returns the element name e.g. {@code div} that will receive the response.
      *
-     * @return the name of the trigger, or null if no name was passed in the request
+     * @return the name of the element, or null if it was not passed in {@code HX-Target} header.
+     * @throws NullPointerException if the {@link #target} is not available, which means that the request was made with an htmx version older than 4.x
+     * @see <a href="https://four.htmx.org/reference/headers/HX-Target">HX-Target</a>
      */
     @Nullable
-    public String getTriggerName() {
-        return triggerName;
+    public String getTargetElementName() {
+
+        if (target == null) {
+            throw new NullPointerException("Unable to determine the target element name because 'HX-Target' header is missing.");
+        }
+
+        int index = target.indexOf("#");
+        if (index > -1) {
+            return target.substring(0, index);
+        }
+
+        return target;
     }
 
     /**
-     * The id of the triggered element if it exists.
+     * Return the ID of the element that will receive the response.
      *
-     * @return the id of the trigger, or null if no name was passed in the request
+     * @return the ID of the element, or null if it was not passed in {@code HX-Target} header.
+     * @throws NullPointerException if the {@link #target} is not available, which means that the request was made with an htmx version older than 4.x
+     * @see <a href="https://four.htmx.org/reference/headers/HX-Target">HX-Target</a>
      */
     @Nullable
-    public String getTriggerId() {
-        return triggerId;
+    public String getTargetElementId() {
+
+        if (target == null) {
+            throw new NullPointerException("Unable to determine the target element id because 'HX-Target' header is missing.");
+        }
+
+        int index = target.indexOf("#");
+        if (index > -1) {
+            return target.substring(index + 1);
+        }
+
+        return null;
+    }
+
+    /**
+     * The element that triggered the request.
+     * <p>
+     * Format is {@code tag#id} like {@code button#submit}
+     *
+     * @return the element that triggered the request, or null if it was not passed in {@code HX-Target} header.
+     * @see <a href="https://four.htmx.org/reference/headers/HX-Source">HX-Source</a>
+     */
+    @Nullable
+    public String getSource() {
+        return source;
+    }
+
+    /**
+     * The element name e.g. {@code div} that triggered the request.
+     *
+     * @return the name of the element, or null if it was not passed in {@code HX-Source} header.
+     * @throws NullPointerException if the {@link #source} is not available, which means that the request was made with an htmx version older than 4.x
+     * @see <a href="https://four.htmx.org/reference/headers/HX-Source">HX-Source</a>
+     */
+    public String getSourceElementName() {
+
+        if (source == null) {
+            throw new NullPointerException("Unable to determine the source element name because 'HX-Source' header is missing.");
+        }
+
+        int index = source.indexOf("#");
+        if (index > -1) {
+            return source.substring(0, index);
+        }
+
+        return source;
+    }
+
+    /**
+     * The ID of the element that triggered the request.
+     *
+     * @return the ID of the element, or null if it was not passed in {@code HX-Source} header.
+     * @throws NullPointerException if the {@link #source} is not available, which means that the request was made with an htmx version older than 4.x
+     * @see <a href="https://four.htmx.org/reference/headers/HX-Source">HX-Source</a>
+     */
+    public String getSourceElementId() {
+
+        if (source == null) {
+            throw new NullPointerException("Unable to determine the source element id because 'HX-Source' header is missing.");
+        }
+
+        int index = source.indexOf("#");
+        if (index > -1) {
+            return source.substring(index + 1);
+        }
+
+        return null;
     }
 
     public static final class Builder {
@@ -181,6 +281,8 @@ public final class HtmxRequest {
         private String currentUrl;
         private boolean historyRestoreRequest;
         private String promptResponse;
+        private HtmxRequestType requestType;
+        private String source;
         private String target;
         private String triggerName;
         private String triggerId;
@@ -208,6 +310,16 @@ public final class HtmxRequest {
             return this;
         }
 
+        public Builder requestType(String requestType) {
+            this.requestType = HtmxRequestType.of(requestType);
+            return this;
+        }
+
+        public Builder source(String source) {
+            this.source = source;
+            return this;
+        }
+
         public Builder target(String target) {
             this.target = target;
             return this;
@@ -224,7 +336,7 @@ public final class HtmxRequest {
         }
 
         public HtmxRequest build() {
-            return new HtmxRequest(true, boosted, currentUrl, historyRestoreRequest, promptResponse, target, triggerName, triggerId);
+            return new HtmxRequest(true, boosted, currentUrl, historyRestoreRequest, promptResponse, target, requestType, source);
         }
     }
 }

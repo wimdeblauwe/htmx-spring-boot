@@ -39,8 +39,8 @@ import java.util.Map;
  * ("abc123" represents the real CSRF token that Spring Security provides at runtime)
  *
  * @author LC Nicolau
- * @see <a href="https://htmx.org/docs/#csrf-prevention">CSRF Prevention</a>
- * @see <a href="https://htmx.org/attributes/hx-headers/">hx-headers Attribute Reference</a>
+ * @see <a href="https://four.htmx.org/docs#csrf-prevention">CSRF Prevention</a>
+ * @see <a href="https://four.htmx.org/reference/attributes/hx-headers">hx-headers Attribute Reference</a>
  * @since 5.1.0
  */
 public class HtmxCsrfAttributeProcessor extends HtmxAttributeProcessor {

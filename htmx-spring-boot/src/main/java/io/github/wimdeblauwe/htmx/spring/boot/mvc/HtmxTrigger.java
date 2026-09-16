@@ -5,7 +5,7 @@ import java.util.Objects;
 /**
  * Represents a value of HX-Trigger, HX-Trigger-After-Settle or HX-Trigger-After-Swap.
  *
- * @see <a href="https://htmx.org/headers/hx-trigger/">HX-Trigger Response Headers</a>
+ * @see <a href="https://four.htmx.org/reference/headers/HX-Trigger">HX-Trigger</a>
  */
 public class HtmxTrigger {
 

@@ -9,7 +9,7 @@ import java.util.Objects;
 /**
  * Represents the HX-Location response header value.
  *
- * @see <a href="https://htmx.org/headers/hx-location/">HX-Location Response Header</a>
+ * @see <a href="https://four.htmx.org/reference/headers/HX-Location">HX-Location</a>
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class HtmxLocation {

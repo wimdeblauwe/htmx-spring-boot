@@ -7,9 +7,10 @@ import java.lang.annotation.Target;
 
 /**
  * Annotation to specify how the response will be swapped.
- * See <a href="https://htmx.org/attributes/hx-swap/">hx-swap</a> for possible values.
+ * See <a href="https://four.htmx.org/reference/attributes/hx-swap">hx-swap</a> for possible values.
  *
- * @see <a href="https://htmx.org/reference/#response_headers">HX-Reswap</a>
+ * @see <a href="https://four.htmx.org/reference/headers/HX-Reswap">HX-Reswap</a>
+ * @see <a href="https://four.htmx.org/reference/attributes/hx-swap">hx-swap</a>
  */
 @Target({ElementType.TYPE, ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
@@ -19,9 +20,16 @@ public @interface HxReswap {
      * A value to specify how the response will be swapped. The default value is {@link HxSwapType#DEFAULT}
      * which uses the default swap behavior as configured by {@code htmx.config.defaultSwapStyle}
      *
-     * @see <a href="https://htmx.org/attributes/hx-swap/">hx-swap</a>
+     * @see <a href="https://four.htmx.org/reference/attributes/hx-swap">hx-swap</a>
      */
     HxSwapType value() default HxSwapType.DEFAULT;
+
+    /**
+     * Enables the use of the new
+     * <a href="https://developer.mozilla.org/en-US/docs/Web/API/View_Transitions_API">View Transitions API</a>
+     * when a swap occurs.
+     */
+    boolean transition() default false;
 
     /**
      * Set the time in milliseconds that should elapse after receiving a response to swap the content.
@@ -32,6 +40,14 @@ public @interface HxReswap {
      * Set the time in milliseconds that should elapse between the swap and the settle logic.
      */
     long settle() default -1;
+
+    /**
+     * Prevents updating the page {@code <title>}.
+     *
+     * @see <a href="https://four.htmx.org/reference/attributes/hx-swap#ignoretitle">hx-swap#ignoreTitle</a>
+     * @since 6.0.0
+     */
+    boolean ignoreTitle() default false;
 
     /**
      * Changes the scrolling behavior of the target element.
@@ -54,21 +70,38 @@ public @interface HxReswap {
     String showTarget() default "";
 
     /**
-     * Enables the use of the new
-     * <a href="https://developer.mozilla.org/en-US/docs/Web/API/View_Transitions_API">View Transitions API</a>
-     * when a swap occurs.
-     */
-    boolean transition() default false;
-
-    /**
      * Enable or disable auto-scrolling to focused inputs between requests.
      */
     FocusScroll focusScroll() default FocusScroll.UNDEFINED;
 
     /**
+     * Sets the swap target.
+     *
+     * @see <a href="https://four.htmx.org/reference/attributes/hx-swap#target">hx-swap#target</a>
+     * @since 6.0.0
+     */
+    String target() default "";
+
+    /**
+     * Controls whether the response’s outer element is removed.
+     *
+     * @see <a href="https://four.htmx.org/reference/attributes/hx-swap#strip">hx-swap#strip</a>
+     * @since 6.0.0
+     */
+    boolean strip() default false;
+
+    /**
+     * Controls the main target when no main content remains.
+     *
+     * @see <a href="https://four.htmx.org/reference/attributes/hx-swap#swapEmpty">hx-swap#swapEmpty</a>
+     * @since 6.0.0
+     */
+    boolean swapEmpty() default false;
+
+    /**
      * Represents the values for {@link #focusScroll()}
      */
-    public enum FocusScroll {
+    enum FocusScroll {
         TRUE,
         FALSE,
         UNDEFINED
@@ -77,7 +110,7 @@ public @interface HxReswap {
     /**
      * Represents the position values for {@link #show()} and {@link #scroll()}
      */
-    public enum Position {
+    enum Position {
         NONE,
         TOP,
         BOTTOM,

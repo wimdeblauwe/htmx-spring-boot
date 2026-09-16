@@ -1,6 +1,9 @@
 package io.github.wimdeblauwe.htmx.spring.boot.mvc;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -8,6 +11,7 @@ import org.springframework.boot.resttestclient.autoconfigure.AutoConfigureRestTe
 import org.springframework.boot.security.autoconfigure.web.servlet.ServletWebSecurityAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.lang.Nullable;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.stereotype.Controller;
 import org.springframework.test.web.servlet.client.RestTestClient;
@@ -15,6 +19,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.time.Duration;
+import java.util.stream.Stream;
+
+import static io.github.wimdeblauwe.htmx.spring.boot.mvc.HtmxResponseHeader.*;
 
 @SpringBootTest(
         classes = HtmxResponseHandlerMethodArgumentResolverIT.Application.class,
@@ -27,14 +34,27 @@ public class HtmxResponseHandlerMethodArgumentResolverIT {
     @Autowired
     RestTestClient webClient;
 
+    @ParameterizedTest
+    @MethodSource("swapTypes")
+    public void testReswapType(HxSwapType type) throws Exception {
+
+        get("/reswap-type?type={type}", type.name())
+                .expectHeader()
+                .valueEquals(HX_RESWAP.getValue(), type.getValue());
+    }
+
+    static Stream<Arguments> swapTypes() {
+        return Stream.of(HxSwapType.values()).map(Arguments::of);
+    }
+
     @Test
     public void testPreventHistoryUpdate() throws Exception {
 
         get("/prevent-history-update")
                 .expectHeader()
-                .doesNotExist("HX-Replace-Url")
+                .doesNotExist(HX_REPLACE_URL.getValue())
                 .expectHeader()
-                .valueEquals("HX-Push-Url", "false");
+                .valueEquals(HX_PUSH_URL.getValue(), "false");
     }
 
     @Test
@@ -42,9 +62,9 @@ public class HtmxResponseHandlerMethodArgumentResolverIT {
 
         get("/push-url")
                 .expectHeader()
-                .doesNotExist("HX-Replace-Url")
+                .doesNotExist(HX_REPLACE_URL.getValue())
                 .expectHeader()
-                .valueEquals("HX-Push-Url", "/path");
+                .valueEquals(HX_PUSH_URL.getValue(), "/path");
     }
 
     @Test
@@ -52,7 +72,7 @@ public class HtmxResponseHandlerMethodArgumentResolverIT {
 
         get("/reselect")
                 .expectHeader()
-                .valueEquals("HX-Reselect", "#container");
+                .valueEquals(HX_RESELECT.getValue(), "#container");
     }
 
     @Test
@@ -60,71 +80,7 @@ public class HtmxResponseHandlerMethodArgumentResolverIT {
 
         get("/reswap")
                 .expectHeader()
-                .valueEquals("HX-Reswap", "innerHTML transition:true focus-scroll:true swap:0ms settle:500ms scroll:#scrollTarget:top show:#showTarget:bottom");
-    }
-
-    @Test
-    public void testReswapAfterBegin() throws Exception {
-
-        get("/reswap-after-begin")
-                .expectHeader()
-                .valueEquals("HX-Reswap", "afterbegin");
-    }
-
-    @Test
-    public void testReswapAfterEnd() throws Exception {
-
-        get("/reswap-after-end")
-                .expectHeader()
-                .valueEquals("HX-Reswap", "afterend");
-    }
-
-    @Test
-    public void testReswapBeforeBegin() throws Exception {
-
-        get("/reswap-before-begin")
-                .expectHeader()
-                .valueEquals("HX-Reswap", "beforebegin");
-    }
-
-    @Test
-    public void testReswapBeforeEnd() throws Exception {
-
-        get("/reswap-before-end")
-                .expectHeader()
-                .valueEquals("HX-Reswap", "beforeend");
-    }
-
-    @Test
-    public void testReswapDelete() throws Exception {
-
-        get("/reswap-delete")
-                .expectHeader()
-                .valueEquals("HX-Reswap", "delete");
-    }
-
-    @Test
-    public void testReswapInnerHtml() throws Exception {
-
-        get("/reswap-inner-html")
-                .expectHeader()
-                .valueEquals("HX-Reswap", "innerHTML");
-    }
-
-    @Test
-    public void testReswapNone() throws Exception {
-
-        get("/reswap-none")
-                .expectHeader()
-                .valueEquals("HX-Reswap", "none");
-    }
-
-    @Test
-    public void testReswapOuterHtml() throws Exception {
-
-        get("/reswap-outer-html")
-                .expectHeader()
-                .valueEquals("HX-Reswap", "outerHTML");
+                .valueEquals(HX_RESWAP.getValue(), "innerHTML transition:true focus-scroll:true swap:0ms settle:500ms scroll:#scrollTarget:top show:#showTarget:bottom target:#target ignoreTitle:true strip:true swapEmpty:true");
     }
 
     @Test
@@ -132,7 +88,7 @@ public class HtmxResponseHandlerMethodArgumentResolverIT {
 
         get("/reswap-default-with-swap-timing")
                 .expectHeader()
-                .valueEquals("HX-Reswap", "swap:0ms");
+                .valueEquals(HX_RESWAP.getValue(), "swap:0ms");
     }
 
     @Test
@@ -140,7 +96,7 @@ public class HtmxResponseHandlerMethodArgumentResolverIT {
 
         get("/reswap-show-none")
                 .expectHeader()
-                .valueEquals("HX-Reswap", "show:none");
+                .valueEquals(HX_RESWAP.getValue(), "show:none");
     }
 
     @Test
@@ -148,7 +104,7 @@ public class HtmxResponseHandlerMethodArgumentResolverIT {
 
         get("/retarget")
                 .expectHeader()
-                .valueEquals("HX-Retarget", "#container");
+                .valueEquals(HX_RETARGET.getValue(), "#container");
     }
 
     @Test
@@ -156,23 +112,7 @@ public class HtmxResponseHandlerMethodArgumentResolverIT {
 
         get("/trigger")
                 .expectHeader()
-                .valueEquals("HX-Trigger", "trigger1,trigger2");
-    }
-
-    @Test
-    public void testTriggerAfterSettle() throws Exception {
-
-        get("/trigger-after-settle")
-                .expectHeader()
-                .valueEquals("HX-Trigger-After-Settle", "trigger1,trigger2");
-    }
-
-    @Test
-    public void testTriggerAfterSwap() throws Exception {
-
-        get("/trigger-after-swap")
-                .expectHeader()
-                .valueEquals("HX-Trigger-After-Swap", "trigger1,trigger2");
+                .valueEquals(HX_TRIGGER.getValue(), "trigger1,trigger2");
     }
 
     @Test
@@ -180,16 +120,16 @@ public class HtmxResponseHandlerMethodArgumentResolverIT {
 
         get("/response-body")
                 .expectHeader()
-                .valueEquals("HX-Trigger", "trigger")
+                .valueEquals(HX_TRIGGER.getValue(), "trigger")
                 .expectHeader()
-                .valueEquals("HX-Reswap", "none");
+                .valueEquals(HX_RESWAP.getValue(), "none");
     }
 
-    private RestTestClient.ResponseSpec get(String uri) {
+    private RestTestClient.ResponseSpec get(String uri, @Nullable Object... uriVariables) {
 
         return webClient
                 .get()
-                .uri(uri)
+                .uri(uri, uriVariables)
                 .exchange()
                 .expectStatus()
                 .isOk();
@@ -237,63 +177,40 @@ public class HtmxResponseHandlerMethodArgumentResolverIT {
                                          .show(HtmxReswap.Position.BOTTOM)
                                          .showTarget("#showTarget")
                                          .transition()
-                                         .focusScroll(true));
+                                         .focusScroll(true)
+                                         .target("#target")
+                                         .ignoreTitle()
+                                         .strip()
+                                         .swapEmpty());
             return "view";
         }
 
-        @GetMapping("/reswap-after-begin")
-        public String reswapAfterBegin(HtmxResponse response) {
+        @GetMapping("/reswap-type")
+        public String reswapType(HxSwapType type, HtmxResponse response) {
 
-            response.setReswap(HtmxReswap.afterBegin());
-            return "view";
-        }
+            HtmxReswap reswap = switch (type) {
+                case AFTER -> HtmxReswap.after();
+                case AFTER_BEGIN -> HtmxReswap.afterBegin();
+                case AFTER_END -> HtmxReswap.afterEnd();
+                case APPEND -> HtmxReswap.append();
+                case BEFORE -> HtmxReswap.before();
+                case BEFORE_BEGIN -> HtmxReswap.beforeBegin();
+                case BEFORE_END -> HtmxReswap.beforeEnd();
+                case DEFAULT -> HtmxReswap.defaultSwap();
+                case DELETE -> HtmxReswap.delete();
+                case INNER_HTML -> HtmxReswap.innerHtml();
+                case INNER_MORPH -> HtmxReswap.innerMorph();
+                case NONE -> HtmxReswap.none();
+                case OUTER_HTML -> HtmxReswap.outerHtml();
+                case OUTER_MORPH -> HtmxReswap.outerMorph();
+                case OUTER_SYNC -> HtmxReswap.outerSync();
+                case PREPEND -> HtmxReswap.prepend();
+                case TEXT_CONTENT -> HtmxReswap.textContent();
+                case UPSERT -> HtmxReswap.upsert();
+                default -> throw new IllegalArgumentException("Unknown type: " + type);
+            };
 
-        @GetMapping("/reswap-after-end")
-        public String reswapAfterEnd(HtmxResponse response) {
-
-            response.setReswap(HtmxReswap.afterEnd());
-            return "view";
-        }
-
-        @GetMapping("/reswap-before-begin")
-        public String reswapBeforeBegin(HtmxResponse response) {
-
-            response.setReswap(HtmxReswap.beforeBegin());
-            return "view";
-        }
-
-        @GetMapping("/reswap-before-end")
-        public String reswapBeforeEnd(HtmxResponse response) {
-
-            response.setReswap(HtmxReswap.beforeEnd());
-            return "view";
-        }
-
-        @GetMapping("/reswap-delete")
-        public String reswapDelete(HtmxResponse response) {
-
-            response.setReswap(HtmxReswap.delete());
-            return "view";
-        }
-
-        @GetMapping("/reswap-inner-html")
-        public String reswapInnerHtml(HtmxResponse response) {
-
-            response.setReswap(HtmxReswap.innerHtml());
-            return "view";
-        }
-
-        @GetMapping("/reswap-none")
-        public String reswapNone(HtmxResponse response) {
-
-            response.setReswap(HtmxReswap.none());
-            return "view";
-        }
-
-        @GetMapping("/reswap-outer-html")
-        public String reswapOuterHtml(HtmxResponse response) {
-
-            response.setReswap(HtmxReswap.outerHtml());
+            response.setReswap(reswap);
             return "view";
         }
 
@@ -325,22 +242,6 @@ public class HtmxResponseHandlerMethodArgumentResolverIT {
 
             response.addTrigger("trigger1");
             response.addTrigger("trigger2");
-            return "view";
-        }
-
-        @GetMapping("/trigger-after-settle")
-        public String triggerAfterSettle(HtmxResponse response) {
-
-            response.addTriggerAfterSettle("trigger1");
-            response.addTriggerAfterSettle("trigger2");
-            return "view";
-        }
-
-        @GetMapping("/trigger-after-swap")
-        public String triggerAfterSwap(HtmxResponse response) {
-
-            response.addTriggerAfterSwap("trigger1");
-            response.addTriggerAfterSwap("trigger2");
             return "view";
         }
 

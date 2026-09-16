@@ -6,7 +6,7 @@ import java.util.Objects;
 /**
  * Represents a HX-Reswap response header value.
  *
- * @see <a href="https://htmx.org/attributes/hx-swap/">hx-swap</a>
+ * @see <a href="https://four.htmx.org/reference/attributes/hx-swap">hx-swap</a>
  * @since 3.1
  */
 public class HtmxReswap {
@@ -20,6 +20,14 @@ public class HtmxReswap {
     private String showTarget;
     private boolean transition;
     private Boolean focusScroll;
+    private boolean ignoreTitle;
+    private String target;
+    private boolean strip;
+    private boolean swapEmpty;
+
+    HtmxReswap(HxSwapType type) {
+        this.type = type;
+    }
 
     /**
      * Use the default swap behavior as configured by {@code htmx.config.defaultSwapStyle}
@@ -31,28 +39,30 @@ public class HtmxReswap {
 
     /**
      * Insert the response before the first child of the target element.
+     *
+     * @deprecated Use {@link #prepend()} instead.
      */
+    @Deprecated
     public static HtmxReswap afterBegin() {
         return new HtmxReswap(HxSwapType.AFTER_BEGIN);
     }
 
     /**
-     * Insert the response after the target element.
-     */
-    public static HtmxReswap afterEnd() {
-        return new HtmxReswap(HxSwapType.AFTER_END);
-    }
-
-    /**
      * Insert the response before the target element.
+     *
+     * @deprecated Use {@link #before()} instead.
      */
+    @Deprecated
     public static HtmxReswap beforeBegin() {
         return new HtmxReswap(HxSwapType.BEFORE_BEGIN);
     }
 
     /**
      * Insert the response after the last child of the target element.
+     *
+     * @deprecated Use {@link #append()} instead.
      */
+    @Deprecated
     public static HtmxReswap beforeEnd() {
         return new HtmxReswap(HxSwapType.BEFORE_END);
     }
@@ -65,14 +75,14 @@ public class HtmxReswap {
     }
 
     /**
-     * Replace the inner html of the target element.
+     * Replace the inner HTML of the target element.
      */
     public static HtmxReswap innerHtml() {
         return new HtmxReswap(HxSwapType.INNER_HTML);
     }
 
     /**
-     * Does not append the response to target element (out of band items will still be processed).
+     * Does not append the response to the target element (out-of-band elements or partials will still be processed).
      */
     public static HtmxReswap none() {
         return new HtmxReswap(HxSwapType.NONE);
@@ -85,8 +95,98 @@ public class HtmxReswap {
         return new HtmxReswap(HxSwapType.OUTER_HTML);
     }
 
-    HtmxReswap(HxSwapType type) {
-        this.type = type;
+    /**
+     * Replaces the text content of the element without parsing the response as HTML.
+     *
+     * @since 6.0.0
+     */
+    public static HtmxReswap textContent() {
+        return new HtmxReswap(HxSwapType.TEXT_CONTENT);
+    }
+
+    /**
+     * Insert the response before the target element.
+     *
+     * @since 6.0.0
+     */
+    public static HtmxReswap before() {
+        return new HtmxReswap(HxSwapType.BEFORE);
+    }
+
+    /**
+     * Insert the response before the first child of the target element.
+     *
+     * @since 6.0.0
+     */
+    public static HtmxReswap prepend() {
+        return new HtmxReswap(HxSwapType.PREPEND);
+    }
+
+    /**
+     * Insert the response after the last child of the target element.
+     *
+     * @since 6.0.0
+     */
+    public static HtmxReswap append() {
+        return new HtmxReswap(HxSwapType.APPEND);
+    }
+
+    /**
+     * Insert the response after the target element.
+     *
+     * @deprecated Use {@link #after()} instead.
+     */
+    @Deprecated
+    public static HtmxReswap afterEnd() {
+        return new HtmxReswap(HxSwapType.AFTER_END);
+    }
+
+    /**
+     * Insert the response after the target element.
+     *
+     * @since 6.0.0
+     */
+    public static HtmxReswap after() {
+        return new HtmxReswap(HxSwapType.AFTER);
+    }
+
+    /**
+     * Morphs the response inside the element, preserving state and focus.
+     *
+     * @since 6.0.0
+     */
+    public static HtmxReswap innerMorph() {
+        return new HtmxReswap(HxSwapType.INNER_MORPH);
+    }
+
+    /**
+     * Morphs the response with the entire element, preserving state and focus.
+     *
+     * @since 6.0.0
+     */
+    public static HtmxReswap outerMorph() {
+        return new HtmxReswap(HxSwapType.OUTER_MORPH);
+    }
+
+    /**
+     * Morphs the target’s attributes, then replaces its children.
+     *
+     * @since 6.0.0
+     */
+    public static HtmxReswap outerSync() {
+        return new HtmxReswap(HxSwapType.OUTER_SYNC);
+    }
+
+    /**
+     * Updates existing elements by ID and inserts new ones.
+     * <p>
+     * <b>Note:</b>
+     * Requires the <a href="https://four.htmx.org/extensions/hx-upsert">hx-upsert</a> extension.
+     *
+     * @since 6.0.0
+     */
+    public static HtmxReswap upsert() {
+        return new HtmxReswap(HxSwapType.UPSERT);
     }
 
     public Boolean getFocusScroll() {
@@ -125,6 +225,22 @@ public class HtmxReswap {
         return transition;
     }
 
+    public String getTarget() {
+        return target;
+    }
+
+    public boolean isIgnoreTitle() {
+        return ignoreTitle;
+    }
+
+    public boolean isStrip() {
+        return strip;
+    }
+
+    public boolean isSwapEmpty() {
+        return swapEmpty;
+    }
+
     /**
      * Returns a string representation for use as an HTTP header value.
      *
@@ -161,6 +277,18 @@ public class HtmxReswap {
                 value.append(" show:").append(show.getValue());
             }
         }
+        if (target != null) {
+            value.append(" target:").append(target);
+        }
+        if (ignoreTitle) {
+            value.append(" ignoreTitle:true");
+        }
+        if (strip) {
+            value.append(" strip:true");
+        }
+        if (swapEmpty) {
+            value.append(" swapEmpty:true");
+        }
 
         return value.toString().trim();
     }
@@ -190,7 +318,7 @@ public class HtmxReswap {
     /**
      * Used to target a different element for scrolling.
      *
-     * @param cssSelector a CSS selector
+     * @param cssSelector an extended <a href="https://four.htmx.org/reference/attributes/hx-target#extended-selectors">CSS selector</a> pointing to the target element.
      * @return self
      */
     public HtmxReswap scrollTarget(String cssSelector) {
@@ -223,7 +351,7 @@ public class HtmxReswap {
     /**
      * Used to target a different element for showing.
      *
-     * @param cssSelector a CSS selector
+     * @param cssSelector an extended <a href="https://four.htmx.org/reference/attributes/hx-target#extended-selectors">CSS selector</a> pointing to the target element.
      * @return self
      */
     public HtmxReswap showTarget(String cssSelector) {
@@ -274,6 +402,51 @@ public class HtmxReswap {
      */
     public HtmxReswap transition() {
         this.transition = true;
+        return this;
+    }
+
+    /**
+     * Prevents updating the page {@code <title>}.
+     *
+     * @return self
+     * @since 6.0.0
+     */
+    public HtmxReswap ignoreTitle() {
+        this.ignoreTitle = true;
+        return this;
+    }
+
+    /**
+     * Sets the swap target.
+     *
+     * @param cssSelector an extended <a href="https://four.htmx.org/reference/attributes/hx-target#extended-selectors">CSS selector</a> pointing to the target element.
+     * @return self
+     * @since 6.0.0
+     */
+    public HtmxReswap target(String cssSelector) {
+        this.target = cssSelector;
+        return this;
+    }
+
+    /**
+     * Strips the outermost element from the response.
+     *
+     * @return self
+     * @since 6.0.0
+     */
+    public HtmxReswap strip() {
+        this.strip = true;
+        return this;
+    }
+
+    /**
+     * Swap the response into the target element even if the response is empty, once htmx has extracted the hx-swap-oob elements.
+     *
+     * @return self
+     * @since 6.0.0
+     */
+    public HtmxReswap swapEmpty() {
+        this.swapEmpty = true;
         return this;
     }
 

@@ -35,15 +35,8 @@ public class HtmxRequestMappingHandlerMapping extends RequestMappingHandlerMappi
         var conditions = new ArrayList<RequestCondition<?>>();
         conditions.add(new HeadersRequestCondition(HX_REQUEST.getValue()));
 
-        if (StringUtils.hasText(hxRequest.value())) {
-            conditions.add(new HtmxTriggerHeadersRequestCondition(hxRequest.value()));
-        } else {
-            if (StringUtils.hasText(hxRequest.triggerId())) {
-                conditions.add(new HeadersRequestCondition(HX_TRIGGER.getValue() + "=" + hxRequest.triggerId()));
-            }
-            if (StringUtils.hasText(hxRequest.triggerName())) {
-                conditions.add(new HeadersRequestCondition(HX_TRIGGER_NAME.getValue() + "=" + hxRequest.triggerName()));
-            }
+        if (StringUtils.hasText(hxRequest.source())) {
+            conditions.add(new HeadersRequestCondition(HX_SOURCE.getValue() + "=" + hxRequest.source()));
         }
 
         if (StringUtils.hasText(hxRequest.target())) {

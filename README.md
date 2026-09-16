@@ -1,17 +1,19 @@
-[![Discord](https://img.shields.io/discord/725789699527933952)](https://htmx.org/discord)
+[![Discord](https://img.shields.io/discord/725789699527933952)](https://four.htmx.org/discord)
 [![Maven Central](https://maven-badges.sml.io/sonatype-central/io.github.wimdeblauwe/htmx-spring-boot/badge.svg)](https://maven-badges.sml.io/sonatype-central/io.github.wimdeblauwe/htmx-spring-boot)
 [![javadoc](https://javadoc.io/badge2/io.github.wimdeblauwe/htmx-spring-boot/javadoc.svg)](https://javadoc.io/doc/io.github.wimdeblauwe/htmx-spring-boot)
 
-# Spring Boot and Thymeleaf library for htmx
+# Spring Boot and Thymeleaf library for htmx 4.x and later
 
 > 📕 Want to write production-ready Spring Boot starters like this one? Read [Crafting Spring Boot Starters](https://www.wimdeblauwe.com/books/crafting-spring-boot-starters/).
 
-The project simplifies the integration of [htmx](https://htmx.org/) with [Spring Boot](https://spring.io/projects/spring-boot) / [Spring Web MVC](https://docs.spring.io/spring-framework/reference/web/webmvc.html) applications.
+The project simplifies the integration of [htmx](https://four.htmx.org/) with [Spring Boot](https://spring.io/projects/spring-boot) / [Spring Web MVC](https://docs.spring.io/spring-framework/reference/web/webmvc.html) applications.
 It provides a set of views, annotations, and argument resolvers for controllers to easily handle htmx-related request and response headers.
 This ensures seamless interaction between the frontend and backend, especially for dynamic content updates via htmx.
 
 Additionally, the project includes a custom [Thymeleaf](https://www.thymeleaf.org/) dialect to enable smooth rendering of htmx-specific attributes within Thymeleaf templates.
 With these tools, developers can quickly implement htmx-driven interactions, such as AJAX-based partial page updates, with minimal configuration.
+
+> ℹ️ For htmx 2.x support, please refer to the [5.x branch](https://github.com/wimdeblauwe/htmx-spring-boot/tree/5.x).
 
 ## Maven configuration
 
@@ -90,7 +92,7 @@ public String users() {
 
 ### Request Headers
 
-To access the various [htmx Request Headers](https://htmx.org/reference/#request_headers) in a controller method, you can use the class [HtmxRequest](https://javadoc.io/doc/io.github.wimdeblauwe/htmx-spring-boot/latest/io/github/wimdeblauwe/htmx/spring/boot/mvc/HtmxRequest.html)
+To access the various [htmx Request Headers](https://four.htmx.org/reference/headers#request) in a controller method, you can use the class [HtmxRequest](https://javadoc.io/doc/io.github.wimdeblauwe/htmx-spring-boot/latest/io/github/wimdeblauwe/htmx/spring/boot/mvc/HtmxRequest.html)
 as a controller method argument.
 
 ```java
@@ -106,18 +108,18 @@ public String users(HtmxRequest htmxRequest) {
 
 ### Response Headers
 
-There are two ways to set [htmx Response Headers](https://htmx.org/reference/#response_headers) in controller methods. The first is to use [HtmxResponse](https://javadoc.io/doc/io.github.wimdeblauwe/htmx-spring-boot/latest/io/github/wimdeblauwe/htmx/spring/boot/mvc/HtmxResponse.html)
+There are two ways to set [htmx Response Headers](https://four.htmx.org/reference/headers#response) in controller methods. The first is to use [HtmxResponse](https://javadoc.io/doc/io.github.wimdeblauwe/htmx-spring-boot/latest/io/github/wimdeblauwe/htmx/spring/boot/mvc/HtmxResponse.html)
 as controller method argument in combination with different Views e.g. [HtmxRedirectView](https://javadoc.io/doc/io.github.wimdeblauwe/htmx-spring-boot/latest/io/github/wimdeblauwe/htmx/spring/boot/mvc/HtmxRedirectView.html)
 as return value. The second is to use annotations, e.g. `@HxTrigger` to set the necessary response headers. The first method is more flexible and allows you to dynamically set the response headers based on the request.
 
 #### HtmxResponse and Views
 
-Most of the [htmx Response Headers](https://htmx.org/reference/#response_headers) can be set by using [HtmxResponse](https://javadoc.io/doc/io.github.wimdeblauwe/htmx-spring-boot/latest/io/github/wimdeblauwe/htmx/spring/boot/mvc/HtmxResponse.html) as controller method argument,
-except for some control flow response headers such as [HX-Redirect](https://htmx.org/headers/hx-redirect/). For these response headers, you have to use a corresponding view as return value of the controller method.
+Most of the [htmx Response Headers](https://four.htmx.org/reference/headers#response) can be set by using [HtmxResponse](https://javadoc.io/doc/io.github.wimdeblauwe/htmx-spring-boot/latest/io/github/wimdeblauwe/htmx/spring/boot/mvc/HtmxResponse.html) as controller method argument,
+except for some control flow response headers such as [HX-Redirect](https://four.htmx.org/reference/headers/HX-Redirect). For these response headers, you have to use a corresponding view as return value of the controller method.
 
-* [HtmxRedirectView](https://javadoc.io/doc/io.github.wimdeblauwe/htmx-spring-boot/latest/io/github/wimdeblauwe/htmx/spring/boot/mvc/HtmxRedirectView.html) - sets the [HX-Redirect](https://htmx.org/headers/hx-redirect/) header to do a client-side redirect.
-* [HtmxLocationRedirectView](https://javadoc.io/doc/io.github.wimdeblauwe/htmx-spring-boot/latest/io/github/wimdeblauwe/htmx/spring/boot/mvc/HtmxLocationRedirectView.html) - sets the [HX-Location](https://htmx.org/headers/hx-location/) header to do a client-side redirect without reloading the whole page.
-* [HtmxRefreshView](https://javadoc.io/doc/io.github.wimdeblauwe/htmx-spring-boot/latest/io/github/wimdeblauwe/htmx/spring/boot/mvc/HtmxRefreshView.html) - sets the [HX-Refresh](https://htmx.org/headers/hx-refresh/) header to do a client-side refresh of the current page.
+* [HtmxRedirectView](https://javadoc.io/doc/io.github.wimdeblauwe/htmx-spring-boot/latest/io/github/wimdeblauwe/htmx/spring/boot/mvc/HtmxRedirectView.html) - sets the [HX-Redirect](https://four.htmx.org/reference/headers/HX-Redirect) header to do a client-side redirect.
+* [HtmxLocationRedirectView](https://javadoc.io/doc/io.github.wimdeblauwe/htmx-spring-boot/latest/io/github/wimdeblauwe/htmx/spring/boot/mvc/HtmxLocationRedirectView.html) - sets the [HX-Location](https://four.htmx.org/reference/headers/HX-Location) header to do a client-side redirect without reloading the whole page.
+* [HtmxRefreshView](https://javadoc.io/doc/io.github.wimdeblauwe/htmx-spring-boot/latest/io/github/wimdeblauwe/htmx/spring/boot/mvc/HtmxRefreshView.html) - sets the [HX-Refresh](https://four.htmx.org/reference/headers/HX-Refresh) header to do a client-side refresh of the current page.
 
 ##### Special view name prefixes
 For these views, there is also a special view name handling if you prefer to return a view name instead of a view instance.
@@ -160,7 +162,7 @@ The following annotations can be used on controller methods to set the necessary
 
 >**Note** Please refer to the related Javadoc to learn more about the available options.
 
-If you want htmx to trigger an event after the response is processed, you can use the annotation `@HxTrigger` which sets the necessary response header [HX-Trigger](https://htmx.org/headers/hx-trigger/).
+If you want htmx to trigger an event after the response is processed, you can use the annotation `@HxTrigger` which sets the necessary response header [HX-Trigger](https://four.htmx.org/reference/headers/HX-Trigger).
 
 ```java
 @HxRequest
@@ -174,7 +176,7 @@ public String users() {
 ### HTML Fragments
 
 In Spring MVC, view rendering typically involves specifying one view and one model. However, in htmx a common capability is to send multiple HTML fragments that
-htmx can use to update different parts of the page, which is called [Out Of Band Swaps](https://htmx.org/docs/#oob_swaps). Spring offers the ability to return 
+htmx can use to update different parts of the page, which is called [Out Of Band Swaps](https://four.htmx.org/docs#out-of-band-swaps). Spring offers the ability to return 
 multiple HTML fragments using `Collection<ModelAndView>` or `FragmentsRendering` as return type of controller. Further information on this can be found in the
 Spring Framework documentation under [HTML Fragments](https://docs.spring.io/spring-framework/reference/web/webmvc-view/mvc-fragments.html).
 
@@ -252,7 +254,7 @@ public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 }
 ```
 
-In addition, htmx provides a special way to send a redirect instruction to the client, keeping a success code ([200](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/200)) and sending a custom HTTP header from the server ([HX-Location](https://htmx.org/headers/hx-location/) / [HX-Redirect](https://htmx.org/headers/hx-redirect/)). Htmx correctly interprets these headers and follows the redirect, replacing the response in the page body.
+In addition, htmx provides a special way to send a redirect instruction to the client, keeping a success code ([200](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/200)) and sending a custom HTTP header from the server ([HX-Location](https://four.htmx.org/reference/headers/HX-Location) / [HX-Redirect](https://four.htmx.org/reference/headers/HX-Redirect)). Htmx correctly interprets these headers and follows the redirect, replacing the response in the page body.
 
 You can take advantage of this behavior by integrating the `HxLocationRedirectAuthenticationFailureHandler`, `HxLocationRedirectAuthenticationSuccessHandler`, `HxLocationRedirectLogoutSuccessHandler`, `HxLocationRedirectAuthenticationEntryPoint` and/or `HxLocationRedirectAccessDeniedHandler` into the `SecurityFilterChain` bean definition.
 
@@ -273,7 +275,7 @@ public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 }
 ```
 
-Also, you can use the provided `HxLocationBoostedRedirectStrategy` as the second parameter in the handlers, instructing the client to include the [HX-Boosted](https://htmx.org/reference/#headers) header in the new request. This can be useful if you want to take advantage of existing controller optimizations, for example, rendering a fragment instead of the full page for non-boosted, htmx-driven requests:
+Also, you can use the provided `HxLocationBoostedRedirectStrategy` as the second parameter in the handlers, instructing the client to include the [HX-Boosted](https://four.htmx.org/reference/headers/HX-Boosted) header in the new request. This can be useful if you want to take advantage of existing controller optimizations, for example, rendering a fragment instead of the full page for non-boosted, htmx-driven requests:
 
 ```java
 @GetMapping("/login")
@@ -291,7 +293,7 @@ String login(HtmxRequest request) {
 The Thymeleaf integration for Spring supports the specification of a [Markup Selector](https://www.thymeleaf.org/doc/tutorials/3.0/usingthymeleaf.html#appendix-c-markup-selector-syntax)
 for views. The Markup Selector will be used for selecting the section
 of the template that should be processed, discarding the rest of the template.
-This is quite handy when it comes to htmx and for example [Out Of Band Swaps](https://htmx.org/docs/#oob_swaps),
+This is quite handy when it comes to htmx and for example [Out Of Band Swaps](https://four.htmx.org/docs#out-of-band-swaps),
 where you only have to return parts of your template.
 
 The following example combines two partials via `HtmxResponse` with a Markup Selector
@@ -331,7 +333,7 @@ public Collection<ModelAndView> test() {
 The Thymeleaf dialect has appropriate processors that enable Thymeleaf to perform calculations and expressions
 in htmx-related attributes.
 
-_See [Attribute Reference](https://htmx.org/reference/#attributes) for the related htmx documentation._
+_See [Attribute Reference](https://four.htmx.org/reference/attributes) for the related htmx documentation._
 
 >**Note** The `:` colon instead of the typical hyphen.
 
@@ -359,7 +361,7 @@ Please [open an issue](https://github.com/wimdeblauwe/htmx-spring-boot-thymeleaf
 
 #### Map support for hx:vals
 
-The [hx-vals](https://htmx.org/attributes/hx-vals/) attribute allows to add to the parameters that will be submitted
+The [hx-vals](https://four.htmx.org/reference/attributes/hx-vals) attribute allows to add to the parameters that will be submitted
 with the AJAX request. The value of the attribute should be a JSON string.
 
 The library makes it a bit easier to write such a JSON string by adding support for inline maps.
@@ -402,20 +404,21 @@ Links to articles and blog posts about this library:
 * [Htmx authentication error handling](https://www.wimdeblauwe.com/blog/2022/10/04/htmx-authentication-error-handling/)
 * [Thymeleaf and htmx with out of band swaps](https://www.wimdeblauwe.com/blog/2022/06/15/thymeleaf-and-htmx-with-out-of-band-swaps/)
 
-## Spring Boot compatibility
+## Compatibility
 
-| Library version                                                                       | Spring Boot  | Minimum Java version | Documentation                                                                          |
-|---------------------------------------------------------------------------------------|--------------|----------------------|----------------------------------------------------------------------------------------|
-| [5.1.0](https://github.com/wimdeblauwe/htmx-spring-boot/releases/tag/5.0.0)           | 4.0.3        | 17                   | [README.md](https://github.com/wimdeblauwe/htmx-spring-boot/blob/5.1.0/README.md) |
-| [5.0.0](https://github.com/wimdeblauwe/htmx-spring-boot/releases/tag/5.0.0)           | 4.0.0        | 17                   | [README.md](https://github.com/wimdeblauwe/htmx-spring-boot/blob/5.0.0/README.md)      |
-| [4.0.3](https://github.com/wimdeblauwe/htmx-spring-boot/releases/tag/4.0.3)           | 3.4.x, 3.5.x | 17                   | [README.md](https://github.com/wimdeblauwe/htmx-spring-boot/blob/4.0.3/README.md)      |
-| [3.6.2](https://github.com/wimdeblauwe/htmx-spring-boot/releases/tag/3.6.2)           | 3.2.x        | 17                   | [README.md](https://github.com/wimdeblauwe/htmx-spring-boot/blob/3.6.2/README.md)      |
-| [3.5.1](https://github.com/wimdeblauwe/htmx-spring-boot/releases/tag/3.5.1)           | 3.2.x        | 17                   | [README.md](https://github.com/wimdeblauwe/htmx-spring-boot/blob/3.5.1/README.md)      |
-| [3.4.1](https://github.com/wimdeblauwe/htmx-spring-boot/releases/tag/3.4.1)           | 3.2.x        | 17                   | [README.md](https://github.com/wimdeblauwe/htmx-spring-boot/blob/3.4.1/README.md)      |
-| [3.3.0](https://github.com/wimdeblauwe/htmx-spring-boot/releases/tag/3.3.0)           | 3.1.x        | 17                   | [README.md](https://github.com/wimdeblauwe/htmx-spring-boot/blob/3.3.0/README.md)      |
-| [3.2.0](https://github.com/wimdeblauwe/htmx-spring-boot/releases/tag/3.2.0)           | 3.1.x        | 17                   | [README.md](https://github.com/wimdeblauwe/htmx-spring-boot/blob/3.2.0/README.md)      |
-| [2.2.0](https://github.com/wimdeblauwe/htmx-spring-boot-thymeleaf/releases/tag/2.2.0) | 3.0.x        | 17                   | [README.md](https://github.com/wimdeblauwe/htmx-spring-boot/blob/2.2.0/README.md)      |
-| [1.0.0](https://github.com/wimdeblauwe/htmx-spring-boot-thymeleaf/releases/tag/1.0.0) | 2.7.x        | 11                   | [README.md](https://github.com/wimdeblauwe/htmx-spring-boot/blob/1.0.0/README.md)      |
+| Library version                                                                       | htmx     | Spring Boot  | Minimum Java version | Documentation                                                                          |
+|---------------------------------------------------------------------------------------|----------|--------------|----------------------|----------------------------------------------------------------------------------------|
+| [6.0.0](https://github.com/wimdeblauwe/htmx-spring-boot/releases/tag/6.0.0)           | 4.x      | 4.0.3        | 17                   | [README.md](https://github.com/wimdeblauwe/htmx-spring-boot/blob/6.0.0/README.md)      |
+| [5.1.0](https://github.com/wimdeblauwe/htmx-spring-boot/releases/tag/5.0.0)           | 1.x, 2.x | 4.0.3        | 17                   | [README.md](https://github.com/wimdeblauwe/htmx-spring-boot/blob/5.1.0/README.md)      |
+| [5.0.0](https://github.com/wimdeblauwe/htmx-spring-boot/releases/tag/5.0.0)           | 1.x, 2.x | 4.0.0        | 17                   | [README.md](https://github.com/wimdeblauwe/htmx-spring-boot/blob/5.0.0/README.md)      |
+| [4.0.3](https://github.com/wimdeblauwe/htmx-spring-boot/releases/tag/4.0.3)           | 1.x, 2.x | 3.4.x, 3.5.x | 17                   | [README.md](https://github.com/wimdeblauwe/htmx-spring-boot/blob/4.0.3/README.md)      |
+| [3.6.2](https://github.com/wimdeblauwe/htmx-spring-boot/releases/tag/3.6.2)           | 1.x, 2.x | 3.2.x        | 17                   | [README.md](https://github.com/wimdeblauwe/htmx-spring-boot/blob/3.6.2/README.md)      |
+| [3.5.1](https://github.com/wimdeblauwe/htmx-spring-boot/releases/tag/3.5.1)           | 1.x, 2.x | 3.2.x        | 17                   | [README.md](https://github.com/wimdeblauwe/htmx-spring-boot/blob/3.5.1/README.md)      |
+| [3.4.1](https://github.com/wimdeblauwe/htmx-spring-boot/releases/tag/3.4.1)           | 1.x, 2.x | 3.2.x        | 17                   | [README.md](https://github.com/wimdeblauwe/htmx-spring-boot/blob/3.4.1/README.md)      |
+| [3.3.0](https://github.com/wimdeblauwe/htmx-spring-boot/releases/tag/3.3.0)           | 1.x      | 3.1.x        | 17                   | [README.md](https://github.com/wimdeblauwe/htmx-spring-boot/blob/3.3.0/README.md)      |
+| [3.2.0](https://github.com/wimdeblauwe/htmx-spring-boot/releases/tag/3.2.0)           | 1.x      | 3.1.x        | 17                   | [README.md](https://github.com/wimdeblauwe/htmx-spring-boot/blob/3.2.0/README.md)      |
+| [2.2.0](https://github.com/wimdeblauwe/htmx-spring-boot-thymeleaf/releases/tag/2.2.0) | 1.x      | 3.0.x        | 17                   | [README.md](https://github.com/wimdeblauwe/htmx-spring-boot/blob/2.2.0/README.md)      |
+| [1.0.0](https://github.com/wimdeblauwe/htmx-spring-boot-thymeleaf/releases/tag/1.0.0) | 1.x      | 2.7.x        | 11                   | [README.md](https://github.com/wimdeblauwe/htmx-spring-boot/blob/1.0.0/README.md)      |
 
 ## Contributing
 

@@ -13,7 +13,7 @@ import java.util.Map;
  * A specialization of {@link RedirectView} that can be used to signal htmx to perform a client-side redirect without reloading the page.
  * This View supports all the features of RedirectView e.g. exposing model attributes, flash attributes, etc.
  *
- * @see <a href="https://htmx.org/headers/hx-location/">HX-Location Response Header</a>
+ * @see <a href="https://four.htmx.org/reference/headers/HX-Location">HX-Location</a>
  * @since 3.6.0
  */
 public class HtmxLocationRedirectView extends RedirectView {

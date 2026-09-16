@@ -21,13 +21,11 @@ import java.util.Set;
  * @author Oliver Drotbohm
  * @author Clint Checketts
  * @author Sascha Woo
- * @see <a href="https://htmx.org/reference/#response_headers">Response Headers Reference</a>
+ * @see <a href="https://four.htmx.org/reference/headers#response">Response Headers Reference</a>
  */
 public final class HtmxResponse {
 
     private final Set<HtmxTrigger> triggers = new LinkedHashSet<>();
-    private final Set<HtmxTrigger> triggersAfterSettle = new LinkedHashSet<>();
-    private final Set<HtmxTrigger> triggersAfterSwap = new LinkedHashSet<>();
     private String replaceUrl;
     private String reselect;
     private boolean contextRelative = true;
@@ -43,10 +41,10 @@ public final class HtmxResponse {
 
     /**
      * Adds an event that will be triggered once the response is received.
-     * <p>Multiple trigger were automatically be merged into the same header.
+     * <p>Multiple trigger will automatically be merged into the same header.
      *
      * @param eventName the event name
-     * @see <a href="https://htmx.org/headers/hx-trigger/">HX-Trigger Response Headers</a>
+     * @see <a href="https://four.htmx.org/reference/headers/HX-Trigger">HX-Trigger</a>
      */
     public void addTrigger(String eventName) {
         Assert.hasText(eventName, "eventName should not be blank");
@@ -59,7 +57,7 @@ public final class HtmxResponse {
      *
      * @param eventName   the event name
      * @param eventDetail details along with the event
-     * @see <a href="https://htmx.org/headers/hx-trigger/">HX-Trigger Response Headers</a>
+     * @see <a href="https://four.htmx.org/reference/headers/HX-Trigger">HX-Trigger</a>
      * @since 3.6.0
      */
     public void addTrigger(String eventName, Object eventDetail) {
@@ -68,64 +66,10 @@ public final class HtmxResponse {
     }
 
     /**
-     * Adds an event that will be triggered after the <a href="https://htmx.org/docs/#request-operations">settling step</a>.
-     * <p>Multiple triggers were automatically be merged into the same header.
-     *
-     * @param eventName the event name
-     * @see <a href="https://htmx.org/headers/hx-trigger/">HX-Trigger Response Headers</a>
-     * @since 3.6.0
-     */
-    public void addTriggerAfterSettle(String eventName) {
-        Assert.hasText(eventName, "eventName should not be blank");
-        triggersAfterSettle.add(new HtmxTrigger(eventName, null));
-    }
-
-    /**
-     * Adds an event that will be triggered after the <a href="https://htmx.org/docs/#request-operations">settling step</a>.
-     * <p>Multiple triggers were automatically be merged into the same header.
-     *
-     * @param eventName   the event name
-     * @param eventDetail details along with the event
-     * @see <a href="https://htmx.org/headers/hx-trigger/">HX-Trigger Response Headers</a>
-     * @since 3.6.0
-     */
-    public void addTriggerAfterSettle(String eventName, Object eventDetail) {
-        Assert.hasText(eventName, "eventName should not be blank");
-        triggersAfterSettle.add(new HtmxTrigger(eventName, eventDetail));
-    }
-
-    /**
-     * Adds an event that will be triggered after the <a href="https://htmx.org/docs/#request-operations">swap step</a>.
-     * <p>Multiple triggers were automatically be merged into the same header.
-     *
-     * @param eventName the event name
-     * @see <a href="https://htmx.org/headers/hx-trigger/">HX-Trigger Response Headers</a>
-     * @since 3.6.0
-     */
-    public void addTriggerAfterSwap(String eventName) {
-        Assert.hasText(eventName, "eventName should not be blank");
-        triggersAfterSwap.add(new HtmxTrigger(eventName, null));
-    }
-
-    /**
-     * Adds an event that will be triggered after the <a href="https://htmx.org/docs/#request-operations">swap step</a>.
-     * <p>Multiple triggers were automatically be merged into the same header.
-     *
-     * @param eventName   the event name
-     * @param eventDetail details along with the event
-     * @see <a href="https://htmx.org/headers/hx-trigger/">HX-Trigger Response Headers</a>
-     * @since 3.6.0
-     */
-    public void addTriggerAfterSwap(String eventName, Object eventDetail) {
-        Assert.hasText(eventName, "eventName should not be blank");
-        triggersAfterSwap.add(new HtmxTrigger(eventName, eventDetail));
-    }
-
-    /**
      * Prevents the browser history stack from being updated.
      *
-     * @see <a href="https://htmx.org/headers/hx-push-url/">HX-Push-Url Response Header</a> documentation
-     * @see <a href="https://htmx.org/headers/hx-replace-url/">HX-Replace-Url Response Header</a>
+     * @see <a href="https://four.htmx.org/reference/headers/HX-Push-Url">HX-Push-Url</a>
+     * @see <a href="https://four.htmx.org/reference/headers/HX-Replace-Url">HX-Replace-Url</a>
      * @since 3.6.0
      */
     public void preventHistoryUpdate() {
@@ -151,7 +95,7 @@ public final class HtmxResponse {
      * If you want to prevent the history stack from being updated, use {@link #preventHistoryUpdate()}.
      *
      * @param url the URL to push into the history stack. The URL can be any URL in the same origin as the current URL.
-     * @see <a href="https://htmx.org/headers/hx-push/">HX-Push Response Header</a> documentation
+     * @see <a href="https://four.htmx.org/reference/headers/HX-Push-Url">HX-Push-Url</a>
      * @see <a href="https://developer.mozilla.org/en-US/docs/Web/API/History/replaceState">history.pushState()</a>
      * @since 3.6.0
      */
@@ -167,7 +111,7 @@ public final class HtmxResponse {
      * If you want to prevent the history stack from being updated, use {@link #preventHistoryUpdate()}.
      *
      * @param url the URL to replace in the history stack. The URL can be any URL in the same origin as the current URL.
-     * @see <a href="https://htmx.org/headers/hx-replace-url/">HX-Replace-Url Response Header</a>
+     * @see <a href="https://four.htmx.org/reference/headers/HX-Replace-Url">HX-Replace-Url</a>
      * @see <a href="https://developer.mozilla.org/en-US/docs/Web/API/History/replaceState">history.replaceState()</a>
      * @since 3.6.0
      */
@@ -178,10 +122,10 @@ public final class HtmxResponse {
 
     /**
      * Set a CSS selector that allows you to choose which part of the response is used to be swapped in.
-     * Overrides an existing <a href="https://htmx.org/attributes/hx-select/">hx-select</a> on the triggering element.
+     * Overrides an existing <a href="https://four.htmx.org/reference/attributes/hx-select/">hx-select</a> on the triggering element.
      *
      * @param cssSelector the CSS selector
-     * @see <a href="https://htmx.org/reference/#response_headers">HX-Reselect</a>
+     * @see <a href="https://four.htmx.org/reference/headers/HX-Reselect">HX-Reselect</a>
      * @since 3.6.0
      */
     public void setReselect(String cssSelector) {
@@ -191,10 +135,10 @@ public final class HtmxResponse {
 
     /**
      * Allows you to specify how the response will be swapped.
-     * See <a href="https://htmx.org/attributes/hx-swap/">hx-swap</a> for possible values.
+     * See <a href="https://four.htmx.org/reference/attributes/hx-swap/">hx-swap</a> for possible values.
      *
      * @param reswap the reswap options.
-     * @see <a href="https://htmx.org/reference/#response_headers">HX-Reswap</a>
+     * @see <a href="https://four.htmx.org/reference/headers/HX-Reswap">HX-Reswap</a>
      * @since 3.6.0
      */
     public void setReswap(HtmxReswap reswap) {
@@ -206,7 +150,7 @@ public final class HtmxResponse {
      * Set a CSS selector that updates the target of the content update to a different element on the page
      *
      * @param cssSelector the CSS selector
-     * @see <a href="https://htmx.org/reference/#response_headers">HX-Retarget</a>
+     * @see <a href="https://four.htmx.org/reference/headers/HX-Retarget">HX-Retarget</a>
      * @since 3.6.0
      */
     public void setRetarget(String cssSelector) {
@@ -236,14 +180,6 @@ public final class HtmxResponse {
 
     public Collection<HtmxTrigger> getTriggers() {
         return this.triggers;
-    }
-
-    public Collection<HtmxTrigger> getTriggersAfterSettle() {
-        return this.triggersAfterSettle;
-    }
-
-    public Collection<HtmxTrigger> getTriggersAfterSwap() {
-        return this.triggersAfterSwap;
     }
 
     public boolean isContextRelative() {
