@@ -169,6 +169,14 @@ public class HtmxResponseHandlerMethodArgumentResolverIT {
     }
 
     @Test
+    public void testTriggerWithNonLatin1DetailIsEscaped() throws Exception {
+
+        get("/trigger-with-non-latin1-detail")
+                .expectHeader()
+                .valueEquals("HX-Trigger", "{\"show-message\":{\"text\":\"\\u0141ukasz was deleted\"}}");
+    }
+
+    @Test
     public void testTriggerAfterSettle() throws Exception {
 
         get("/trigger-after-settle")
@@ -342,6 +350,13 @@ public class HtmxResponseHandlerMethodArgumentResolverIT {
 
             response.addTrigger("dialog-close");
             response.addTrigger("show-toast", Map.of("title", "Saved"));
+            return "view";
+        }
+
+        @GetMapping("/trigger-with-non-latin1-detail")
+        public String triggerWithNonLatin1Detail(HtmxResponse response) {
+
+            response.addTrigger("show-message", Map.of("text", "Łukasz was deleted"));
             return "view";
         }
 
