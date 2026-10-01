@@ -161,6 +161,14 @@ public class HtmxResponseHandlerMethodArgumentResolverIT {
     }
 
     @Test
+    public void testTriggerWithDetailsKeepsOrder() throws Exception {
+
+        get("/trigger-with-details")
+                .expectHeader()
+                .valueEquals("HX-Trigger", "{\"dialog-close\":null,\"show-toast\":{\"title\":\"Saved\"}}");
+    }
+
+    @Test
     public void testTriggerWithNonLatin1DetailIsEscaped() throws Exception {
 
         get("/trigger-with-non-latin1-detail")
@@ -334,6 +342,14 @@ public class HtmxResponseHandlerMethodArgumentResolverIT {
 
             response.addTrigger("trigger1");
             response.addTrigger("trigger2");
+            return "view";
+        }
+
+        @GetMapping("/trigger-with-details")
+        public String triggerWithDetails(HtmxResponse response) {
+
+            response.addTrigger("dialog-close");
+            response.addTrigger("show-toast", Map.of("title", "Saved"));
             return "view";
         }
 
