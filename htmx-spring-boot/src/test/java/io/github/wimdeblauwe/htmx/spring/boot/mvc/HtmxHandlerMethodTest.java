@@ -111,6 +111,14 @@ public class HtmxHandlerMethodTest {
     }
 
     @Test
+    public void testLocationRedirectWithNonLatin1ValueIsEscaped() throws Exception {
+
+        mockMvc.perform(get("/location-redirect-with-non-latin1-value").headers(htmxRequest()))
+               .andExpect(status().isOk())
+               .andExpect(header().string("HX-Location", "{\"path\":\"/path\",\"values\":{\"name\":\"\\u0141ukasz\"}}"));
+    }
+
+    @Test
     public void testLocationRedirectWithContextDataAndFlashAttributes() throws Exception {
 
         mockMvc.perform(get("/location-redirect-context-data-flash-attributes").headers(htmxRequest()))
@@ -273,6 +281,16 @@ public class HtmxHandlerMethodTest {
             redirectView.setSelect("select");
             redirectView.setValues(new TreeMap<>(Map.of("value1", "v1", "value2", "v2")));
             redirectView.setHeaders(new TreeMap<>(Map.of("header1", "v1", "header2", "v2")));
+
+            return redirectView;
+        }
+
+        @HxRequest
+        @GetMapping("/location-redirect-with-non-latin1-value")
+        public HtmxLocationRedirectView locationRedirectWithNonLatin1Value() {
+
+            var redirectView = new HtmxLocationRedirectView("/path");
+            redirectView.setValues(Map.of("name", "Łukasz"));
 
             return redirectView;
         }
