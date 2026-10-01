@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.time.Duration;
+import java.util.Map;
 
 @SpringBootTest(
         classes = HtmxResponseHandlerMethodArgumentResolverIT.Application.class,
@@ -157,6 +158,14 @@ public class HtmxResponseHandlerMethodArgumentResolverIT {
         get("/trigger")
                 .expectHeader()
                 .valueEquals("HX-Trigger", "trigger1,trigger2");
+    }
+
+    @Test
+    public void testTriggerWithDetailsKeepsOrder() throws Exception {
+
+        get("/trigger-with-details")
+                .expectHeader()
+                .valueEquals("HX-Trigger", "{\"dialog-close\":null,\"show-toast\":{\"title\":\"Saved\"}}");
     }
 
     @Test
@@ -325,6 +334,14 @@ public class HtmxResponseHandlerMethodArgumentResolverIT {
 
             response.addTrigger("trigger1");
             response.addTrigger("trigger2");
+            return "view";
+        }
+
+        @GetMapping("/trigger-with-details")
+        public String triggerWithDetails(HtmxResponse response) {
+
+            response.addTrigger("dialog-close");
+            response.addTrigger("show-toast", Map.of("title", "Saved"));
             return "view";
         }
 

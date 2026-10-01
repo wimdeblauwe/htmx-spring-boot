@@ -9,7 +9,7 @@ import tools.jackson.databind.ObjectMapper;
 import java.lang.reflect.Method;
 import java.time.Duration;
 import java.util.Collection;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.stream.Collectors;
 
 /**
@@ -79,7 +79,7 @@ class HtmxHandlerMethodHandler {
         }
 
         // multiple events with or without details
-        var triggerMap = new HashMap<String, Object>();
+        var triggerMap = new LinkedHashMap<String, Object>();
         for (HtmxTrigger trigger : triggers) {
             triggerMap.put(trigger.getEventName(), trigger.getEventDetail());
         }
