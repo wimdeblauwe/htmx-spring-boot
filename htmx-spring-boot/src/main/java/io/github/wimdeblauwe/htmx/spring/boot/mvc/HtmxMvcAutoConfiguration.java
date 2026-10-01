@@ -14,6 +14,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
+import tools.jackson.core.json.JsonWriteFeature;
 import tools.jackson.databind.json.JsonMapper;
 
 import java.util.List;
@@ -26,7 +27,10 @@ public class HtmxMvcAutoConfiguration implements WebMvcRegistrations, WebMvcConf
     private final HtmxResponseBodyAdvice responseBodyAdvice;
 
     HtmxMvcAutoConfiguration() {
-        JsonMapper jsonMapper = JsonMapper.builder().build();
+        // header values must be ASCII, so escape non-ASCII characters in the JSON written to them
+        JsonMapper jsonMapper = JsonMapper.builder()
+                .enable(JsonWriteFeature.ESCAPE_NON_ASCII)
+                .build();
         this.handlerMethodHandler = new HtmxHandlerMethodHandler(jsonMapper);
         this.responseBodyAdvice = new HtmxResponseBodyAdvice(handlerMethodHandler);
     }

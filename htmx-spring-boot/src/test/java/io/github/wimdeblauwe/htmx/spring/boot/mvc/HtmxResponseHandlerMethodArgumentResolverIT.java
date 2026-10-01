@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.time.Duration;
+import java.util.Map;
 
 @SpringBootTest(
         classes = HtmxResponseHandlerMethodArgumentResolverIT.Application.class,
@@ -157,6 +158,14 @@ public class HtmxResponseHandlerMethodArgumentResolverIT {
         get("/trigger")
                 .expectHeader()
                 .valueEquals("HX-Trigger", "trigger1,trigger2");
+    }
+
+    @Test
+    public void testTriggerWithNonLatin1DetailIsEscaped() throws Exception {
+
+        get("/trigger-with-non-latin1-detail")
+                .expectHeader()
+                .valueEquals("HX-Trigger", "{\"show-message\":{\"text\":\"\\u0141ukasz was deleted\"}}");
     }
 
     @Test
@@ -325,6 +334,13 @@ public class HtmxResponseHandlerMethodArgumentResolverIT {
 
             response.addTrigger("trigger1");
             response.addTrigger("trigger2");
+            return "view";
+        }
+
+        @GetMapping("/trigger-with-non-latin1-detail")
+        public String triggerWithNonLatin1Detail(HtmxResponse response) {
+
+            response.addTrigger("show-message", Map.of("text", "Łukasz was deleted"));
             return "view";
         }
 

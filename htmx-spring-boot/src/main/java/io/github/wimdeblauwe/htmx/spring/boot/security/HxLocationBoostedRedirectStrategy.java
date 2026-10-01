@@ -6,6 +6,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.web.DefaultRedirectStrategy;
+import tools.jackson.core.json.JsonWriteFeature;
 import tools.jackson.databind.json.JsonMapper;
 
 import java.io.IOException;
@@ -63,7 +64,9 @@ public class HxLocationBoostedRedirectStrategy extends HxLocationRedirectStrateg
 
     public HxLocationBoostedRedirectStrategy(HttpStatus status) {
         super(status);
-        this.jsonMapper = new JsonMapper();
+        this.jsonMapper = JsonMapper.builder()
+                .enable(JsonWriteFeature.ESCAPE_NON_ASCII)
+                .build();
     }
 
     @Override

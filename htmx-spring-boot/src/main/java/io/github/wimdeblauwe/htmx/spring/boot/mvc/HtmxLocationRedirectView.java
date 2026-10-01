@@ -4,6 +4,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.web.servlet.view.RedirectView;
 import tools.jackson.core.JacksonException;
+import tools.jackson.core.json.JsonWriteFeature;
 import tools.jackson.databind.json.JsonMapper;
 
 import java.io.IOException;
@@ -18,7 +19,9 @@ import java.util.Map;
  */
 public class HtmxLocationRedirectView extends RedirectView {
 
-    private final JsonMapper jsonMapper = new JsonMapper();
+    private final JsonMapper jsonMapper = JsonMapper.builder()
+            .enable(JsonWriteFeature.ESCAPE_NON_ASCII)
+            .build();
 
     private String source;
     private String event;
