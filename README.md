@@ -233,28 +233,87 @@ public String handleError(Exception ex) {
 
 ### Spring Security
 
-The library has an `HxRefreshHeaderAuthenticationEntryPoint` that you can use to have htmx force a full page browser
-refresh in case there is an authentication failure.
-If you don't use this, then your login page might be appearing in place of a swap you want to do somewhere.
-See [htmx-authentication-error-handling](https://www.wimdeblauwe.com/blog/2022/10/04/htmx-authentication-error-handling/)
-blog post for detailed information.
+Spring Security answers requests with redirects and error pages that are meant for the browser, not for htmx.
+The library has classes for two situations:
 
-To use it, add it to your security configuration like this:
+- **An htmx request after the session expired.** Without help, the login page is swapped into the request's target,
+  or a POST fails its CSRF check and nothing happens. See [After the session expired](#after-the-session-expired).
+- **A login form that is itself submitted with htmx.** Without help, htmx swaps the page Spring Security redirects to
+  after signing in, signing out or a failed attempt into the form's target. See [Signing in with htmx](#signing-in-with-htmx).
+
+Spring Security has one authentication entry point and one access denied handler per filter chain, so pick one of the
+approaches below for those two. The login, logout and failure handlers of [Signing in with htmx](#signing-in-with-htmx)
+can be combined with any of them.
+
+| Entry point                                  | What an htmx request gets when authentication is needed                                                                                |
+|----------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------|
+| `HxRedirectToPageAuthenticationEntryPoint`   | `HX-Redirect` to the page: a normal navigation to it, after which your own entry point asks the user to sign in (recommended)          |
+| `HxRefreshHeaderAuthenticationEntryPoint`    | `HX-Refresh`: the current page is reloaded                                                                                             |
+| `HxLocationRedirectAuthenticationEntryPoint` | `HX-Location` to a fixed URL: htmx loads that page with an ajax request and swaps it into the `body`                                   |
+
+#### After the session expired
+
+When the session has expired, an htmx request gets Spring Security's normal answer, which htmx cannot follow:
+a GET is redirected to the login page, which htmx swaps into the request's target, and a POST (or PUT, PATCH,
+DELETE) fails its CSRF check with a 403, which htmx does not swap, so nothing happens on the page.
+On top of that, the htmx request's URL is saved as the request to return to after signing in, and it may be a fragment
+endpoint.
+
+`HxRedirectToPageAuthenticationEntryPoint` and `HxRedirectToPageAccessDeniedHandler` answer such htmx requests with
+`HX-Redirect` to the page the request was made from (`HX-Current-URL`, or the link itself for a boosted link).
+The browser loads that page as a normal navigation, so your own entry point takes over (a login form, an OAuth2
+provider) and the page is what the user returns to after signing in:
+
+Give the entry point the one your application uses for every other request, such as the login form's:
 
 ```java
 @Bean
 public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
     // probably some other configurations here
-    var entryPoint = new HxRefreshHeaderAuthenticationEntryPoint();
-    var requestMatcher = new RequestHeaderRequestMatcher("HX-Request");
-    http.exceptionHandling(configurer -> configurer.defaultAuthenticationEntryPointFor(entryPoint, requestMatcher));
+    http.formLogin(login -> login.loginPage("/login").permitAll())
+        .exceptionHandling(exceptions -> exceptions
+                .authenticationEntryPoint(new HxRedirectToPageAuthenticationEntryPoint(
+                        new LoginUrlAuthenticationEntryPoint("/login")))
+                .accessDeniedHandler(new HxRedirectToPageAccessDeniedHandler()));
     return http.build();
 }
 ```
 
-In addition, htmx provides a special way to send a redirect instruction to the client, keeping a success code ([200](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/200)) and sending a custom HTTP header from the server ([HX-Location](https://htmx.org/headers/hx-location/) / [HX-Redirect](https://htmx.org/headers/hx-redirect/)). Htmx correctly interprets these headers and follows the redirect, replacing the response in the page body.
+With OAuth2 login, that is `new LoginUrlAuthenticationEntryPoint("/oauth2/authorization/<registration id>")`.
+
+- Requests that are no htmx requests go to the entry point you pass, so they behave as before. If you have an access
+  denied handler of your own, pass it to `HxRedirectToPageAccessDeniedHandler` as its delegate.
+- The entry point removes the htmx request from the `RequestCache`. Pass your own cache to its constructor if it is
+  not an `HttpSessionRequestCache`.
+- The access denied handler only answers a missing CSRF token (the session that held it is gone). Every other denial,
+  such as a signed-in user without the required role, goes to its delegate (`AccessDeniedHandlerImpl` by default).
+- Only the path and query of `HX-Current-URL` are used, so the redirect stays on your application's origin. Without a
+  usable page, `HX-Refresh` reloads the current one.
+- Why not `defaultAuthenticationEntryPointFor(entryPoint, new RequestHeaderRequestMatcher("HX-Request"))`? Spring
+  Security makes the first entry point registered that way the default for requests no other entry point claims, and
+  that registration runs before the login form's. Requests that are no htmx requests and do not ask for HTML (a
+  `fetch` without an `Accept` header, `curl`, a MockMvc test without `accept(...)`) would then get a plain 401 (the
+  entry point's no-argument constructor) instead of the redirect to the login page.
+
+The older `HxRefreshHeaderAuthenticationEntryPoint` is a simpler alternative for the entry point: it answers with a
+403 and `HX-Refresh`, so htmx reloads the current page. It leaves the htmx request saved as the request to return to,
+a boosted link reloads the page the user was on rather than the one they clicked, and it does not cover a POST whose
+CSRF token expired with the session.
+See the [htmx-authentication-error-handling](https://www.wimdeblauwe.com/blog/2022/10/04/htmx-authentication-error-handling/)
+blog post for the background.
+
+```java
+var htmxRequest = new RequestHeaderRequestMatcher("HX-Request");
+http.exceptionHandling(exceptions -> exceptions
+        .defaultAuthenticationEntryPointFor(new HxRefreshHeaderAuthenticationEntryPoint(), htmxRequest));
+```
+
+#### Signing in with htmx
+
+htmx provides a special way to send a redirect instruction to the client, keeping a success code ([200](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/200)) and sending a custom HTTP header from the server ([HX-Location](https://htmx.org/headers/hx-location/) / [HX-Redirect](https://htmx.org/headers/hx-redirect/)). Htmx correctly interprets these headers and follows the redirect, replacing the response in the page body.
 
 You can take advantage of this behavior by integrating the `HxLocationRedirectAuthenticationFailureHandler`, `HxLocationRedirectAuthenticationSuccessHandler`, `HxLocationRedirectLogoutSuccessHandler`, `HxLocationRedirectAuthenticationEntryPoint` and/or `HxLocationRedirectAccessDeniedHandler` into the `SecurityFilterChain` bean definition.
+For non-htmx requests, they redirect as usual.
 
 ```java
 @Bean
@@ -272,6 +331,34 @@ public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
             ).build();
 }
 ```
+
+`HxLocationRedirectAuthenticationEntryPoint` and `HxLocationRedirectAccessDeniedHandler` take the place of
+[the classes for an expired session](#after-the-session-expired): there is one entry point and one access denied
+handler. To sign in with htmx and handle an expired session, combine the login, logout and failure handlers with those
+instead:
+
+```java
+@Bean
+public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    // probably some other configurations here
+    return http
+            .formLogin(login -> login
+                    .loginPage("/login")
+                    .permitAll()
+                    .failureHandler(new HxLocationRedirectAuthenticationFailureHandler("/login?failure"))
+                    .successHandler(new HxLocationRedirectAuthenticationSuccessHandler("/home?login"))
+            ).logout(logout -> logout
+                    .logoutSuccessHandler(new HxLocationRedirectLogoutSuccessHandler("/home?logout"))
+            ).exceptionHandling(exceptions -> exceptions
+                    .authenticationEntryPoint(new HxRedirectToPageAuthenticationEntryPoint(
+                            new LoginUrlAuthenticationEntryPoint("/login")))
+                    .accessDeniedHandler(new HxRedirectToPageAccessDeniedHandler())
+            ).build();
+}
+```
+
+The success handler sends the user back to the request Spring Security saved, which is then the page, and to
+`/home?login` when nothing was saved.
 
 Also, you can use the provided `HxLocationBoostedRedirectStrategy` as the second parameter in the handlers, instructing the client to include the [HX-Boosted](https://htmx.org/reference/#headers) header in the new request. This can be useful if you want to take advantage of existing controller optimizations, for example, rendering a fragment instead of the full page for non-boosted, htmx-driven requests:
 
