@@ -1,7 +1,7 @@
 package io.github.wimdeblauwe.htmx.spring.boot.mvc;
 
 import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.lang.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import static io.github.wimdeblauwe.htmx.spring.boot.mvc.HtmxRequestHeader.*;
 
@@ -27,12 +27,12 @@ public final class HtmxRequest {
 
     private final boolean htmxRequest;
     private final boolean boosted;
-    private final String currentUrl;
+    private final @Nullable String currentUrl;
     private final boolean historyRestoreRequest;
-    private final String promptResponse;
-    private final String target;
-    private final String triggerName;
-    private final String triggerId;
+    private final @Nullable String promptResponse;
+    private final @Nullable String target;
+    private final @Nullable String triggerName;
+    private final @Nullable String triggerId;
 
     /**
      * Return a {@link Builder} to create a {@link HtmxRequest}.
@@ -92,7 +92,15 @@ public final class HtmxRequest {
         return builder.build();
     }
 
-    HtmxRequest(boolean htmxRequest, boolean boosted, String currentUrl, boolean historyRestoreRequest, String promptResponse, String target, String triggerName, String triggerId) {
+    HtmxRequest(boolean htmxRequest,
+                boolean boosted,
+                @Nullable String currentUrl,
+                boolean historyRestoreRequest,
+                @Nullable String promptResponse,
+                @Nullable String target,
+                @Nullable String triggerName,
+                @Nullable String triggerId) {
+
         this.htmxRequest = htmxRequest;
         this.boosted = boosted;
         this.currentUrl = currentUrl;
@@ -121,8 +129,7 @@ public final class HtmxRequest {
      *
      * @return the URL, or null if the URL was not passed
      */
-    @Nullable
-    public String getCurrentUrl() {
+    public @Nullable String getCurrentUrl() {
         return currentUrl;
     }
 
@@ -140,8 +147,7 @@ public final class HtmxRequest {
      *
      * @return The response of the user. Can be null.
      */
-    @Nullable
-    public String getPromptResponse() {
+    public @Nullable String getPromptResponse() {
         return promptResponse;
     }
 
@@ -150,8 +156,7 @@ public final class HtmxRequest {
      *
      * @return the id, or null if no id was passed in the request
      */
-    @Nullable
-    public String getTarget() {
+    public @Nullable String getTarget() {
         return target;
     }
 
@@ -160,8 +165,7 @@ public final class HtmxRequest {
      *
      * @return the name of the trigger, or null if no name was passed in the request
      */
-    @Nullable
-    public String getTriggerName() {
+    public @Nullable String getTriggerName() {
         return triggerName;
     }
 
@@ -170,20 +174,19 @@ public final class HtmxRequest {
      *
      * @return the id of the trigger, or null if no name was passed in the request
      */
-    @Nullable
-    public String getTriggerId() {
+    public @Nullable String getTriggerId() {
         return triggerId;
     }
 
     public static final class Builder {
 
         private boolean boosted;
-        private String currentUrl;
+        private @Nullable String currentUrl;
         private boolean historyRestoreRequest;
-        private String promptResponse;
-        private String target;
-        private String triggerName;
-        private String triggerId;
+        private @Nullable String promptResponse;
+        private @Nullable String target;
+        private @Nullable String triggerName;
+        private @Nullable String triggerId;
 
         private Builder() {
         }

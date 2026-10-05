@@ -19,7 +19,7 @@ public class HtmxResponseBodyAdviceIT {
     RestTestClient webClient;
 
     @Test
-    public void testTrigger() throws Exception {
+    public void testTrigger() {
 
         get("/trigger")
                 .expectHeader()
@@ -27,7 +27,7 @@ public class HtmxResponseBodyAdviceIT {
     }
 
     @Test
-    public void testExceptionHandler() throws Exception {
+    public void testExceptionHandler() {
 
         get("/throw-exception")
                 .expectHeader()

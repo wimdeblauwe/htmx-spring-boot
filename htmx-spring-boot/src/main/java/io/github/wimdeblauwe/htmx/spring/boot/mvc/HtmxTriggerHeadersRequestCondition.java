@@ -1,6 +1,7 @@
 package io.github.wimdeblauwe.htmx.spring.boot.mvc;
 
 import jakarta.servlet.http.HttpServletRequest;
+import org.jspecify.annotations.Nullable;
 import org.springframework.web.cors.CorsUtils;
 import org.springframework.web.servlet.mvc.condition.RequestCondition;
 
@@ -12,13 +13,14 @@ class HtmxTriggerHeadersRequestCondition implements RequestCondition<HtmxTrigger
 
     private static final HtmxTriggerHeadersRequestCondition EMPTY_CONDITION = new HtmxTriggerHeadersRequestCondition();
 
-    private String value;
+    private final @Nullable String value;
 
     public HtmxTriggerHeadersRequestCondition(String value) {
         this.value = value;
     }
 
     HtmxTriggerHeadersRequestCondition() {
+        this.value = null;
     }
 
     @Override
@@ -40,7 +42,7 @@ class HtmxTriggerHeadersRequestCondition implements RequestCondition<HtmxTrigger
     }
 
     @Override
-    public HtmxTriggerHeadersRequestCondition getMatchingCondition(HttpServletRequest request) {
+    public @Nullable HtmxTriggerHeadersRequestCondition getMatchingCondition(HttpServletRequest request) {
         if (CorsUtils.isPreFlightRequest(request)) {
             return EMPTY_CONDITION;
         }

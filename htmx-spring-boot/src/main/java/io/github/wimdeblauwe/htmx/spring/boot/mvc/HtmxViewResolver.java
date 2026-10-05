@@ -1,8 +1,8 @@
 package io.github.wimdeblauwe.htmx.spring.boot.mvc;
 
 import jakarta.servlet.http.HttpServletResponse;
+import org.jspecify.annotations.Nullable;
 import org.springframework.core.Ordered;
-import org.springframework.lang.Nullable;
 import org.springframework.web.context.support.WebApplicationObjectSupport;
 import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.ViewResolver;
@@ -39,8 +39,7 @@ public class HtmxViewResolver extends WebApplicationObjectSupport implements Vie
 
     private boolean redirectContextRelative = true;
 
-    @Nullable
-    private String[] redirectHosts;
+    private String @Nullable [] redirectHosts;
 
     @Override
     public int getOrder() {
@@ -50,13 +49,12 @@ public class HtmxViewResolver extends WebApplicationObjectSupport implements Vie
     /**
      * Return the configured application hosts for redirect purposes.
      */
-    @Nullable
-    public String[] getRedirectHosts() {
+    public String @Nullable [] getRedirectHosts() {
         return this.redirectHosts;
     }
 
     @Override
-    public View resolveViewName(String viewName, Locale locale) throws Exception {
+    public @Nullable View resolveViewName(String viewName, Locale locale) {
 
         if (viewName.equals(REFRESH_VIEW_NAME)) {
             return new HtmxRefreshView();
@@ -65,20 +63,14 @@ public class HtmxViewResolver extends WebApplicationObjectSupport implements Vie
         if (viewName.startsWith(LOCATION_URL_PREFIX)) {
             String redirectUrl = viewName.substring(LOCATION_URL_PREFIX.length());
             RedirectView view = new HtmxLocationRedirectView(redirectUrl, isRedirectContextRelative());
-            String[] hosts = getRedirectHosts();
-            if (hosts != null) {
-                view.setHosts(hosts);
-            }
+            view.setHosts(getRedirectHosts());
             return view;
         }
 
         if (viewName.startsWith(REDIRECT_URL_PREFIX)) {
             String redirectUrl = viewName.substring(REDIRECT_URL_PREFIX.length());
             RedirectView view = new HtmxRedirectView(redirectUrl, isRedirectContextRelative());
-            String[] hosts = getRedirectHosts();
-            if (hosts != null) {
-                view.setHosts(hosts);
-            }
+            view.setHosts(getRedirectHosts());
             return view;
         }
 
@@ -124,7 +116,7 @@ public class HtmxViewResolver extends WebApplicationObjectSupport implements Vie
      *
      * @param redirectHosts one or more application hosts
      */
-    public void setRedirectHosts(@Nullable String... redirectHosts) {
+    public void setRedirectHosts(String @Nullable ... redirectHosts) {
         this.redirectHosts = redirectHosts;
     }
 

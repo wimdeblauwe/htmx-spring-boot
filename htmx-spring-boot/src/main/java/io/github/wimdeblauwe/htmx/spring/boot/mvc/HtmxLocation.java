@@ -1,6 +1,7 @@
 package io.github.wimdeblauwe.htmx.spring.boot.mvc;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import org.jspecify.annotations.Nullable;
 import org.springframework.util.CollectionUtils;
 
 import java.util.Map;
@@ -14,15 +15,15 @@ import java.util.Objects;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class HtmxLocation {
 
-    private String path;
-    private String source;
-    private String event;
-    private String handler;
-    private String target;
-    private String swap;
-    private String select;
-    private Map<String, Object> values;
-    private Map<String, String> headers;
+    private @Nullable String path;
+    private @Nullable String source;
+    private @Nullable String event;
+    private @Nullable String handler;
+    private @Nullable String target;
+    private @Nullable String swap;
+    private @Nullable String select;
+    private @Nullable Map<String, Object> values;
+    private @Nullable Map<String, String> headers;
 
     public HtmxLocation() {
     }
@@ -33,50 +34,56 @@ public class HtmxLocation {
 
     @Override
     public boolean equals(Object o) {
+
         if (this == o) {
             return true;
         }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        HtmxLocation location = (HtmxLocation) o;
-        return Objects.equals(path, location.path) && Objects.equals(source, location.source) && Objects.equals(event, location.event) && Objects.equals(handler, location.handler) && Objects.equals(target, location.target) && Objects.equals(swap, location.swap)
-                && Objects.equals(values, location.values) && Objects.equals(headers, location.headers);
+
+        return o instanceof HtmxLocation that &&
+                Objects.equals(path, that.path) &&
+                Objects.equals(source, that.source) &&
+                Objects.equals(event, that.event) &&
+                Objects.equals(handler, that.handler) &&
+                Objects.equals(target, that.target) &&
+                Objects.equals(swap, that.swap) &&
+                Objects.equals(select, that.select) &&
+                Objects.equals(values, that.values) &&
+                Objects.equals(headers, that.headers);
     }
 
-    public String getEvent() {
+    public @Nullable String getEvent() {
         return event;
     }
 
-    public String getHandler() {
+    public @Nullable String getHandler() {
         return handler;
     }
 
-    public Map<String, String> getHeaders() {
+    public @Nullable Map<String, String> getHeaders() {
         return headers;
     }
 
-    public String getPath() {
+    public @Nullable String getPath() {
         return path;
     }
 
-    public String getSelect() {
+    public @Nullable String getSelect() {
         return select;
     }
 
-    public String getSource() {
+    public @Nullable String getSource() {
         return source;
     }
 
-    public String getSwap() {
+    public @Nullable String getSwap() {
         return swap;
     }
 
-    public String getTarget() {
+    public @Nullable String getTarget() {
         return target;
     }
 
-    public Map<String, Object> getValues() {
+    public @Nullable Map<String, Object> getValues() {
         return values;
     }
 
@@ -92,18 +99,18 @@ public class HtmxLocation {
 
     @Override
     public int hashCode() {
-        return Objects.hash(path, source, event, handler, target, swap, values, headers);
+        return Objects.hash(path, source, event, handler, target, swap, select, values, headers);
     }
 
-    public void setEvent(String event) {
+    public void setEvent(@Nullable String event) {
         this.event = event;
     }
 
-    public void setHandler(String handler) {
+    public void setHandler(@Nullable String handler) {
         this.handler = handler;
     }
 
-    public void setHeaders(Map<String, String> headers) {
+    public void setHeaders(@Nullable Map<String, String> headers) {
         this.headers = headers;
     }
 
@@ -111,23 +118,23 @@ public class HtmxLocation {
         this.path = path;
     }
 
-    public void setSelect(String select) {
+    public void setSelect(@Nullable String select) {
         this.select = select;
     }
 
-    public void setSource(String source) {
+    public void setSource(@Nullable String source) {
         this.source = source;
     }
 
-    public void setSwap(String swap) {
+    public void setSwap(@Nullable String swap) {
         this.swap = swap;
     }
 
-    public void setTarget(String target) {
+    public void setTarget(@Nullable String target) {
         this.target = target;
     }
 
-    public void setValues(Map<String, Object> values) {
+    public void setValues(@Nullable Map<String, Object> values) {
         this.values = values;
     }
 

@@ -68,7 +68,7 @@ public @interface HxReswap {
     /**
      * Represents the values for {@link #focusScroll()}
      */
-    public enum FocusScroll {
+    enum FocusScroll {
         TRUE,
         FALSE,
         UNDEFINED
@@ -77,7 +77,7 @@ public @interface HxReswap {
     /**
      * Represents the position values for {@link #show()} and {@link #scroll()}
      */
-    public enum Position {
+    enum Position {
         NONE,
         TOP,
         BOTTOM,

@@ -2,6 +2,7 @@ package io.github.wimdeblauwe.htmx.spring.boot.security;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.jspecify.annotations.Nullable;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 
@@ -43,7 +44,7 @@ final class HxRedirectToPage {
         response.getWriter().flush();
     }
 
-    static String page(HttpServletRequest request) {
+    static @Nullable String page(HttpServletRequest request) {
         if (request.getHeader(HX_BOOSTED.getValue()) != null && HttpMethod.GET.matches(request.getMethod())) {
             String query = request.getQueryString();
             return query != null ? request.getRequestURI() + "?" + query : request.getRequestURI();
@@ -51,7 +52,7 @@ final class HxRedirectToPage {
         return pathAndQuery(request.getHeader(HX_CURRENT_URL.getValue()));
     }
 
-    private static String pathAndQuery(String url) {
+    private static @Nullable String pathAndQuery(@Nullable String url) {
         if (url == null || url.isBlank()) {
             return null;
         }

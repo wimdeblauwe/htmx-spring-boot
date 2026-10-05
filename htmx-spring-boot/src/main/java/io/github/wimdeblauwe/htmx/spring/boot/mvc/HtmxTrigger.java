@@ -1,5 +1,8 @@
 package io.github.wimdeblauwe.htmx.spring.boot.mvc;
 
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
+
 import java.util.Objects;
 
 /**
@@ -10,26 +13,26 @@ import java.util.Objects;
 public class HtmxTrigger {
 
     private final String eventName;
-    private final Object eventDetail;
+    private final @Nullable Object eventDetail;
 
-    public HtmxTrigger(String eventName, Object eventDetail) {
+    public HtmxTrigger(String eventName, @Nullable Object eventDetail) {
         this.eventName = eventName;
         this.eventDetail = eventDetail;
     }
 
     @Override
-    public boolean equals(Object object) {
-        if (this == object) {
+    public boolean equals(Object o) {
+
+        if (this == o) {
             return true;
         }
-        if (object == null || getClass() != object.getClass()) {
-            return false;
-        }
-        HtmxTrigger that = (HtmxTrigger) object;
-        return Objects.equals(eventName, that.eventName) && Objects.equals(eventDetail, that.eventDetail);
+
+        return o instanceof HtmxTrigger that &&
+                Objects.equals(eventName, that.eventName) &&
+                Objects.equals(eventDetail, that.eventDetail);
     }
 
-    public Object getEventDetail() {
+    public @Nullable Object getEventDetail() {
         return eventDetail;
     }
 
