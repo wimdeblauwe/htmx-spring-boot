@@ -17,7 +17,7 @@ import java.lang.annotation.Target;
  * as per <a href="https://developer.mozilla.org/en-US/docs/Web/API/History/pushState">history.pushState()</a>.</li>
  * </ul>
  *
- * @see <a href="https://htmx.org/headers/hx-push-url/">HX-Push-Url Response Header</a>
+ * @see <a href="https://four.htmx.org/reference/headers/HX-Push-Url">HX-Push-Url</a>
  */
 @Target({ElementType.TYPE, ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)

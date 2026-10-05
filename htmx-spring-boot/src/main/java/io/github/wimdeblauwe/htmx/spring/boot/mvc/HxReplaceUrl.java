@@ -18,7 +18,7 @@ import java.lang.annotation.Target;
  * but must have the same origin as the current URL.</li>
  * </ul>
  *
- * @see <a href="https://htmx.org/headers/hx-replace-url/">HX-Replace-Url</a>
+ * @see <a href="https://four.htmx.org/reference/headers/HX-Replace-Url">HX-Replace-Url</a>
  */
 @Target({ElementType.TYPE, ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
