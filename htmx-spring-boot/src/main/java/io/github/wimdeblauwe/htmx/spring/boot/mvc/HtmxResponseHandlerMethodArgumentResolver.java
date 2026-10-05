@@ -1,8 +1,8 @@
 package io.github.wimdeblauwe.htmx.spring.boot.mvc;
 
 import jakarta.servlet.http.HttpServletRequest;
+import org.jspecify.annotations.Nullable;
 import org.springframework.core.MethodParameter;
-import org.springframework.lang.Nullable;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
@@ -16,12 +16,16 @@ public class HtmxResponseHandlerMethodArgumentResolver implements HandlerMethodA
     }
 
     @Override
-    public Object resolveArgument(MethodParameter parameter,
+    public @Nullable Object resolveArgument(MethodParameter parameter,
                                   @Nullable ModelAndViewContainer mavContainer,
                                   NativeWebRequest webRequest,
-                                  @Nullable WebDataBinderFactory binderFactory) throws Exception {
+                                  @Nullable WebDataBinderFactory binderFactory) {
 
         HttpServletRequest request = webRequest.getNativeRequest(HttpServletRequest.class);
+
+        if (request == null) {
+            return null;
+        }
 
         var htmxResponse = new HtmxResponse();
         request.setAttribute(RequestContextUtils.HTMX_RESPONSE_CONTEXT_ATTRIBUTE, htmxResponse);

@@ -35,7 +35,7 @@ public class HxLocationRedirectAccessDeniedHandler implements AccessDeniedHandle
     }
 
     @Override
-    public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) throws IOException, ServletException {
+    public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) throws IOException {
         redirectStrategy.sendRedirect(request, response, redirectUrl);
     }
 

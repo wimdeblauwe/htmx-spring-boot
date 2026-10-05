@@ -2,6 +2,7 @@ package io.github.wimdeblauwe.htmx.spring.boot.mvc;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.jspecify.annotations.Nullable;
 import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.ModelAndView;
@@ -25,7 +26,7 @@ public class HtmxExceptionHandlerExceptionResolver extends ExceptionHandlerExcep
     }
 
     @Override
-    protected ModelAndView doResolveHandlerMethodException(HttpServletRequest request, HttpServletResponse response, HandlerMethod handlerMethod, Exception exception) {
+    protected @Nullable ModelAndView doResolveHandlerMethodException(HttpServletRequest request, HttpServletResponse response, @Nullable HandlerMethod handlerMethod, Exception exception) {
 
         ServletWebRequest webRequest = new ServletWebRequest(request, response);
         ServletInvocableHandlerMethod exceptionHandlerMethod = this.getExceptionHandlerMethod(handlerMethod, exception, webRequest);

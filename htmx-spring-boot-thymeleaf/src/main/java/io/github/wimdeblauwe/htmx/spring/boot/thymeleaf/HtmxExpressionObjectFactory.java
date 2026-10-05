@@ -2,6 +2,7 @@ package io.github.wimdeblauwe.htmx.spring.boot.thymeleaf;
 
 import io.github.wimdeblauwe.htmx.spring.boot.mvc.HtmxRequest;
 import jakarta.servlet.http.HttpServletRequest;
+import org.jspecify.annotations.Nullable;
 import org.thymeleaf.context.IExpressionContext;
 import org.thymeleaf.context.IWebContext;
 import org.thymeleaf.expression.IExpressionObjectFactory;
@@ -27,11 +28,13 @@ public class HtmxExpressionObjectFactory implements IExpressionObjectFactory {
         ALL_EXPRESSION_OBJECT_NAMES = Collections.unmodifiableSet(allExpressionObjectNames);
     }
 
+    @Override
     public Set<String> getAllExpressionObjectNames() {
         return ALL_EXPRESSION_OBJECT_NAMES;
     }
 
-    public Object buildObject(final IExpressionContext context, final String expressionObjectName) {
+    @Override
+    public @Nullable Object buildObject(final IExpressionContext context, final String expressionObjectName) {
         if (HTMX_REQUEST_EXPRESSION_OBJECT_NAME.equals(expressionObjectName) && context instanceof IWebContext webContext) {
             IWebExchange exchange = webContext.getExchange();
             IServletWebRequest webRequest = (IServletWebRequest) exchange.getRequest();

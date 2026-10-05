@@ -1,5 +1,6 @@
 package io.github.wimdeblauwe.htmx.spring.boot.mvc;
 
+import org.jspecify.annotations.Nullable;
 import org.springframework.util.Assert;
 
 import java.util.Collection;
@@ -28,12 +29,12 @@ public final class HtmxResponse {
     private final Set<HtmxTrigger> triggers = new LinkedHashSet<>();
     private final Set<HtmxTrigger> triggersAfterSettle = new LinkedHashSet<>();
     private final Set<HtmxTrigger> triggersAfterSwap = new LinkedHashSet<>();
-    private String replaceUrl;
-    private String reselect;
+    private @Nullable String replaceUrl;
+    private @Nullable String reselect;
     private boolean contextRelative = true;
-    private String retarget;
-    private String pushUrl;
-    private HtmxReswap reswap;
+    private @Nullable String retarget;
+    private @Nullable String pushUrl;
+    private @Nullable HtmxReswap reswap;
 
     /**
      * Create a new HtmxResponse.
@@ -214,23 +215,23 @@ public final class HtmxResponse {
         this.retarget = cssSelector;
     }
 
-    public String getPushUrl() {
+    public @Nullable String getPushUrl() {
         return pushUrl;
     }
 
-    public String getReplaceUrl() {
+    public @Nullable String getReplaceUrl() {
         return replaceUrl;
     }
 
-    public String getReselect() {
+    public @Nullable String getReselect() {
         return reselect;
     }
 
-    public HtmxReswap getReswap() {
+    public @Nullable HtmxReswap getReswap() {
         return reswap;
     }
 
-    public String getRetarget() {
+    public @Nullable String getRetarget() {
         return retarget;
     }
 

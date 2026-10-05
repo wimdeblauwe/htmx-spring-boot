@@ -55,7 +55,7 @@ public class HtmxRedirectView extends RedirectView {
     }
 
     @Override
-    protected void sendRedirect(HttpServletRequest request, HttpServletResponse response, String targetUrl, boolean http10Compatible) throws IOException {
+    protected void sendRedirect(HttpServletRequest request, HttpServletResponse response, String targetUrl, boolean http10Compatible) {
 
         String encodedURL = (isRemoteHost(targetUrl) ? targetUrl : response.encodeRedirectURL(targetUrl));
         response.setHeader(HtmxResponseHeader.HX_REDIRECT.getValue(), encodedURL);

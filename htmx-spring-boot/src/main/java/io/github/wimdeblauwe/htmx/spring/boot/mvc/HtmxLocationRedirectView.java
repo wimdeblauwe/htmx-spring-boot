@@ -2,6 +2,7 @@ package io.github.wimdeblauwe.htmx.spring.boot.mvc;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.jspecify.annotations.Nullable;
 import org.springframework.web.servlet.view.RedirectView;
 import tools.jackson.core.JacksonException;
 import tools.jackson.core.json.JsonWriteFeature;
@@ -23,14 +24,14 @@ public class HtmxLocationRedirectView extends RedirectView {
             .enable(JsonWriteFeature.ESCAPE_NON_ASCII)
             .build();
 
-    private String source;
-    private String event;
-    private String handler;
-    private String target;
-    private String swap;
-    private String select;
-    private Map<String, Object> values;
-    private Map<String, String> headers;
+    private @Nullable String source;
+    private @Nullable String event;
+    private @Nullable String handler;
+    private @Nullable String target;
+    private @Nullable String swap;
+    private @Nullable String select;
+    private @Nullable Map<String, Object> values;
+    private @Nullable Map<String, String> headers;
 
     /**
      * Create a new HtmxLocationRedirectView.
@@ -144,7 +145,7 @@ public class HtmxLocationRedirectView extends RedirectView {
     }
 
     @Override
-    protected void sendRedirect(HttpServletRequest request, HttpServletResponse response, String targetUrl, boolean http10Compatible) throws IOException {
+    protected void sendRedirect(HttpServletRequest request, HttpServletResponse response, String targetUrl, boolean http10Compatible) {
 
         String encodedURL = (isRemoteHost(targetUrl) ? targetUrl : response.encodeRedirectURL(targetUrl));
         HtmxLocation location = createLocation(encodedURL);

@@ -2,6 +2,7 @@ package io.github.wimdeblauwe.htmx.spring.boot.mvc;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.jspecify.annotations.Nullable;
 import org.springframework.web.servlet.SmartView;
 import org.springframework.web.servlet.View;
 
@@ -21,7 +22,7 @@ public class HtmxRefreshView implements View, SmartView {
     }
 
     @Override
-    public void render(Map<String, ?> model, HttpServletRequest request, HttpServletResponse response) throws Exception {
+    public void render(@Nullable Map<String, ?> model, HttpServletRequest request, HttpServletResponse response) {
         response.setHeader(HtmxResponseHeader.HX_REFRESH.getValue(), HtmxValue.TRUE);
     }
 

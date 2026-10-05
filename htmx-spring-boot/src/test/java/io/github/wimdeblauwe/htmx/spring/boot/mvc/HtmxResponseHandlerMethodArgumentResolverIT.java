@@ -29,7 +29,7 @@ public class HtmxResponseHandlerMethodArgumentResolverIT {
     RestTestClient webClient;
 
     @Test
-    public void testPreventHistoryUpdate() throws Exception {
+    public void testPreventHistoryUpdate() {
 
         get("/prevent-history-update")
                 .expectHeader()
@@ -39,7 +39,7 @@ public class HtmxResponseHandlerMethodArgumentResolverIT {
     }
 
     @Test
-    public void testPushUrl() throws Exception {
+    public void testPushUrl() {
 
         get("/push-url")
                 .expectHeader()
@@ -49,7 +49,7 @@ public class HtmxResponseHandlerMethodArgumentResolverIT {
     }
 
     @Test
-    public void testReselect() throws Exception {
+    public void testReselect() {
 
         get("/reselect")
                 .expectHeader()
@@ -57,7 +57,7 @@ public class HtmxResponseHandlerMethodArgumentResolverIT {
     }
 
     @Test
-    public void testReswap() throws Exception {
+    public void testReswap() {
 
         get("/reswap")
                 .expectHeader()
@@ -65,7 +65,7 @@ public class HtmxResponseHandlerMethodArgumentResolverIT {
     }
 
     @Test
-    public void testReswapAfterBegin() throws Exception {
+    public void testReswapAfterBegin() {
 
         get("/reswap-after-begin")
                 .expectHeader()
@@ -73,7 +73,7 @@ public class HtmxResponseHandlerMethodArgumentResolverIT {
     }
 
     @Test
-    public void testReswapAfterEnd() throws Exception {
+    public void testReswapAfterEnd() {
 
         get("/reswap-after-end")
                 .expectHeader()
@@ -81,7 +81,7 @@ public class HtmxResponseHandlerMethodArgumentResolverIT {
     }
 
     @Test
-    public void testReswapBeforeBegin() throws Exception {
+    public void testReswapBeforeBegin() {
 
         get("/reswap-before-begin")
                 .expectHeader()
@@ -89,7 +89,7 @@ public class HtmxResponseHandlerMethodArgumentResolverIT {
     }
 
     @Test
-    public void testReswapBeforeEnd() throws Exception {
+    public void testReswapBeforeEnd() {
 
         get("/reswap-before-end")
                 .expectHeader()
@@ -97,7 +97,7 @@ public class HtmxResponseHandlerMethodArgumentResolverIT {
     }
 
     @Test
-    public void testReswapDelete() throws Exception {
+    public void testReswapDelete() {
 
         get("/reswap-delete")
                 .expectHeader()
@@ -105,7 +105,7 @@ public class HtmxResponseHandlerMethodArgumentResolverIT {
     }
 
     @Test
-    public void testReswapInnerHtml() throws Exception {
+    public void testReswapInnerHtml() {
 
         get("/reswap-inner-html")
                 .expectHeader()
@@ -113,7 +113,7 @@ public class HtmxResponseHandlerMethodArgumentResolverIT {
     }
 
     @Test
-    public void testReswapNone() throws Exception {
+    public void testReswapNone() {
 
         get("/reswap-none")
                 .expectHeader()
@@ -121,7 +121,7 @@ public class HtmxResponseHandlerMethodArgumentResolverIT {
     }
 
     @Test
-    public void testReswapOuterHtml() throws Exception {
+    public void testReswapOuterHtml() {
 
         get("/reswap-outer-html")
                 .expectHeader()
@@ -129,7 +129,7 @@ public class HtmxResponseHandlerMethodArgumentResolverIT {
     }
 
     @Test
-    public void testReswapDefaultWithSwapTiming() throws Exception {
+    public void testReswapDefaultWithSwapTiming() {
 
         get("/reswap-default-with-swap-timing")
                 .expectHeader()
@@ -137,7 +137,7 @@ public class HtmxResponseHandlerMethodArgumentResolverIT {
     }
 
     @Test
-    public void testReswapShowNone() throws Exception {
+    public void testReswapShowNone() {
 
         get("/reswap-show-none")
                 .expectHeader()
@@ -145,7 +145,7 @@ public class HtmxResponseHandlerMethodArgumentResolverIT {
     }
 
     @Test
-    public void testRetarget() throws Exception {
+    public void testRetarget() {
 
         get("/retarget")
                 .expectHeader()
@@ -153,7 +153,7 @@ public class HtmxResponseHandlerMethodArgumentResolverIT {
     }
 
     @Test
-    public void testTrigger() throws Exception {
+    public void testTrigger() {
 
         get("/trigger")
                 .expectHeader()
@@ -161,7 +161,7 @@ public class HtmxResponseHandlerMethodArgumentResolverIT {
     }
 
     @Test
-    public void testTriggerWithDetailsKeepsOrder() throws Exception {
+    public void testTriggerWithDetailsKeepsOrder() {
 
         get("/trigger-with-details")
                 .expectHeader()
@@ -169,7 +169,7 @@ public class HtmxResponseHandlerMethodArgumentResolverIT {
     }
 
     @Test
-    public void testTriggerWithNonLatin1DetailIsEscaped() throws Exception {
+    public void testTriggerWithNonLatin1DetailIsEscaped() {
 
         get("/trigger-with-non-latin1-detail")
                 .expectHeader()
@@ -177,7 +177,7 @@ public class HtmxResponseHandlerMethodArgumentResolverIT {
     }
 
     @Test
-    public void testTriggerAfterSettle() throws Exception {
+    public void testTriggerAfterSettle() {
 
         get("/trigger-after-settle")
                 .expectHeader()
@@ -185,7 +185,7 @@ public class HtmxResponseHandlerMethodArgumentResolverIT {
     }
 
     @Test
-    public void testTriggerAfterSwap() throws Exception {
+    public void testTriggerAfterSwap() {
 
         get("/trigger-after-swap")
                 .expectHeader()
@@ -193,7 +193,7 @@ public class HtmxResponseHandlerMethodArgumentResolverIT {
     }
 
     @Test
-    public void testResponseBodyReturnValue() throws Exception {
+    public void testResponseBodyReturnValue() {
 
         get("/response-body")
                 .expectHeader()

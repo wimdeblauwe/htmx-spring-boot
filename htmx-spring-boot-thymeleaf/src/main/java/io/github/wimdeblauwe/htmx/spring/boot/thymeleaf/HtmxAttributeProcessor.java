@@ -1,5 +1,6 @@
 package io.github.wimdeblauwe.htmx.spring.boot.thymeleaf;
 
+import org.jspecify.annotations.Nullable;
 import org.thymeleaf.context.ITemplateContext;
 import org.thymeleaf.engine.AttributeDefinition;
 import org.thymeleaf.engine.AttributeDefinitions;
@@ -30,7 +31,7 @@ public class HtmxAttributeProcessor extends AbstractStandardExpressionAttributeT
 
     private static final TemplateMode TEMPLATE_MODE = TemplateMode.HTML;
 
-    private AttributeDefinition targetAttributeDefinition;
+    private @Nullable AttributeDefinition targetAttributeDefinition;
 
     public HtmxAttributeProcessor(String dialectPrefix,
                                   String attrName,
@@ -47,6 +48,7 @@ public class HtmxAttributeProcessor extends AbstractStandardExpressionAttributeT
         this.mapper = mapper;
     }
 
+    @Override
     public void setAttributeDefinitions(final AttributeDefinitions attributeDefinitions) {
         Validate.notNull(attributeDefinitions, "Attribute Definitions cannot be null");
         // We precompute the AttributeDefinition of the target attribute in order to being able to use much
@@ -60,7 +62,7 @@ public class HtmxAttributeProcessor extends AbstractStandardExpressionAttributeT
             final IProcessableElementTag tag,
             final AttributeName attributeName,
             final String attributeValue,
-            final Object expressionResult,
+            @Nullable final Object expressionResult,
             final IElementTagStructureHandler structureHandler) {
         if (expressionResult == null) {
             structureHandler.removeAttribute(attributeName);

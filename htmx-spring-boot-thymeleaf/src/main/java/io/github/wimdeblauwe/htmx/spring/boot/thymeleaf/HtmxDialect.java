@@ -1,5 +1,6 @@
 package io.github.wimdeblauwe.htmx.spring.boot.thymeleaf;
 
+import org.jspecify.annotations.Nullable;
 import org.thymeleaf.dialect.AbstractProcessorDialect;
 import org.thymeleaf.dialect.IExpressionObjectDialect;
 import org.thymeleaf.expression.IExpressionObjectFactory;
@@ -11,7 +12,7 @@ import java.util.Set;
 
 public class HtmxDialect extends AbstractProcessorDialect implements IExpressionObjectDialect {
 
-    private HtmxExpressionObjectFactory expressionObjectFactory;
+    private @Nullable HtmxExpressionObjectFactory expressionObjectFactory;
 
     private final ObjectMapper mapper;
 

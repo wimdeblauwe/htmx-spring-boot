@@ -1,5 +1,7 @@
 package io.github.wimdeblauwe.htmx.spring.boot.mvc;
 
+import org.jspecify.annotations.Nullable;
+
 import java.time.Duration;
 import java.util.Objects;
 
@@ -12,14 +14,14 @@ import java.util.Objects;
 public class HtmxReswap {
 
     private final HxSwapType type;
-    private Duration swap;
-    private Duration settle;
-    private Position scroll;
-    private String scrollTarget;
-    private Position show;
-    private String showTarget;
+    private @Nullable Duration swap;
+    private @Nullable Duration settle;
+    private @Nullable Position scroll;
+    private @Nullable String scrollTarget;
+    private @Nullable Position show;
+    private @Nullable String showTarget;
     private boolean transition;
-    private Boolean focusScroll;
+    private @Nullable Boolean focusScroll;
 
     /**
      * Use the default swap behavior as configured by {@code htmx.config.defaultSwapStyle}
@@ -89,31 +91,31 @@ public class HtmxReswap {
         this.type = type;
     }
 
-    public Boolean getFocusScroll() {
+    public @Nullable Boolean getFocusScroll() {
         return focusScroll;
     }
 
-    public Position getScroll() {
+    public @Nullable Position getScroll() {
         return scroll;
     }
 
-    public String getScrollTarget() {
+    public @Nullable String getScrollTarget() {
         return scrollTarget;
     }
 
-    public Duration getSettle() {
+    public @Nullable Duration getSettle() {
         return settle;
     }
 
-    public Position getShow() {
+    public @Nullable Position getShow() {
         return show;
     }
 
-    public String getShowTarget() {
+    public @Nullable String getShowTarget() {
         return showTarget;
     }
 
-    public Duration getSwap() {
+    public @Nullable Duration getSwap() {
         return swap;
     }
 
@@ -243,16 +245,22 @@ public class HtmxReswap {
     }
 
     @Override
-    public boolean equals(Object object) {
-        if (this == object) {
+    public boolean equals(Object o) {
+
+        if (this == o) {
             return true;
         }
-        if (object == null || getClass() != object.getClass()) {
-            return false;
-        }
-        HtmxReswap that = (HtmxReswap) object;
-        return transition == that.transition && Objects.equals(type, that.type) && Objects.equals(swap, that.swap) && Objects.equals(settle, that.settle) && scroll == that.scroll && Objects.equals(scrollTarget, that.scrollTarget) && show == that.show && Objects.equals(
-                showTarget, that.showTarget) && Objects.equals(focusScroll, that.focusScroll);
+
+        return o instanceof HtmxReswap that &&
+                transition == that.transition &&
+                type == that.type &&
+                Objects.equals(swap, that.swap) &&
+                Objects.equals(settle, that.settle) &&
+                scroll == that.scroll &&
+                Objects.equals(scrollTarget, that.scrollTarget) &&
+                show == that.show &&
+                Objects.equals(showTarget, that.showTarget) &&
+                Objects.equals(focusScroll, that.focusScroll);
     }
 
     @Override

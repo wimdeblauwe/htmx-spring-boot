@@ -233,7 +233,7 @@ class HtmxHandlerMethodArgumentResolverTest {
     }
 
     @Service
-    public class TestService {
+    static class TestService {
         void doSomething(HtmxRequest details) {
         }
     }

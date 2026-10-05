@@ -1,5 +1,6 @@
 package io.github.wimdeblauwe.htmx.spring.boot.mvc;
 
+import org.jspecify.annotations.Nullable;
 import org.springframework.core.annotation.AnnotatedElementUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.servlet.mvc.condition.CompositeRequestCondition;
@@ -15,18 +16,18 @@ import static io.github.wimdeblauwe.htmx.spring.boot.mvc.HtmxRequestHeader.*;
 public class HtmxRequestMappingHandlerMapping extends RequestMappingHandlerMapping {
 
     @Override
-    protected RequestCondition<?> getCustomMethodCondition(Method method) {
+    protected @Nullable RequestCondition<?> getCustomMethodCondition(Method method) {
         HxRequest methodAnnotation = AnnotatedElementUtils.findMergedAnnotation(method, HxRequest.class);
         return createCondition(methodAnnotation);
     }
 
     @Override
-    protected RequestCondition<?> getCustomTypeCondition(Class<?> handlerType) {
+    protected @Nullable RequestCondition<?> getCustomTypeCondition(Class<?> handlerType) {
         HxRequest typeAnnotation = AnnotatedElementUtils.findMergedAnnotation(handlerType, HxRequest.class);
         return createCondition(typeAnnotation);
     }
 
-    private RequestCondition<?> createCondition(HxRequest hxRequest) {
+    private @Nullable RequestCondition<?> createCondition(@Nullable HxRequest hxRequest) {
 
         if (hxRequest == null) {
             return null;

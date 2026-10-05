@@ -35,7 +35,7 @@ public class HxLocationRedirectAuthenticationEntryPoint implements Authenticatio
     }
 
     @Override
-    public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
+    public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException {
         redirectStrategy.sendRedirect(request, response, redirectUrl);
     }
 

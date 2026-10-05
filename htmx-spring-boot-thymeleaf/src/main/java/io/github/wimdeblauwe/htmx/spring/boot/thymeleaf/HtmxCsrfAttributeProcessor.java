@@ -1,5 +1,6 @@
 package io.github.wimdeblauwe.htmx.spring.boot.thymeleaf;
 
+import org.jspecify.annotations.Nullable;
 import org.springframework.security.web.csrf.CsrfToken;
 import org.thymeleaf.context.ITemplateContext;
 import org.thymeleaf.engine.AttributeName;
@@ -43,6 +44,7 @@ import java.util.Map;
  * @see <a href="https://htmx.org/attributes/hx-headers/">hx-headers Attribute Reference</a>
  * @since 5.1.0
  */
+@SuppressWarnings("EscapedEntity")
 public class HtmxCsrfAttributeProcessor extends HtmxAttributeProcessor {
 
     public HtmxCsrfAttributeProcessor(String dialectPrefix,
@@ -57,7 +59,7 @@ public class HtmxCsrfAttributeProcessor extends HtmxAttributeProcessor {
             final IProcessableElementTag tag,
             final AttributeName attributeName,
             final String attributeValue,
-            final Object expressionResult,
+            @Nullable final Object expressionResult,
             final IElementTagStructureHandler structureHandler) {
         super.doProcess(context, tag, attributeName, attributeValue, expressionResult, structureHandler);
 

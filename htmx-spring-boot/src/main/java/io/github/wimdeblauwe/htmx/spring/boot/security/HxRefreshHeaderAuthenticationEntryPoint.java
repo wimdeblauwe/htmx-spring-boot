@@ -1,5 +1,6 @@
 package io.github.wimdeblauwe.htmx.spring.boot.security;
 
+import io.github.wimdeblauwe.htmx.spring.boot.mvc.HtmxResponseHeader;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -25,7 +26,7 @@ public class HxRefreshHeaderAuthenticationEntryPoint implements AuthenticationEn
 
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
-        response.setHeader("HX-Refresh", "true");
+        response.setHeader(HtmxResponseHeader.HX_REFRESH.getValue(), "true");
         forbiddenEntryPoint.commence(request, response, authException);
     }
 }

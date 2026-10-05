@@ -1,6 +1,7 @@
 package io.github.wimdeblauwe.htmx.spring.boot.mvc;
 
 import jakarta.servlet.http.HttpServletRequest;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Utility class for working with the request context.
@@ -27,7 +28,7 @@ final class RequestContextUtils {
         return url;
     }
 
-    static HtmxResponse getHtmxResponse(HttpServletRequest request) {
+    static @Nullable HtmxResponse getHtmxResponse(HttpServletRequest request) {
 
         Object contextAttribute = request.getAttribute(HTMX_RESPONSE_CONTEXT_ATTRIBUTE);
         if (contextAttribute instanceof HtmxResponse response) {
