@@ -11,6 +11,7 @@ import org.unbescape.html.HtmlEscape;
 import tools.jackson.core.JacksonException;
 import tools.jackson.core.type.TypeReference;
 import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.json.JsonMapper;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -47,10 +48,14 @@ import java.util.Map;
 @SuppressWarnings("EscapedEntity")
 public class HtmxCsrfAttributeProcessor extends HtmxAttributeProcessor {
 
+    private final CsrfTokenCondition csrfTokenCondition;
+
     public HtmxCsrfAttributeProcessor(String dialectPrefix,
                                       String attrName,
-                                      ObjectMapper mapper) {
-        super(dialectPrefix, attrName, ATTR_PRECEDENCE + 1, mapper);
+                                      CsrfTokenCondition csrfTokenCondition,
+                                      JsonMapper jsonMapper) {
+        super(dialectPrefix, attrName, ATTR_PRECEDENCE + 1, jsonMapper);
+        this.csrfTokenCondition = csrfTokenCondition;
     }
 
     @Override
@@ -61,12 +66,19 @@ public class HtmxCsrfAttributeProcessor extends HtmxAttributeProcessor {
             final String attributeValue,
             @Nullable final Object expressionResult,
             final IElementTagStructureHandler structureHandler) {
+
         super.doProcess(context, tag, attributeName, attributeValue, expressionResult, structureHandler);
 
         var token = (CsrfToken) context.getVariable("_csrf");
         if (token == null || expressionResult == null) {
             return;
         }
+
+        if (!csrfTokenCondition.test(expressionResult.toString())) {
+            // Skip token generation because the attribute value does not meet the condition
+            return;
+        }
+
         var headers = this.getHeaders(tag);
         headers.put(token.getHeaderName(), token.getToken());
         try {

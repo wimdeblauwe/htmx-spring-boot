@@ -5,7 +5,7 @@
 </head>
 <body>
 <!--/*@thymesVar id="#htmxRequest" type="io.github.wimdeblauwe.htmx.spring.boot.mvc.HtmxRequest"*/-->
-<div id="htmxRequest" th:if="${#htmxRequest.isHtmxRequest()}">It is an htmx Request</div>
+<div id="htmx-request" th:if="${#htmxRequest.isHtmxRequest()}">It is an htmx Request</div>
 
 </body>
 </html>
