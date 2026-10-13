@@ -50,6 +50,20 @@ Provides a [Thymeleaf](https://www.thymeleaf.org/) dialect to easily work with h
 
 The included Spring Boot Auto-configuration will enable the htmx integrations.
 
+The `JsonMapper` used to serialize JSON values written to htmx response headers (e.g. `HX-Trigger`)
+can be customized by overriding the bean named `htmxJsonMapper`:
+
+```java
+@Bean
+JsonMapper htmxJsonMapper() {
+    return JsonMapper.builder()
+                     // header values must be ASCII, so keep escaping non-ASCII characters
+                     .enable(JsonWriteFeature.ESCAPE_NON_ASCII)
+                     // your customizations
+                     .build();
+}
+```
+
 ### Mapping Requests
 
 Controller methods can be annotated with
