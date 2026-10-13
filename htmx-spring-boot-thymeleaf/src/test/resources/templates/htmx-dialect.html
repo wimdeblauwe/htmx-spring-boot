@@ -72,6 +72,11 @@
 <div id="hx-ws-close" hx:ws:close="${trueVariable}?'done':''"></div>
 <div id="hx-ws-connect" hx:ws:connect="${trueVariable}?'/foo':'/bar'"></div>
 
+<!-- custom attributes -->
+<div id="hx-custom" hx:custom="${trueVariable}?'#some-div':''"></div>
+<div id="hx-custom-csrf" hx:custom-csrf="'value'"></div>
+<div id="hx-custom-csrf-with-condition" hx:custom-csrf-with-condition="'post'"></div>
+
 <!-- edge cases -->
 <div id="hx-swap-with-empty-string" hx:swap="${falseVariable}?'afterend':''"></div>
 <div id="hx-swap-with-null" hx:swap="${falseVariable}?'afterend':null"></div>

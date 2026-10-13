@@ -143,6 +143,37 @@ class HtmxDialectTest {
     }
 
     @Test
+    void testCustomAttribute() throws Exception {
+
+        String id = "hx-custom";
+        String fragment = getFragment(id).getResponse().getContentAsString();
+
+        assertThat(fragment).isEqualTo("<div id=\"%s\" hx-custom=\"#some-div\"></div>".formatted(id));
+    }
+
+    @Test
+    void testCustomCsrfAttribute() throws Exception {
+
+        String id = "hx-custom-csrf";
+        MvcResult result = getFragment(id);
+        String csrfToken = getCsrfToken(result);
+        String fragment = result.getResponse().getContentAsString();
+
+        assertThat(fragment).isEqualTo("<div id=\"%s\" hx-custom-csrf=\"value\" hx-headers=\"{&quot;X-CSRF-TOKEN&quot;:&quot;%s&quot;}\"></div>".formatted(id, csrfToken));
+    }
+
+    @Test
+    void testCustomCsrfAttributeWithCondition() throws Exception {
+
+        String id = "hx-custom-csrf-with-condition";
+        MvcResult result = getFragment(id);
+        String csrfToken = getCsrfToken(result);
+        String fragment = result.getResponse().getContentAsString();
+
+        assertThat(fragment).isEqualTo("<div id=\"%s\" hx-custom-csrf-with-condition=\"post\" hx-headers=\"{&quot;X-CSRF-TOKEN&quot;:&quot;%s&quot;}\"></div>".formatted(id, csrfToken));
+    }
+
+    @Test
     void testHxSwapWithEmptyString() throws Exception {
 
         String id = "hx-swap-with-empty-string";
@@ -235,6 +266,15 @@ class HtmxDialectTest {
 
     @Configuration
     static class TestConfig {
+
+        @Bean
+        HtmxDialectCustomizer htmxDialectCustomizer() {
+
+            return htmxDialect -> htmxDialect
+                    .registerCustomAttribute("custom")
+                    .registerCustomCsrfAttribute("custom-csrf")
+                    .registerCustomCsrfAttribute("custom-csrf-with-condition", value -> value.equals("post"));
+        }
 
         @Bean
         SecurityFilterChain securityFilterChain(HttpSecurity http) {

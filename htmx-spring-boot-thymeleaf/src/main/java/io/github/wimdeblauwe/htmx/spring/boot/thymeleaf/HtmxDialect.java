@@ -9,6 +9,7 @@ import tools.jackson.databind.json.JsonMapper;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Stream;
 
 public class HtmxDialect extends AbstractProcessorDialect implements IExpressionObjectDialect {
 
@@ -70,6 +71,7 @@ public class HtmxDialect extends AbstractProcessorDialect implements IExpression
                 new HtmxAttribute("ws:connect"));
     }
 
+    private final Set<HtmxAttribute> customAttributes = new HashSet<>(0);
     private @Nullable HtmxExpressionObjectFactory expressionObjectFactory;
     private final JsonMapper jsonMapper;
 
@@ -83,14 +85,61 @@ public class HtmxDialect extends AbstractProcessorDialect implements IExpression
         this.jsonMapper = jsonMapper;
     }
 
+    /**
+     * Registers a custom attribute to the dialect.
+     *
+     * @param name the name of the attribute.
+     * @return this dialect.
+     */
+    public HtmxDialect registerCustomAttribute(String name) {
+        registerCustomAttribute(new HtmxAttribute(name));
+        return this;
+    }
+
+    /**
+     * Registers a custom CSRF-aware attribute, which adds the CSRF token to the element through {@code hx-headers}.
+     *
+     * @param name the name of the attribute.
+     * @return this dialect.
+     * @see <a href="https://docs.spring.io/spring-security/reference/servlet/exploits/csrf.html">Cross Site Request Forgery (CSRF)</a>
+     */
+    public HtmxDialect registerCustomCsrfAttribute(String name) {
+        registerCustomAttribute(new HtmxAttribute(name, true));
+        return this;
+    }
+
+    /**
+     * Registers a custom conditional CSRF-aware attribute, which adds the CSRF token to the element through {@code hx-headers},
+     * but only if the value of the attribute meets the condition.
+     *
+     * @param name               the name of the attribute.
+     * @param csrfTokenCondition a condition that determines whether the CSRF token should be rendered based on the value of the attribute.
+     * @return this dialect.
+     * @see <a href="https://docs.spring.io/spring-security/reference/servlet/exploits/csrf.html">Cross Site Request Forgery (CSRF)</a>
+     */
+    public HtmxDialect registerCustomCsrfAttribute(String name, CsrfTokenCondition csrfTokenCondition) {
+        registerCustomAttribute(new HtmxAttribute(name, csrfTokenCondition));
+        return this;
+    }
+
+    private void registerCustomAttribute(HtmxAttribute attribute) {
+
+        Stream<HtmxAttribute> existingAttributes = Stream.concat(Stream.concat(CORE_ATTRIBUTES.stream(), EXTENSION_ATTRIBUTES.stream()), customAttributes.stream());
+        if (existingAttributes.anyMatch(a -> a.name().equals(attribute.name()))) {
+            throw new IllegalArgumentException("An attribute with name '" + attribute.name() + "' is already registered.");
+        }
+        customAttributes.add(attribute);
+    }
+
     @Override
     public Set<IProcessor> getProcessors(String dialectPrefix) {
 
         Set<IProcessor> htmxProcessors = new HashSet<>();
 
-        var attributes = new HashSet<HtmxAttribute>(CORE_ATTRIBUTES.size() + EXTENSION_ATTRIBUTES.size());
+        var attributes = new HashSet<HtmxAttribute>(CORE_ATTRIBUTES.size() + EXTENSION_ATTRIBUTES.size() + customAttributes.size());
         attributes.addAll(CORE_ATTRIBUTES);
         attributes.addAll(EXTENSION_ATTRIBUTES);
+        attributes.addAll(customAttributes);
 
         for (HtmxAttribute attribute : attributes) {
             if (attribute.csrfTokenCondition() != null) {

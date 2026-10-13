@@ -12,8 +12,14 @@ public class HtmxThymeleafAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public HtmxDialect htmxDialect() {
+    HtmxDialect htmxDialect() {
         return new HtmxDialect(JsonMapper.builder().build());
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    HtmxDialectCustomizerBeanPostProcessor htmxDialectCustomizerBeanPostProcessor() {
+        return new HtmxDialectCustomizerBeanPostProcessor();
     }
 
 }
