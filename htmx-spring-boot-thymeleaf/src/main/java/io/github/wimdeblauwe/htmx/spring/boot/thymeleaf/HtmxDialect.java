@@ -5,7 +5,7 @@ import org.thymeleaf.dialect.AbstractProcessorDialect;
 import org.thymeleaf.dialect.IExpressionObjectDialect;
 import org.thymeleaf.expression.IExpressionObjectFactory;
 import org.thymeleaf.processor.IProcessor;
-import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.json.JsonMapper;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -14,46 +14,46 @@ public class HtmxDialect extends AbstractProcessorDialect implements IExpression
 
     private @Nullable HtmxExpressionObjectFactory expressionObjectFactory;
 
-    private final ObjectMapper mapper;
+    private final JsonMapper jsonMapper;
 
-    public HtmxDialect(ObjectMapper mapper) {
+    public HtmxDialect(JsonMapper jsonMapper) {
         super("Htmx", "hx", 1000);
-        this.mapper = mapper;
+        this.jsonMapper = jsonMapper;
     }
 
     @Override
     public Set<IProcessor> getProcessors(String dialectPrefix) {
         Set<IProcessor> htmxProcessors = new HashSet<>();
 
-        htmxProcessors.add(new HtmxAttributeProcessor(dialectPrefix, "boost", mapper));
-        htmxProcessors.add(new HtmxAttributeProcessor(dialectPrefix, "confirm", mapper));
-        htmxProcessors.add(new HtmxCsrfAttributeProcessor(dialectPrefix, "delete", mapper));
-        htmxProcessors.add(new HtmxAttributeProcessor(dialectPrefix, "disable", mapper));
-        htmxProcessors.add(new HtmxAttributeProcessor(dialectPrefix, "disinherit", mapper));
-        htmxProcessors.add(new HtmxAttributeProcessor(dialectPrefix, "encoding", mapper));
-        htmxProcessors.add(new HtmxAttributeProcessor(dialectPrefix, "ext", mapper));
-        htmxProcessors.add(new HtmxAttributeProcessor(dialectPrefix, "get", mapper));
-        htmxProcessors.add(new HtmxAttributeProcessor(dialectPrefix, "headers", mapper));
-        htmxProcessors.add(new HtmxAttributeProcessor(dialectPrefix, "history-elt", mapper));
-        htmxProcessors.add(new HtmxAttributeProcessor(dialectPrefix, "include", mapper));
-        htmxProcessors.add(new HtmxAttributeProcessor(dialectPrefix, "indicator", mapper));
-        htmxProcessors.add(new HtmxAttributeProcessor(dialectPrefix, "params", mapper));
-        htmxProcessors.add(new HtmxCsrfAttributeProcessor(dialectPrefix, "patch", mapper));
-        htmxProcessors.add(new HtmxCsrfAttributeProcessor(dialectPrefix, "post", mapper));
-        htmxProcessors.add(new HtmxAttributeProcessor(dialectPrefix, "preserve", mapper));
-        htmxProcessors.add(new HtmxAttributeProcessor(dialectPrefix, "prompt", mapper));
-        htmxProcessors.add(new HtmxCsrfAttributeProcessor(dialectPrefix, "put", mapper));
-        htmxProcessors.add(new HtmxAttributeProcessor(dialectPrefix, "push-url", mapper));
-        htmxProcessors.add(new HtmxAttributeProcessor(dialectPrefix, "request", mapper));
-        htmxProcessors.add(new HtmxAttributeProcessor(dialectPrefix, "select", mapper));
-        htmxProcessors.add(new HtmxAttributeProcessor(dialectPrefix, "swap", mapper));
-        htmxProcessors.add(new HtmxAttributeProcessor(dialectPrefix, "swap-oob", mapper));
-        htmxProcessors.add(new HtmxAttributeProcessor(dialectPrefix, "sync", mapper));
-        htmxProcessors.add(new HtmxAttributeProcessor(dialectPrefix, "target", mapper));
-        htmxProcessors.add(new HtmxAttributeProcessor(dialectPrefix, "trigger", mapper));
-        htmxProcessors.add(new HtmxAttributeProcessor(dialectPrefix, "validate", mapper));
-        htmxProcessors.add(new HtmxAttributeProcessor(dialectPrefix, "vals", mapper));
-        htmxProcessors.add(new HtmxAttributeProcessor(dialectPrefix, "vars", mapper));
+        htmxProcessors.add(new HtmxAttributeProcessor(dialectPrefix, "boost", jsonMapper));
+        htmxProcessors.add(new HtmxAttributeProcessor(dialectPrefix, "confirm", jsonMapper));
+        htmxProcessors.add(new HtmxCsrfAttributeProcessor(dialectPrefix, "delete", jsonMapper));
+        htmxProcessors.add(new HtmxAttributeProcessor(dialectPrefix, "disable", jsonMapper));
+        htmxProcessors.add(new HtmxAttributeProcessor(dialectPrefix, "disinherit", jsonMapper));
+        htmxProcessors.add(new HtmxAttributeProcessor(dialectPrefix, "encoding", jsonMapper));
+        htmxProcessors.add(new HtmxAttributeProcessor(dialectPrefix, "ext", jsonMapper));
+        htmxProcessors.add(new HtmxAttributeProcessor(dialectPrefix, "get", jsonMapper));
+        htmxProcessors.add(new HtmxAttributeProcessor(dialectPrefix, "headers", jsonMapper));
+        htmxProcessors.add(new HtmxAttributeProcessor(dialectPrefix, "history-elt", jsonMapper));
+        htmxProcessors.add(new HtmxAttributeProcessor(dialectPrefix, "include", jsonMapper));
+        htmxProcessors.add(new HtmxAttributeProcessor(dialectPrefix, "indicator", jsonMapper));
+        htmxProcessors.add(new HtmxAttributeProcessor(dialectPrefix, "params", jsonMapper));
+        htmxProcessors.add(new HtmxCsrfAttributeProcessor(dialectPrefix, "patch", jsonMapper));
+        htmxProcessors.add(new HtmxCsrfAttributeProcessor(dialectPrefix, "post", jsonMapper));
+        htmxProcessors.add(new HtmxAttributeProcessor(dialectPrefix, "preserve", jsonMapper));
+        htmxProcessors.add(new HtmxAttributeProcessor(dialectPrefix, "prompt", jsonMapper));
+        htmxProcessors.add(new HtmxCsrfAttributeProcessor(dialectPrefix, "put", jsonMapper));
+        htmxProcessors.add(new HtmxAttributeProcessor(dialectPrefix, "push-url", jsonMapper));
+        htmxProcessors.add(new HtmxAttributeProcessor(dialectPrefix, "request", jsonMapper));
+        htmxProcessors.add(new HtmxAttributeProcessor(dialectPrefix, "select", jsonMapper));
+        htmxProcessors.add(new HtmxAttributeProcessor(dialectPrefix, "swap", jsonMapper));
+        htmxProcessors.add(new HtmxAttributeProcessor(dialectPrefix, "swap-oob", jsonMapper));
+        htmxProcessors.add(new HtmxAttributeProcessor(dialectPrefix, "sync", jsonMapper));
+        htmxProcessors.add(new HtmxAttributeProcessor(dialectPrefix, "target", jsonMapper));
+        htmxProcessors.add(new HtmxAttributeProcessor(dialectPrefix, "trigger", jsonMapper));
+        htmxProcessors.add(new HtmxAttributeProcessor(dialectPrefix, "validate", jsonMapper));
+        htmxProcessors.add(new HtmxAttributeProcessor(dialectPrefix, "vals", jsonMapper));
+        htmxProcessors.add(new HtmxAttributeProcessor(dialectPrefix, "vars", jsonMapper));
 
         return htmxProcessors;
     }
