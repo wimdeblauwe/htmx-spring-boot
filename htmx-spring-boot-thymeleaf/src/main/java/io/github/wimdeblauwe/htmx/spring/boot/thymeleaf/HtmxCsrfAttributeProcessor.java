@@ -10,7 +10,7 @@ import org.thymeleaf.processor.element.IElementTagStructureHandler;
 import org.unbescape.html.HtmlEscape;
 import tools.jackson.core.JacksonException;
 import tools.jackson.core.type.TypeReference;
-import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.json.JsonMapper;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -49,8 +49,8 @@ public class HtmxCsrfAttributeProcessor extends HtmxAttributeProcessor {
 
     public HtmxCsrfAttributeProcessor(String dialectPrefix,
                                       String attrName,
-                                      ObjectMapper mapper) {
-        super(dialectPrefix, attrName, ATTR_PRECEDENCE + 1, mapper);
+                                      JsonMapper jsonMapper) {
+        super(dialectPrefix, attrName, ATTR_PRECEDENCE + 1, jsonMapper);
     }
 
     @Override
@@ -70,7 +70,7 @@ public class HtmxCsrfAttributeProcessor extends HtmxAttributeProcessor {
         var headers = this.getHeaders(tag);
         headers.put(token.getHeaderName(), token.getToken());
         try {
-            var json = mapper.writeValueAsString(headers);
+            var json = jsonMapper.writeValueAsString(headers);
             var escaped = HtmlEscape.escapeHtml4Xml(json);
             structureHandler.setAttribute("hx-headers", escaped);
         } catch (JacksonException e) {
@@ -85,7 +85,7 @@ public class HtmxCsrfAttributeProcessor extends HtmxAttributeProcessor {
         }
         try {
             var json = HtmlEscape.unescapeHtml(current);
-            return this.mapper.readValue(json, new TypeReference<>() {
+            return this.jsonMapper.readValue(json, new TypeReference<>() {
             });
         } catch (JacksonException e) {
             throw new TemplateProcessingException("Exception reading map", tag.getTemplateName(), tag.getLine(), tag.getLine(), e);

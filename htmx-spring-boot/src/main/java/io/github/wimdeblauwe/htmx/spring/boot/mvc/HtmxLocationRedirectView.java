@@ -3,6 +3,10 @@ package io.github.wimdeblauwe.htmx.spring.boot.mvc;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.jspecify.annotations.Nullable;
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.NoSuchBeanDefinitionException;
+import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.servlet.support.RequestContextUtils;
 import org.springframework.web.servlet.view.RedirectView;
 import tools.jackson.core.JacksonException;
 import tools.jackson.core.json.JsonWriteFeature;
@@ -19,10 +23,6 @@ import java.util.Map;
  * @since 3.6.0
  */
 public class HtmxLocationRedirectView extends RedirectView {
-
-    private final JsonMapper jsonMapper = JsonMapper.builder()
-            .enable(JsonWriteFeature.ESCAPE_NON_ASCII)
-            .build();
 
     private @Nullable String source;
     private @Nullable String event;
@@ -151,7 +151,17 @@ public class HtmxLocationRedirectView extends RedirectView {
         HtmxLocation location = createLocation(encodedURL);
 
         if (location.hasContextData()) {
-            setHeaderAsJson(response, HtmxResponseHeader.HX_LOCATION.getValue(), location);
+            WebApplicationContext ctx = RequestContextUtils.findWebApplicationContext(request);
+            if (ctx == null) {
+                throw new IllegalStateException("No WebApplicationContext found in the request context.");
+            }
+            JsonMapper jsonMapper = ctx.getBean("htmxJsonMapper", JsonMapper.class);
+
+            try {
+                response.setHeader(HtmxResponseHeader.HX_LOCATION.getValue(), jsonMapper.writeValueAsString(location));
+            } catch (JacksonException e) {
+                throw new IllegalArgumentException("Unable to set header " + HtmxResponseHeader.HX_LOCATION.getValue() + " to " + location, e);
+            }
         } else {
             response.setHeader(HtmxResponseHeader.HX_LOCATION.getValue(), location.getPath());
         }
@@ -173,11 +183,4 @@ public class HtmxLocationRedirectView extends RedirectView {
         return location;
     }
 
-    private void setHeaderAsJson(HttpServletResponse response, String name, Object value) {
-        try {
-            response.setHeader(name, jsonMapper.writeValueAsString(value));
-        } catch (JacksonException e) {
-            throw new IllegalArgumentException("Unable to set header " + name + " to " + value, e);
-        }
-    }
 }

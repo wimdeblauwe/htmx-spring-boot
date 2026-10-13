@@ -16,7 +16,7 @@ import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.util.Validate;
 import org.unbescape.html.HtmlEscape;
 import tools.jackson.core.JacksonException;
-import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.json.JsonMapper;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -27,7 +27,7 @@ public class HtmxAttributeProcessor extends AbstractStandardExpressionAttributeT
 
     public static final int ATTR_PRECEDENCE = 1000;
     private final String attrName;
-    protected final ObjectMapper mapper;
+    protected final JsonMapper jsonMapper;
 
     private static final TemplateMode TEMPLATE_MODE = TemplateMode.HTML;
 
@@ -35,17 +35,17 @@ public class HtmxAttributeProcessor extends AbstractStandardExpressionAttributeT
 
     public HtmxAttributeProcessor(String dialectPrefix,
                                   String attrName,
-                                  ObjectMapper mapper) {
-        this(dialectPrefix, attrName, ATTR_PRECEDENCE, mapper);
+                                  JsonMapper jsonMapper) {
+        this(dialectPrefix, attrName, ATTR_PRECEDENCE, jsonMapper);
     }
 
     public HtmxAttributeProcessor(String dialectPrefix,
                                   String attrName,
                                   int precedence,
-                                  ObjectMapper mapper) {
+                                  JsonMapper jsonMapper) {
         super(TEMPLATE_MODE, dialectPrefix, attrName, precedence, false, true);
         this.attrName = attrName;
-        this.mapper = mapper;
+        this.jsonMapper = jsonMapper;
     }
 
     @Override
@@ -74,7 +74,7 @@ public class HtmxAttributeProcessor extends AbstractStandardExpressionAttributeT
                                                                                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (x, y) -> y, LinkedHashMap::new));
 
                 try {
-                    expressionResultString = this.mapper.writeValueAsString(mapWithoutNullValues);
+                    expressionResultString = this.jsonMapper.writeValueAsString(mapWithoutNullValues);
                 } catch (JacksonException e) {
                     throw new TemplateProcessingException("Exception writing map", tag.getTemplateName(), tag.getLine(), tag.getLine(), e);
                 }

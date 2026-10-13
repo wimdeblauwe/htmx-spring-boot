@@ -4,7 +4,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.core.annotation.AnnotatedElementUtils;
 import tools.jackson.core.JacksonException;
-import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.json.JsonMapper;
 
 import java.lang.reflect.Method;
 import java.time.Duration;
@@ -19,10 +19,10 @@ import java.util.stream.Collectors;
  */
 class HtmxHandlerMethodHandler {
 
-    private final ObjectMapper objectMapper;
+    private final JsonMapper jsonMapper;
 
-    public HtmxHandlerMethodHandler(ObjectMapper objectMapper) {
-        this.objectMapper = objectMapper;
+    public HtmxHandlerMethodHandler(JsonMapper jsonMapper) {
+        this.jsonMapper = jsonMapper;
     }
 
     public void handleMethodArgument(HttpServletRequest request, HttpServletResponse response) {
@@ -204,7 +204,7 @@ class HtmxHandlerMethodHandler {
 
     private void setHeaderJsonValue(HttpServletResponse response, HtmxResponseHeader header, Object value) {
         try {
-            response.setHeader(header.getValue(), objectMapper.writeValueAsString(value));
+            response.setHeader(header.getValue(), jsonMapper.writeValueAsString(value));
         } catch (JacksonException e) {
             throw new IllegalArgumentException("Unable to set header " + header.getValue() + " to " + value, e);
         }
