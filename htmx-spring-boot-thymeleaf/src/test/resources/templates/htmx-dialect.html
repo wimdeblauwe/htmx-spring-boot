@@ -11,24 +11,77 @@
 <!--/*@thymesVar id="falseVariable" type="java.lang.Boolean"*/-->
 <!--/*@thymesVar id="listVariable" type="java.util.List"*/-->
 <!-- @formatter:off -->
-<div id="hx-get-div" hx:get="${trueVariable}?'/foo':'/bar'"></div>
-<div id="hx-post-div" hx:post="${trueVariable}?'/foo':'/bar'"></div>
-<div id="hx-put-div" hx:put="${trueVariable}?'/foo':'/bar'"></div>
-<div id="hx-delete-div" hx:delete="${trueVariable}?'/foo':'/bar'"></div>
-<div id="hx-patch-div" hx:patch="${trueVariable}?'/foo':'/bar'"></div>
-<div id="hx-target-div" hx:target="${trueVariable}?'#some-div':'#some-other-div'"></div>
-<div id="hx-trigger-div" hx:trigger="${trueVariable}?'reveal':''"></div>
-<div id="hx-swap-div" hx:swap="${trueVariable}?'outerHTML':''"></div>
-<div id="hx-vals-div-boolean" hx:vals="${ {someBooleanProperty: trueVariable} }"></div>
-<div id="hx-vals-div-string" hx:vals="${ {someStringProperty: stringVariable} }"></div>
-<div id="hx-vals-div-number" hx:vals="${ {someNumberProperty: numberVariable} }"></div>
-<div id="hx-vals-div-multiple" hx:vals="${ {someBooleanProperty: trueVariable, someNumberProperty: numberVariable} }"></div>
-<div id="hx-vals-div-with-null" hx:vals="${ {someStringProperty: null, someNumberProperty: numberVariable} }"></div>
-<div id="hx-swap-div-with-empty-string" hx:swap="${falseVariable}?'afterend':''"></div>
-<div id="hx-swap-div-with-null" hx:swap="${falseVariable}?'afterend':null"></div>
-<div id="hx-swap-div-with-th-with" th:with="sum = ${1+1}" hx:swap="${sum.equals(2)}?'afterend':null"></div>
-<div id="hx-target-div-with-th-each" th:each="number : ${listVariable}" hx:target="${number}"></div>
-<div id="hx-validate-div" hx:validate="${trueVariable}"></div>
+
+<!-- core csrf attributes -->
+<div id="hx-post" hx:post="'/foo'"></div>
+<div id="hx-post-with-headers" hx:post="'/foo'" hx:headers="${ {someHeader: true} }"></div>
+<div id="hx-put" hx:put="'/foo'"></div>
+<div id="hx-put-with-headers" hx:put="'/foo'" hx:headers="${ {someHeader: true} }"></div>
+<div id="hx-patch" hx:patch="'/foo'"></div>
+<div id="hx-patch-with-headers" hx:patch="'/foo'" hx:headers="${ {someHeader: true} }"></div>
+<div id="hx-delete" hx:delete="'/foo'"></div>
+<div id="hx-delete-with-headers" hx:delete="'/foo'" hx:headers="${ {someHeader: true} }"></div>
+<div id="hx-method" hx:method="'post'"></div>
+<div id="hx-method-with-headers" hx:method="'post'" hx:headers="${ {someHeader: true} }"></div>
+
+<!-- core attributes -->
+<div id="hx-action" hx:action="'/foo'"></div>
+<div id="hx-boost" hx:boost="${trueVariable}"></div>
+<div id="hx-config" hx:config="${ {timeout: numberVariable} }"></div>
+<div id="hx-confirm" hx:confirm="${trueVariable}?'Are you sure?':''"></div>
+<div id="hx-disable" hx:disable="${trueVariable}?'#some-button':''"></div>
+<div id="hx-encoding" hx:encoding="${trueVariable}?'multipart/form-data':''"></div>
+<div id="hx-get" hx:get="${trueVariable}?'/foo':'/bar'"></div>
+<div id="hx-headers" hx:headers="${ {'X-Custom': stringVariable} }"></div>
+<div id="hx-history-elt" hx:history-elt="${trueVariable}"></div>
+<div id="hx-ignore" hx:ignore="${trueVariable}"></div>
+<div id="hx-include" hx:include="${trueVariable}?'#some-div':''"></div>
+<div id="hx-indicator" hx:indicator="${trueVariable}?'#spinner':''"></div>
+<div id="hx-morph-skip" hx:morph-skip="${trueVariable}"></div>
+<div id="hx-morph-skip-children" hx:morph-skip-children="${trueVariable}"></div>
+<div id="hx-on" hx:on="${trueVariable}?'click: alert(1)':''"></div>
+<div id="hx-preserve" hx:preserve="${trueVariable}"></div>
+<div id="hx-push-url" hx:push-url="${trueVariable}?'/foo':'false'"></div>
+<div id="hx-replace-url" hx:replace-url="${trueVariable}?'/foo':'false'"></div>
+<div id="hx-select" hx:select="${trueVariable}?'#some-div':''"></div>
+<div id="hx-select-oob" hx:select-oob="${trueVariable}?'#some-div':''"></div>
+<div id="hx-status" hx:status="${trueVariable}?'404: swap:none':''"></div>
+<div id="hx-swap" hx:swap="${trueVariable}?'outerHTML':''"></div>
+<div id="hx-swap-oob" hx:swap-oob="${trueVariable}"></div>
+<div id="hx-sync" hx:sync="${trueVariable}?'closest form:abort':''"></div>
+<div id="hx-target" hx:target="${trueVariable}?'#some-div':'#some-other-div'"></div>
+<div id="hx-trigger" hx:trigger="${trueVariable}?'reveal':''"></div>
+<div id="hx-validate" hx:validate="${trueVariable}"></div>
+<div id="hx-vals" hx:vals="${ {booleanProperty: trueVariable, stringProperty: stringVariable, numberProperty: numberVariable, nullProperty: null} }"></div>
+<div id="hx-query" hx:query="'/foo'"></div>
+
+<!-- extension attributes -->
+<div id="hx-browser-indicator" hx:browser-indicator="${trueVariable}"></div>
+<div id="hx-head" hx:head="${trueVariable}?'merge':''"></div>
+<div id="hx-nonce" hx:nonce="${stringVariable}"></div>
+<div id="hx-live" hx:live="${trueVariable}?'#some-div':''"></div>
+<div id="hx-multipart-close" hx:multipart:close="${trueVariable}?'done':''"></div>
+<div id="hx-multipart-connect" hx:multipart:connect="${trueVariable}?'/foo':'/bar'"></div>
+<div id="hx-pending" hx:pending="${trueVariable}?'#some-div':''"></div>
+<div id="hx-preload" hx:preload="${trueVariable}?'mouseover':''"></div>
+<div id="hx-prompt" hx:prompt="${trueVariable}?'Enter a value':''"></div>
+<div id="hx-ptag" hx:ptag="${stringVariable}"></div>
+<div id="hx-sse-close" hx:sse:close="${trueVariable}?'done':''"></div>
+<div id="hx-sse-connect" hx:sse:connect="${trueVariable}?'/foo':'/bar'"></div>
+<div id="hx-targets" hx:targets="${trueVariable}?'#some-div':''"></div>
+<div id="hx-ws-close" hx:ws:close="${trueVariable}?'done':''"></div>
+<div id="hx-ws-connect" hx:ws:connect="${trueVariable}?'/foo':'/bar'"></div>
+
+<!-- custom attributes -->
+<div id="hx-custom" hx:custom="${trueVariable}?'#some-div':''"></div>
+<div id="hx-custom-csrf" hx:custom-csrf="'value'"></div>
+<div id="hx-custom-csrf-with-condition" hx:custom-csrf-with-condition="'post'"></div>
+
+<!-- edge cases -->
+<div id="hx-swap-with-empty-string" hx:swap="${falseVariable}?'afterend':''"></div>
+<div id="hx-swap-with-null" hx:swap="${falseVariable}?'afterend':null"></div>
+<div id="hx-swap-with-th-with" th:with="sum = ${1+1}" hx:swap="${sum.equals(2)}?'afterend':null"></div>
+<div id="hx-target-with-th-each" th:each="number : ${listVariable}" hx:target="${number}"></div>
 <!-- @formatter:on -->
 </body>
 </html>

@@ -453,8 +453,24 @@ Will be rendered as:
 <div hx-get="/users/123" hx-target="#otherElement">Load user details</div>
 ```
 
-The Thymeleaf dialect has corresponding processors for most of the `hx-*` attributes.
-Please [open an issue](https://github.com/wimdeblauwe/htmx-spring-boot-thymeleaf/issues) if something is missing.
+##### Custom attributes
+
+The Thymeleaf dialect has corresponding processors for most of the core `hx-*` attributes, as well as for those from the [official extensions](https://four.htmx.org/extensions).
+However, if you need an attribute that is not supported out of the box (e.g. from a custom extension), you can register it by customizing the dialect through an `HtmxDialectCustomizer` bean:
+
+```java
+@Bean
+HtmxDialectCustomizer htmxDialectCustomizer() {
+    return dialect -> dialect
+            .registerCustomAttribute("my-attribute")
+            .registerCustomCsrfAttribute("my-csrf-attribute")
+            .registerCustomCsrfAttribute("my-csrf-on-post-attribute", value -> value.equals("post"));
+}
+```
+
+* The first registers `my-attribute` as a custom attribute. You can use `hx:my-attribute="${someValue}"` in the Thymeleaf template, and it is rendered as `hx-my-attribute`.
+* The second registers `my-csrf-attribute` as a CSRF-aware attribute. You can use `hx:my-csrf-attribute="${someValue}"` in the Thymeleaf template, and the CSRF token is automatically rendered into the `hx-headers` attribute of the HTML element.
+* The third registers `my-csrf-on-post-attribute` as a conditional CSRF-aware attribute. You can use `hx:my-csrf-on-post-attribute="${someValue}"` in the Thymeleaf template, and the CSRF token is automatically rendered into the `hx-headers` attribute of the HTML element, but only if the value of the attribute is `post`.
 
 > **Note**
 > Be careful about using `#` in the value. If you do `hx:target="#mydiv"`, then this will not work as Thymeleaf uses

@@ -47,10 +47,14 @@ import java.util.Map;
 @SuppressWarnings("EscapedEntity")
 public class HtmxCsrfAttributeProcessor extends HtmxAttributeProcessor {
 
+    private final CsrfTokenCondition csrfTokenCondition;
+
     public HtmxCsrfAttributeProcessor(String dialectPrefix,
                                       String attrName,
+                                      CsrfTokenCondition csrfTokenCondition,
                                       JsonMapper jsonMapper) {
         super(dialectPrefix, attrName, ATTR_PRECEDENCE + 1, jsonMapper);
+        this.csrfTokenCondition = csrfTokenCondition;
     }
 
     @Override
@@ -61,12 +65,19 @@ public class HtmxCsrfAttributeProcessor extends HtmxAttributeProcessor {
             final String attributeValue,
             @Nullable final Object expressionResult,
             final IElementTagStructureHandler structureHandler) {
+
         super.doProcess(context, tag, attributeName, attributeValue, expressionResult, structureHandler);
 
         var token = (CsrfToken) context.getVariable("_csrf");
         if (token == null || expressionResult == null) {
             return;
         }
+
+        if (!csrfTokenCondition.test(expressionResult.toString())) {
+            // Skip token generation because the attribute value does not meet the condition
+            return;
+        }
+
         var headers = this.getHeaders(tag);
         headers.put(token.getHeaderName(), token.getToken());
         try {
