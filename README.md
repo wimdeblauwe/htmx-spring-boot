@@ -525,7 +525,7 @@ Links to articles and blog posts about this library:
 
 | Library version                                                                       | htmx     | Spring Boot  | Minimum Java version | Documentation                                                                          |
 |---------------------------------------------------------------------------------------|----------|--------------|----------------------|----------------------------------------------------------------------------------------|
-| [6.0.0](https://github.com/wimdeblauwe/htmx-spring-boot/releases/tag/6.0.0)           | 4.x      | 4.1.x        | 17                   | [README.md](https://github.com/wimdeblauwe/htmx-spring-boot/blob/6.0.0/README.md)      |
+| [6.0.1](https://github.com/wimdeblauwe/htmx-spring-boot/releases/tag/6.0.1)           | 4.x      | 4.1.x        | 17                   | [README.md](https://github.com/wimdeblauwe/htmx-spring-boot/blob/6.0.1/README.md)      |
 | [5.2.0](https://github.com/wimdeblauwe/htmx-spring-boot/releases/tag/5.2.0)           | 1.x, 2.x | 4.0.8        | 17                   | [README.md](https://github.com/wimdeblauwe/htmx-spring-boot/blob/5.2.0/README.md)      |
 | [5.1.1](https://github.com/wimdeblauwe/htmx-spring-boot/releases/tag/5.1.1)           | 1.x, 2.x | 4.0.8        | 17                   | [README.md](https://github.com/wimdeblauwe/htmx-spring-boot/blob/5.1.1/README.md)      |
 | [5.1.0](https://github.com/wimdeblauwe/htmx-spring-boot/releases/tag/5.0.0)           | 1.x, 2.x | 4.0.3        | 17                   | [README.md](https://github.com/wimdeblauwe/htmx-spring-boot/blob/5.1.0/README.md)      |
