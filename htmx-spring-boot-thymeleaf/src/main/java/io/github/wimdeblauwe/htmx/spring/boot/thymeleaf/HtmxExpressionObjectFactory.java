@@ -1,6 +1,6 @@
 package io.github.wimdeblauwe.htmx.spring.boot.thymeleaf;
 
-import io.github.wimdeblauwe.htmx.spring.boot.mvc.HtmxRequest;
+import io.github.wimdeblauwe.htmx.spring.boot.mvc.RequestContextUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import org.jspecify.annotations.Nullable;
 import org.thymeleaf.context.IExpressionContext;
@@ -40,7 +40,7 @@ public class HtmxExpressionObjectFactory implements IExpressionObjectFactory {
             IServletWebRequest webRequest = (IServletWebRequest) exchange.getRequest();
             HttpServletRequest request = (HttpServletRequest) webRequest.getNativeRequestObject();
 
-            return HtmxRequest.fromRequest(request);
+            return RequestContextUtils.getHtmxRequest(request);
         }
 
         return null;

@@ -8,8 +8,9 @@ import org.jspecify.annotations.Nullable;
  *
  * @since 3.6.0
  */
-final class RequestContextUtils {
+public final class RequestContextUtils {
 
+    public static final String HTMX_REQUEST_CONTEXT_ATTRIBUTE = "htmxRequest";
     public static final String HTMX_RESPONSE_CONTEXT_ATTRIBUTE = "htmxResponse";
 
     /**
@@ -21,20 +22,25 @@ final class RequestContextUtils {
      * @param contextRelative whether to prepend the context path
      * @return the target URL
      */
-    static String createUrl(HttpServletRequest request, String url, boolean contextRelative) {
+    public static String createUrl(HttpServletRequest request, String url, boolean contextRelative) {
         if (contextRelative && url.startsWith("/")) {
             return getContextPath(request) + url;
         }
         return url;
     }
 
-    static @Nullable HtmxResponse getHtmxResponse(HttpServletRequest request) {
+    public static @Nullable HtmxRequest getHtmxRequest(HttpServletRequest request) {
+
+        Object contextAttribute = request.getAttribute(HTMX_REQUEST_CONTEXT_ATTRIBUTE);
+
+        return contextAttribute instanceof HtmxRequest htmxRequest ? htmxRequest : null;
+    }
+
+    public static @Nullable HtmxResponse getHtmxResponse(HttpServletRequest request) {
 
         Object contextAttribute = request.getAttribute(HTMX_RESPONSE_CONTEXT_ATTRIBUTE);
-        if (contextAttribute instanceof HtmxResponse response) {
-            return response;
-        }
-        return null;
+
+        return contextAttribute instanceof HtmxResponse htmxResponse ? htmxResponse : null;
     }
 
     private static String getContextPath(HttpServletRequest request) {

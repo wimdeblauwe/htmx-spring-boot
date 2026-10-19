@@ -32,6 +32,8 @@ public class HtmxHandlerInterceptor implements HandlerInterceptor {
         setVary(request, response);
 
         if (handler instanceof HandlerMethod handlerMethod) {
+            request.setAttribute(RequestContextUtils.HTMX_REQUEST_CONTEXT_ATTRIBUTE, HtmxRequest.fromRequest(request));
+
             htmxHandlerMethodHandler.handleMethodAnnotations(handlerMethod.getMethod(), request, response);
         }
 
