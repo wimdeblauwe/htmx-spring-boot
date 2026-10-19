@@ -17,7 +17,7 @@ public class HtmxHandlerMethodArgumentResolver implements HandlerMethodArgumentR
     }
 
     @Override
-    public Object resolveArgument(MethodParameter parameter,
+    public @Nullable Object resolveArgument(MethodParameter parameter,
                                   @Nullable ModelAndViewContainer mavContainer,
                                   NativeWebRequest webRequest,
                                   @Nullable WebDataBinderFactory binderFactory) {
@@ -25,7 +25,7 @@ public class HtmxHandlerMethodArgumentResolver implements HandlerMethodArgumentR
         HttpServletRequest request = webRequest.getNativeRequest(HttpServletRequest.class);
         Assert.notNull(request, "HttpServletRequest must not be null");
 
-        return HtmxRequest.fromRequest(request);
+        return RequestContextUtils.getHtmxRequest(request);
     }
 
 }

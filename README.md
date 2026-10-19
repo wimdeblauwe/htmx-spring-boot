@@ -120,6 +120,13 @@ public String users(HtmxRequest htmxRequest) {
 }
 ```
 
+The [HtmxRequest](https://javadoc.io/doc/io.github.wimdeblauwe/htmx-spring-boot/latest/io/github/wimdeblauwe/htmx/spring/boot/mvc/HtmxRequest.html) object
+is also exposed as a model attribute named `htmxRequest`, so you can access it directly in your views, such as Thymeleaf templates.
+
+```html
+<div th:if="${htmxRequest.isHtmxRequest()}">It is an htmx Request</div>
+```
+
 ### Response Headers
 
 There are two ways to set [htmx Response Headers](https://four.htmx.org/reference/headers#response) in controller methods. The first is to use [HtmxResponse](https://javadoc.io/doc/io.github.wimdeblauwe/htmx-spring-boot/latest/io/github/wimdeblauwe/htmx/spring/boot/mvc/HtmxResponse.html)

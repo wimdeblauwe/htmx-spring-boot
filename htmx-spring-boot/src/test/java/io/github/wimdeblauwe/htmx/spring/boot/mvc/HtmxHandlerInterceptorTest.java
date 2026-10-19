@@ -14,9 +14,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import static io.github.wimdeblauwe.htmx.spring.boot.mvc.HeaderResultMatchers.header;
 import static io.github.wimdeblauwe.htmx.spring.boot.mvc.HtmxRequestHeader.HX_REQUEST;
 import static io.github.wimdeblauwe.htmx.spring.boot.mvc.HtmxResponseHeader.*;
-import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.*;
 import static org.hamcrest.collection.IsIterableContainingInRelativeOrder.containsInRelativeOrder;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(HtmxHandlerInterceptorTest.TestController.class)
@@ -167,6 +168,14 @@ class HtmxHandlerInterceptorTest {
                .andExpect(header().string(HX_RESELECT.getValue(), "#target"));
     }
 
+    @Test
+    public void modelAttributeShouldContainHtmxRequest() throws Exception {
+        mockMvc.perform(get("/model-attribute"))
+               .andExpect(status().isOk())
+               .andExpect(model().attributeExists("htmxRequest"))
+               .andExpect(model().attribute("htmxRequest", hasProperty("htmxRequest", equalTo(false))));
+    }
+
     @Controller
     @RequestMapping("/")
     static class TestController {
@@ -298,6 +307,11 @@ class HtmxHandlerInterceptorTest {
         @ResponseBody
         public String hxReselect() {
             return "";
+        }
+
+        @GetMapping("/model-attribute")
+        public String modelAttribute() {
+            return "view";
         }
 
     }

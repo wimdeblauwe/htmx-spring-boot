@@ -16,6 +16,8 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import static io.github.wimdeblauwe.htmx.spring.boot.mvc.HeaderResultMatchers.header;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasProperty;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -49,7 +51,8 @@ public class HtmxHandlerMethodTest {
         mockMvc.perform(get("/throw-exception").headers(htmxRequest()))
                .andExpect(status().isOk())
                .andExpect(header().string("HX-Retarget", "#container"))
-               .andExpect(content().string("View1\n"));
+               .andExpect(content().string("View1\n"))
+               .andExpect(model().attribute("htmxRequest", hasProperty("htmxRequest", equalTo(true))));
     }
 
     @Test
