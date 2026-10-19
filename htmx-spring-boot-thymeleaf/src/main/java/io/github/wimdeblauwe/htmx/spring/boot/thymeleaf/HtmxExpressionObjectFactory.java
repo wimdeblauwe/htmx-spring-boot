@@ -13,6 +13,10 @@ import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+/**
+ * @deprecated use Spring model attribute {@code htmxRequest} instead.
+ */
+@Deprecated
 public class HtmxExpressionObjectFactory implements IExpressionObjectFactory {
 
     /*

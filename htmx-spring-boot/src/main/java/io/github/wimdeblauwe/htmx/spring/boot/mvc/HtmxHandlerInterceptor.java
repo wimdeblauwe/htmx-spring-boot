@@ -22,6 +22,10 @@ public class HtmxHandlerInterceptor implements HandlerInterceptor {
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, @Nullable ModelAndView modelAndView) {
         htmxHandlerMethodHandler.handleMethodArgument(request, response);
+
+        if (modelAndView != null) {
+            modelAndView.addObject("htmxRequest", RequestContextUtils.getHtmxRequest(request));
+        }
     }
 
     @Override
@@ -30,10 +34,9 @@ public class HtmxHandlerInterceptor implements HandlerInterceptor {
                              Object handler) {
 
         setVary(request, response);
+        request.setAttribute(RequestContextUtils.HTMX_REQUEST_CONTEXT_ATTRIBUTE, HtmxRequest.fromRequest(request));
 
         if (handler instanceof HandlerMethod handlerMethod) {
-            request.setAttribute(RequestContextUtils.HTMX_REQUEST_CONTEXT_ATTRIBUTE, HtmxRequest.fromRequest(request));
-
             htmxHandlerMethodHandler.handleMethodAnnotations(handlerMethod.getMethod(), request, response);
         }
 

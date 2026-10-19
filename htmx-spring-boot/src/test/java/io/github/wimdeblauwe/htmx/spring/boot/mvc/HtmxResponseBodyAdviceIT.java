@@ -31,7 +31,9 @@ public class HtmxResponseBodyAdviceIT {
 
         get("/throw-exception")
                 .expectHeader()
-                .valueEquals("HX-Retarget", "#container");
+                .valueEquals("HX-Retarget", "#container")
+                .expectBody(String.class)
+                .isEqualTo("view");
     }
 
     private RestTestClient.ResponseSpec get(String uri) {
