@@ -39,6 +39,11 @@ public class HtmxExceptionHandlerExceptionResolver extends ExceptionHandlerExcep
 
         htmxHandlerMethodHandler.handleMethodArgument(request, response);
 
+        // an empty ModelAndView signals that the response has already been handled
+        if (modelAndView != null && !modelAndView.isEmpty()) {
+            modelAndView.addObject(RequestContextUtils.HTMX_REQUEST_CONTEXT_ATTRIBUTE, RequestContextUtils.getHtmxRequest(request));
+        }
+
         return modelAndView;
     }
 
