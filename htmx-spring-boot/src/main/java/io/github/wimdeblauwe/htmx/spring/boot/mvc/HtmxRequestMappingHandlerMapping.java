@@ -33,28 +33,28 @@ public class HtmxRequestMappingHandlerMapping extends RequestMappingHandlerMappi
             return null;
         }
 
-        var conditions = new ArrayList<RequestCondition<?>>();
-        conditions.add(new HeadersRequestCondition(HX_REQUEST.getValue()));
+        var headers = new ArrayList<String>();
+        headers.add(HX_REQUEST.getValue());
 
         if (StringUtils.hasText(hxRequest.source())) {
-            conditions.add(new HeadersRequestCondition(HX_SOURCE.getValue() + "=" + hxRequest.source()));
+            headers.add(HX_SOURCE.getValue() + "=" + hxRequest.source());
         }
 
         if (StringUtils.hasText(hxRequest.target())) {
-            conditions.add(new HeadersRequestCondition(HX_TARGET.getValue() + "=" + hxRequest.target()));
+            headers.add(HX_TARGET.getValue() + "=" + hxRequest.target());
         }
 
         if (!hxRequest.boosted()) {
             // exclude boosted requests by checking whether the header is absent
-            conditions.add(new HeadersRequestCondition("!" + HX_BOOSTED.getValue()));
+            headers.add("!" + HX_BOOSTED.getValue());
         }
 
         if (!hxRequest.historyRestoreRequest()) {
             // exclude history restore requests by checking whether the header is absent
-            conditions.add(new HeadersRequestCondition("!" + HX_HISTORY_RESTORE_REQUEST.getValue()));
+            headers.add("!" + HX_HISTORY_RESTORE_REQUEST.getValue());
         }
 
-        return new CompositeRequestCondition(conditions.toArray(RequestCondition[]::new));
+        return new HeadersRequestCondition(headers.toArray(String[]::new));
     }
 
 }
